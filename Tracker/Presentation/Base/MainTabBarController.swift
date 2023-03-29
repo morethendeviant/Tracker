@@ -17,8 +17,8 @@ final class MainTabBarController: UITabBarController {
 private extension MainTabBarController {
     func configure() {
         let tabBarAppearance = UITabBarAppearance()
-        tabBarAppearance.backgroundColor = UIColor.ypBlack
+        //tabBarAppearance.backgroundColor = .ypWhite
         tabBar.standardAppearance = tabBarAppearance
-        tabBar.tintColor = UIColor.ypWhite
+        tabBar.tintColor = .ypBlue
     }
 }
