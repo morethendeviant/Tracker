@@ -9,7 +9,7 @@ import UIKit
 
 final class TrackerCreationViewController: BaseViewController {
 
-    private let newHabit = BaseButton(style: .default, text: "Привычка")
+    private let newHabit = BaseButton(style: .confirm, text: "Привычка")
     private let newEvent = BaseButton(style: .disabled, text: "Нерегулярное событие")
     
     override func viewDidLoad() {

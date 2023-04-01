@@ -1,15 +1,15 @@
 //
-//  CollectionHeaderView.swift
+//  TrackersCollectionHeaderView.swift
 //  Tracker
 //
-//  Created by Aleksandr Velikanov on 31.03.2023.
+//  Created by Aleksandr Velikanov on 01.04.2023.
 //
 
 import UIKit
 
-final class CollectionHeaderView: UICollectionReusableView {
+final class TrackersCollectionHeaderView: UICollectionReusableView {
     
-    static let identifier = "CreationHeader"
+    static let identifier = "CathegoriesHeader"
     
     var titleLabel: UILabel = {
         let label = UILabel()
@@ -32,7 +32,7 @@ final class CollectionHeaderView: UICollectionReusableView {
 }
 
 //MARK: - Subviews configure + layout
-private extension CollectionHeaderView {
+private extension TrackersCollectionHeaderView {
     func addSubviews() {
         addSubview(titleLabel)
     }
@@ -43,7 +43,7 @@ private extension CollectionHeaderView {
     
     func applyLayout() {
         titleLabel.snp.makeConstraints { make in
-            make.top.equalTo(self)
+            make.bottom.equalTo(self).offset(-12)
             make.leading.equalTo(self).offset(10)
             
         }

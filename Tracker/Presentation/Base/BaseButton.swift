@@ -25,7 +25,7 @@ class BaseButton: UIButton {
 private extension BaseButton {
     func setUpAppearance(for style: Style) {
         switch style {
-        case .default:
+        case .confirm:
             backgroundColor = .ypBlack
             setTitleColor(.ypWhite, for: .normal)
         case .disabled:
@@ -42,6 +42,6 @@ private extension BaseButton {
 
 extension BaseButton {
     enum Style {
-        case disabled, `default`, cancel
+        case disabled, confirm, cancel
     }
 }

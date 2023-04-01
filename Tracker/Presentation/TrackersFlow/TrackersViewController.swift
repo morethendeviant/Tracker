@@ -10,6 +10,24 @@ import SnapKit
 
 final class TrackersViewController: UIViewController {
     
+    private let emojis = ["🙂", "😻", "🌺", "🐶", "❤️", "😱", "😇", "😡", "🥶", "🤔", "🙌", "🍔", "🥦", "🏓", "🥇", "🎸", "🏝️", "😪"]
+    private var categories: [TrackerCategory] = [ TrackerCategory(name: "Домашний уют", trackers: [Tracker(name: "test1", color: 1, emoji: 2, schedule: [.mon, .tue])]),
+                                                  TrackerCategory(name: "Радостные мелочи", trackers: [Tracker(name: "test3", color: 3, emoji: 4, schedule: [.fri, .sat]),
+                                                                                                       Tracker(name: "test4", color: 4, emoji: 5, schedule: [.fri, .sat])])]
+    private var visibleCategories: [TrackerCategory] = []
+    
+    private var completedTrackers: [TrackerRecord] = []
+    
+    
+    private var date: String {
+        datePicker.date.toString()
+    }
+    
+    private var dayOfWeek: DayOfWeek {
+        datePicker.date.getDayOfWeek()
+        
+    }
+    
     private lazy var plusButton: UIButton = {
         let button = UIButton()
         let image = UIImage(systemName: "plus")
@@ -35,6 +53,8 @@ final class TrackersViewController: UIViewController {
         
     private lazy var datePicker: UIDatePicker = {
         let datePicker = UIDatePicker()
+        datePicker.addTarget(nil, action: #selector(dateChanged), for: .valueChanged)
+        
         datePicker.layer.cornerRadius = 8
         datePicker.clipsToBounds = true
         datePicker.preferredDatePickerStyle = .compact
@@ -48,6 +68,7 @@ final class TrackersViewController: UIViewController {
     private lazy var trackersCollectionView: UICollectionView = {
         let collection = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
         collection.register(TrackerCollectionViewCell.self, forCellWithReuseIdentifier: TrackerCollectionViewCell.identifier)
+        collection.register(TrackersCollectionHeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: TrackersCollectionHeaderView.identifier)
         collection.delegate = self
         collection.dataSource = self
         return collection
@@ -80,33 +101,43 @@ final class TrackersViewController: UIViewController {
     }
 }
 
+
+//MARK: - Collection Flow Layout DataSource
+
 extension TrackersViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        10
+        visibleCategories[section].trackers.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = trackersCollectionView.dequeueReusableCell(withReuseIdentifier: TrackerCollectionViewCell.identifier, for: indexPath) as? TrackerCollectionViewCell else {
             fatalError("cell not found")
         }
-        cell.color = .ypSelection(1)
-        cell.emoji = "😍"
-        cell.trackerText = "Поливать растения"
+        let tracker = visibleCategories[indexPath.section].trackers[indexPath.item]
+        
+        cell.color = .ypSelection(tracker.color)
+        cell.emoji = emojis[tracker.color]
+        cell.trackerText = tracker.name
         cell.callback = { [weak self] in
+            guard let self else { return }
             
+            self.cellIsMarked(at: indexPath) ? self.removeRecord(at: indexPath) : self.addRecord(at: indexPath)
             
-            self?.trackersCollectionView.performBatchUpdates {
-                self?.trackersCollectionView.reloadItems(at: [indexPath])
+            self.trackersCollectionView.performBatchUpdates {
+                self.trackersCollectionView.reloadItems(at: [indexPath])
             }
         }
         
-        cell.isMarked = true
-        cell.daysAmount = 115
+        cell.isMarked = cellIsMarked(at: indexPath)
+        cell.daysAmount = daysAmount(at: indexPath)
         return cell
     }
     
     
+    
 }
+
+//MARK: - Collection Flow Layout Delegate
 
 extension TrackersViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
@@ -117,8 +148,80 @@ extension TrackersViewController: UICollectionViewDelegateFlowLayout {
         9
     }
     
+    func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
+        var id: String
+        switch kind {
+        case UICollectionView.elementKindSectionHeader: id = TrackersCollectionHeaderView.identifier
+        default: id = ""
+        }
+        
+        guard let view = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: id, for: indexPath) as? TrackersCollectionHeaderView else { return UICollectionReusableView()}
+        view.titleLabel.text = visibleCategories[indexPath.section].name
+        return view
+    }
     
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
+        
+        let indexPath = IndexPath(row: 0, section: section)
+        let headerView = self.collectionView(collectionView, viewForSupplementaryElementOfKind: UICollectionView.elementKindSectionHeader, at: indexPath)
+        
+        return headerView.systemLayoutSizeFitting(CGSize(width: collectionView.frame.width,
+                                                         height: 62),
+                                                  withHorizontalFittingPriority: .required,
+                                                  verticalFittingPriority: .required)
+    }
+    
+    func numberOfSections(in collectionView: UICollectionView) -> Int {
+        visibleCategories.count
+    }
 }
+
+
+//MARK: - Private Methods
+
+extension TrackersViewController {
+    func addRecord(at index: IndexPath) {
+        let id = visibleCategories[index.section].trackers[index.item].id
+        let trackerRecord = TrackerRecord(id: id, date: date)
+        completedTrackers.append(trackerRecord)
+    }
+    
+    func removeRecord(at index: IndexPath) {
+        let id = visibleCategories[index.section].trackers[index.item].id
+        completedTrackers.removeAll(where: { $0.id == id && $0.date == date } )
+    }
+    
+    func cellIsMarked(at index: IndexPath) -> Bool {
+        let id = visibleCategories[index.section].trackers[index.item].id
+        return completedTrackers.filter( {$0.id == id && $0.date == date} ).count > 0
+        
+    }
+    
+    func daysAmount(at index: IndexPath) -> Int {
+        let id = visibleCategories[index.section].trackers[index.item].id
+        return completedTrackers.filter( {$0.id == id } ).count
+    }
+    
+    @objc func dateChanged() {
+        dismiss(animated: false)
+        visibleCategories = getVisibleCategories()
+        trackersCollectionView.reloadData()
+    }
+    
+    func getVisibleCategories() -> [TrackerCategory] {
+        categories.compactMap { category in
+            let trackers = category.trackers.filter { $0.schedule.contains(dayOfWeek) }
+            return trackers.count > 0 ? TrackerCategory(name: category.name, trackers: trackers) : nil
+        }
+    }
+}
+
+
+
+
+
+
+
 
 //MARK: - Subviews configure + layout
 private extension TrackersViewController {

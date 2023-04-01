@@ -24,6 +24,12 @@ final class EmojiCollectionViewCell: UICollectionViewCell {
         }
     }
     
+//    override var isSelected: Bool {
+//        didSet {
+//            isSelected ? (backgroundColor = .ypLightGray) : (backgroundColor = .clear)
+//        }
+//    }
+    
     private lazy var emojiLabel: UILabel = {
         let label = UILabel()
         label.textAlignment = .center

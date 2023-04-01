@@ -54,7 +54,7 @@ final class HabitCreationViewController: BaseViewController, UITextFieldDelegate
         collection.register(EmojiCollectionViewCell.self, forCellWithReuseIdentifier: EmojiCollectionViewCell.identifier)
         collection.register(ColorCollectionViewCell.self, forCellWithReuseIdentifier: ColorCollectionViewCell.identifier)
 
-        collection.register(CollectionHeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: CollectionHeaderView.identifier)
+        collection.register(HabitCollectionHeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: HabitCollectionHeaderView.identifier)
         collection.delegate = self
         collection.dataSource = self
         collection.allowsMultipleSelection = false
@@ -86,9 +86,12 @@ final class HabitCreationViewController: BaseViewController, UITextFieldDelegate
     }
 }
 
+//MARK: - Collection Flow Layout Delegate
 extension HabitCreationViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         CGSize(width: 52, height: 52)
+        
+        
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
@@ -100,36 +103,39 @@ extension HabitCreationViewController: UICollectionViewDelegateFlowLayout {
         case 1: guard let cell = collectionView.cellForItem(at: indexPath) as? ColorCollectionViewCell else { return }
             cell.cellIsSelected = true
             colorSelectedItem = indexPath.item
-        
+
         default: break
         }
     }
     
     func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
         selectedItem = indexPath
+        //collectionView.indexPathsForSelectedItems?.filter({ $0.section == indexPath.section && $0.item != indexPath.item }).forEach({ collectionView.deselectItem(at: $0, animated: false) })
+
         return true
     }
     
     func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
         guard let section = selectedItem?.section else { return }
-        
+
         switch section {
         case 0:
             guard let item = emojiSelectedItem,
                   let cell = collectionView.cellForItem(at: IndexPath(item: item, section: section)) as? EmojiCollectionViewCell
             else { return }
-            
+
             cell.cellIsSelected = false
-            
+
         case 1:
             guard let item = colorSelectedItem,
                   let cell = collectionView.cellForItem(at: IndexPath(item: item, section: section)) as? ColorCollectionViewCell
             else { return }
-            
+
             cell.cellIsSelected = false
-            
+
         default: break
         }
+        
     }
     
     
@@ -137,14 +143,18 @@ extension HabitCreationViewController: UICollectionViewDelegateFlowLayout {
         5
     }
     
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
+        0
+    }
+    
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
         var id: String
         switch kind {
-        case UICollectionView.elementKindSectionHeader: id = CollectionHeaderView.identifier
+        case UICollectionView.elementKindSectionHeader: id = HabitCollectionHeaderView.identifier
         default: id = ""
         }
         
-        guard let view = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: id, for: indexPath) as? CollectionHeaderView else { return UICollectionReusableView()}
+        guard let view = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: id, for: indexPath) as? HabitCollectionHeaderView else { return UICollectionReusableView()}
         switch indexPath.section {
         case 0: view.titleLabel.text = "Emoji"
         case 1: view.titleLabel.text = "Цвет"
@@ -160,16 +170,18 @@ extension HabitCreationViewController: UICollectionViewDelegateFlowLayout {
         let headerView = self.collectionView(collectionView, viewForSupplementaryElementOfKind: UICollectionView.elementKindSectionHeader, at: indexPath)
         
         return headerView.systemLayoutSizeFitting(CGSize(width: collectionView.frame.width,
-                                                         height: 50),
+                                                         height: 34),
                                                   withHorizontalFittingPriority: .required,
                                                   verticalFittingPriority: .required)
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
-        UIEdgeInsets(top: 0, left: 0, bottom: 47, right: 0)
+        UIEdgeInsets(top: 24, left: 0, bottom: 24, right: 0)
     }
 }
 
+
+//MARK: - Collection View Data Source
 extension HabitCreationViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         switch section {
@@ -203,14 +215,15 @@ extension HabitCreationViewController: UICollectionViewDataSource {
 
 }
 
+
+//MARK: - Table View Delegate
 extension HabitCreationViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         75
     }
-    
-    
 }
 
+//MARK: - Table View Data Source
 extension HabitCreationViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         2
@@ -240,8 +253,6 @@ extension HabitCreationViewController: UITableViewDataSource {
 }
 
 
-
-
 //MARK: - Subviews configure + layout
 private extension HabitCreationViewController {
     func addSubviews() {
@@ -252,10 +263,10 @@ private extension HabitCreationViewController {
         mainStackView.setCustomSpacing(24, after: trackerTitleTextField)
         
         mainStackView.addArrangedSubview(parametersTableView)
-        mainStackView.setCustomSpacing(32, after: parametersTableView)
+        mainStackView.setCustomSpacing(16, after: parametersTableView)
         
         mainStackView.addArrangedSubview(parametersCollectionView)
-        //mainStackView.setCustomSpacing(47, after: parametersCollectionView)
+        mainStackView.setCustomSpacing(16, after: parametersCollectionView)
         
         mainStackView.addArrangedSubview(buttonsStack)
         
@@ -289,7 +300,7 @@ private extension HabitCreationViewController {
         }
         
         parametersCollectionView.snp.makeConstraints { make in
-            make.height.equalTo(550)
+            make.height.equalTo(480)
         }
         
         buttonsStack.snp.makeConstraints { make in

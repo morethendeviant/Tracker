@@ -22,7 +22,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         window = UIWindow(windowScene: windowScene)
         window?.rootViewController = //tabBarController
-                                     HabitCreationViewController(pageTitle: "Новая привычка")
+                                     //HabitCreationViewController(pageTitle: "Новая привычка")
+                                        ScheduleViewController(pageTitle: "Расписание")
         window?.makeKeyAndVisible()
     }
 }
