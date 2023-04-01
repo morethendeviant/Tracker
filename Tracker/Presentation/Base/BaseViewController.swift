@@ -6,24 +6,60 @@
 //
 
 import UIKit
+import SnapKit
 
 class BaseViewController: UIViewController {
-
+    
+    private let titleLabel: UILabel = {
+        let label = UILabel()
+        label.font = .systemFont(ofSize: 16)
+        label.textColor = .ypBlack
+        return label
+    }()
+        
+    let content = UIView()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        addSubviews()
+        configure()
+        applyLayout()
         // Do any additional setup after loading the view.
     }
     
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
+    init(pageTitle: String? = nil) {
+        titleLabel.text = pageTitle
+        super.init(nibName: nil, bundle: nil)
     }
-    */
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
 
+}
+
+//MARK: - Subviews configure + layout
+private extension BaseViewController {
+    func addSubviews() {
+        view.addSubview(titleLabel)
+        view.addSubview(content)
+    }
+    
+    func configure() {
+        view.backgroundColor = .ypWhite
+    }
+    
+    func applyLayout() {
+        titleLabel.snp.makeConstraints { make in
+            make.top.equalTo(view.safeAreaLayoutGuide).offset(27)
+            make.centerX.equalTo(view)
+        }
+        
+        content.snp.makeConstraints { make in
+            make.top.equalTo(titleLabel.snp.bottom).offset(38)
+            make.leading.trailing.bottom.equalTo(view)
+        }
+        
+    }
 }

@@ -13,7 +13,6 @@ final class TrackerCollectionViewCell: UICollectionViewCell {
     var color: UIColor? {
         didSet {
             colorBackgroundView.backgroundColor = color
-            plusButton.backgroundColor = color
         }
     }
     
@@ -42,6 +41,18 @@ final class TrackerCollectionViewCell: UICollectionViewCell {
                 default: suffix = ""
                 }
                 daysCounter.text = "\(daysAmount) " + suffix
+            }
+        }
+    }
+    
+    var isMarked: Bool = true {
+        didSet {
+            if isMarked {
+                plusButton.setImage(UIImage(systemName: "checkmark"), for: .normal)
+                plusButton.backgroundColor = color?.withAlphaComponent(0.3)
+            } else {
+                plusButton.setImage(UIImage(systemName: "plus"), for: .normal)
+                plusButton.backgroundColor = color
             }
         }
     }
@@ -95,8 +106,10 @@ final class TrackerCollectionViewCell: UICollectionViewCell {
     override init(frame: CGRect) {
         super.init(frame: .zero)
         addSubviews()
+        configure()
         applyLayout()
     }
+
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -104,23 +117,21 @@ final class TrackerCollectionViewCell: UICollectionViewCell {
     
     @objc private func plusButtonTapped() {
         callback?()
-        plusButton.setImage(UIImage(systemName: "checkmark"), for: .normal)
-        plusButton.backgroundColor = color?.withAlphaComponent(0.3)
     }
 }
 
 //MARK: - Subviews configure + layout
 private extension TrackerCollectionViewCell {
     func addSubviews() {
-        addSubview(colorBackgroundView)
-        addSubview(emojiLabel)
-        addSubview(trackerLabel)
-        addSubview(daysCounter)
-        addSubview(plusButton)
+        contentView.addSubview(colorBackgroundView)
+        contentView.addSubview(emojiLabel)
+        contentView.addSubview(trackerLabel)
+        contentView.addSubview(daysCounter)
+        contentView.addSubview(plusButton)
     }
     
     func configure() {
-        
+
     }
     
     func applyLayout() {

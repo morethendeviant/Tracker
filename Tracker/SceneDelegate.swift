@@ -11,20 +11,21 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     
     var window: UIWindow?
     let tabBarController: UITabBarController = {
-        let controller = MainTabBarController()
+        let controller = UITabBarController()
+        
         controller.viewControllers = [TrackersViewController(), StatisticsViewController()]
         return controller
     }()
     
-    
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
-       
         guard let windowScene = (scene as? UIWindowScene) else { return }
         
         window = UIWindow(windowScene: windowScene)
-        window?.rootViewController = tabBarController
+        window?.rootViewController = //tabBarController
+                                     HabitCreationViewController(pageTitle: "Новая привычка")
         window?.makeKeyAndVisible()
     }
-    
 }
+
+
 

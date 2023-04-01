@@ -43,21 +43,29 @@ final class TrackersViewController: UIViewController {
         return datePicker
     }()
     
-    private let contentPlaceholder = ContentPlaceholder(style: .trackers)
+    private lazy var contentPlaceholder = ContentPlaceholder(style: .trackers)
 
     private lazy var trackersCollectionView: UICollectionView = {
         let collection = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
         collection.register(TrackerCollectionViewCell.self, forCellWithReuseIdentifier: TrackerCollectionViewCell.identifier)
         collection.delegate = self
         collection.dataSource = self
-        print("collection inited")
         return collection
+    }()
+    
+    private lazy var filtersButton: UIButton = {
+        let button = UIButton()
+        button.layer.cornerRadius = 16
+        button.setTitleColor(.white, for: .normal)
+        button.setTitle("Фильтры", for: .normal)
+        button.backgroundColor = .ypBlue
+        button.titleLabel?.font = .systemFont(ofSize: 17)
+        return button
     }()
     
     init() {
         super.init(nibName: nil, bundle: nil)
         tabBarItem = UITabBarItem(title: "Трекеры", image: UIImage(named: "record.circle.fill"), tag: 0)
-       
     }
     
     required init?(coder: NSCoder) {
@@ -84,7 +92,15 @@ extension TrackersViewController: UICollectionViewDataSource {
         cell.color = .ypSelection(1)
         cell.emoji = "😍"
         cell.trackerText = "Поливать растения"
-        cell.callback = { print("test") }
+        cell.callback = { [weak self] in
+            
+            
+            self?.trackersCollectionView.performBatchUpdates {
+                self?.trackersCollectionView.reloadItems(at: [indexPath])
+            }
+        }
+        
+        cell.isMarked = true
         cell.daysAmount = 115
         return cell
     }
@@ -113,6 +129,7 @@ private extension TrackersViewController {
         view.addSubview(searchTextField)
         //view.addSubview(contentPlaceholder)
         view.addSubview(trackersCollectionView)
+        view.addSubview(filtersButton)
     }
     
     func configure() {
@@ -158,7 +175,15 @@ private extension TrackersViewController {
             make.top.equalTo(searchTextField.snp.bottom).offset(10)
             make.leading.equalTo(view).offset(16)
             make.trailing.equalTo(view).offset(-16)
-            make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom)
+            //make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom)
+            make.bottom.equalTo(view)
+        }
+        
+        filtersButton.snp.makeConstraints { make in
+            make.height.equalTo(50)
+            make.leading.equalTo(view).offset(130)
+            make.trailing.equalTo(view).offset(-130)
+            make.bottom.equalTo(view.safeAreaLayoutGuide).offset(-17)
         }
     }
 }
