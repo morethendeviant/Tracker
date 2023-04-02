@@ -63,6 +63,7 @@ private extension ContentPlaceholder {
         imageView.snp.makeConstraints { make in
             make.width.height.equalTo(80)
             make.centerX.equalTo(self)
+            make.top.equalTo(self)
         }
         
         label.snp.makeConstraints { make in

@@ -7,20 +7,48 @@
 
 import UIKit
 
-final class TrackerCreationViewController: BaseViewController {
+protocol TrackerCreationCoordinatorProtocol {
+    var onHeadForHabit: (() -> Void)? { get set }
+    var onHeadForEvent: (() -> Void)? { get set }
+}
 
-    private let newHabit = BaseButton(style: .confirm, text: "Привычка")
-    private let newEvent = BaseButton(style: .disabled, text: "Нерегулярное событие")
+final class TrackerCreationViewController: BaseViewController, TrackerCreationCoordinatorProtocol {
+    var onHeadForHabit: (() -> Void)?
+    var onHeadForEvent: (() -> Void)?
+
+    private var newHabit: BaseButton = {
+        let button = BaseButton(style: .confirm, text: "Привычка")
+        button.addTarget(nil, action: #selector(headForHabit), for: .touchUpInside)
+        return button
+    }()
+    
+    private var newEvent: BaseButton = {
+        let button = BaseButton(style: .confirm, text: "Нерегулярное событие")
+        button.addTarget(nil, action: #selector(headForEvent), for: .touchUpInside)
+        return button
+    }()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         addSubviews()
         configure()
         applyLayout()
-        // Do any additional setup after loading the view.
     }
-
 }
+
+@objc private extension TrackerCreationViewController {
+    func headForHabit() {
+        onHeadForHabit?()
+    }
+    
+    func headForEvent() {
+        onHeadForEvent?()
+    }
+}
+
+
+
+
 
 //MARK: - Subviews configure + layout
 private extension TrackerCreationViewController {

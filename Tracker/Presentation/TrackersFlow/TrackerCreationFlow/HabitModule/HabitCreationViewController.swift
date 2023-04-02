@@ -7,8 +7,10 @@
 
 import UIKit
 
-final class HabitCreationViewController: BaseViewController, UITextFieldDelegate {
+final class HabitCreationViewController: BaseViewController {
 
+    private let dataSource: UITableViewDataSource
+    
     private let emojis = ["🙂", "😻", "🌺", "🐶", "❤️", "😱", "😇", "😡", "🥶", "🤔", "🙌", "🍔", "🥦", "🏓", "🥇", "🎸", "🏝️", "😪"]
     private let colors = Array(1...18).map { UIColor(named: "ypSelection\($0)") }
     
@@ -42,7 +44,7 @@ final class HabitCreationViewController: BaseViewController, UITextFieldDelegate
     private lazy var parametersTableView: UITableView = {
         let table = UITableView()
         table.delegate = self
-        table.dataSource = self
+        table.dataSource = dataSource
         table.isScrollEnabled = false
         table.separatorInset = .init(top: 0, left: 16, bottom: 0, right: 16)
         table.separatorColor = .ypGray
@@ -73,13 +75,24 @@ final class HabitCreationViewController: BaseViewController, UITextFieldDelegate
     private lazy var cancelButton = BaseButton(style: .cancel, text: "Отменить")
     private lazy var createButton = BaseButton(style: .disabled, text: "Создать")
     
+    init(pageTitle: String? = nil, dataSource: UITableViewDataSource) {
+        self.dataSource = dataSource
+        super.init(pageTitle: pageTitle)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         addSubviews()
         configure()
         applyLayout()
     }
-    
+}
+
+extension HabitCreationViewController: UITextFieldDelegate {
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.resignFirstResponder()
         return true
@@ -212,9 +225,7 @@ extension HabitCreationViewController: UICollectionViewDataSource {
     func numberOfSections(in collectionView: UICollectionView) -> Int {
         2
     }
-
 }
-
 
 //MARK: - Table View Delegate
 extension HabitCreationViewController: UITableViewDelegate {
@@ -224,33 +235,11 @@ extension HabitCreationViewController: UITableViewDelegate {
 }
 
 //MARK: - Table View Data Source
-extension HabitCreationViewController: UITableViewDataSource {
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        2
-    }
-    
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = UITableViewCell(style: .subtitle, reuseIdentifier: "Cell")
-        cell.backgroundColor = .ypBackground
-        cell.layer.cornerRadius = 16
-        cell.accessoryType = .disclosureIndicator
-        cell.textLabel?.font = .systemFont(ofSize: 17)
-        cell.selectionStyle = .none
-        switch indexPath.row {
-        case 0:
-            cell.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
-            cell.textLabel?.text = "Категория"
-        case 1:
-            cell.layer.maskedCorners = [.layerMinXMaxYCorner, .layerMaxXMaxYCorner]
-            cell.textLabel?.text = "Расписание"
-        default: break
-        }
-
-        return cell
-    }
-    
-    
-}
+//extension HabitCreationViewController: UITableViewDataSource {
+//
+//
+//
+//}
 
 
 //MARK: - Subviews configure + layout
@@ -296,7 +285,7 @@ private extension HabitCreationViewController {
         }
         
         parametersTableView.snp.makeConstraints { make in
-            make.height.equalTo(150)
+            make.height.equalTo(parametersTableView.numberOfRows(inSection: 0) * 75)
         }
         
         parametersCollectionView.snp.makeConstraints { make in

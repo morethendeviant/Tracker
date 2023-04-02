@@ -8,16 +8,26 @@
 import UIKit
 import SnapKit
 
-final class TrackersViewController: UIViewController {
+protocol TrackersViewCoordinatorProtocol {
+    var headForTrackerCreation: (() -> Void)? { get set }
+}
+
+final class TrackersViewController: UIViewController, TrackersViewCoordinatorProtocol {
+    
+    var headForTrackerCreation: (() -> Void)?
     
     private let emojis = ["🙂", "😻", "🌺", "🐶", "❤️", "😱", "😇", "😡", "🥶", "🤔", "🙌", "🍔", "🥦", "🏓", "🥇", "🎸", "🏝️", "😪"]
     private var categories: [TrackerCategory] = [ TrackerCategory(name: "Домашний уют", trackers: [Tracker(name: "test1", color: 1, emoji: 2, schedule: [.mon, .tue])]),
                                                   TrackerCategory(name: "Радостные мелочи", trackers: [Tracker(name: "test3", color: 3, emoji: 4, schedule: [.fri, .sat]),
-                                                                                                       Tracker(name: "test4", color: 4, emoji: 5, schedule: [.fri, .sat])])]
-    private var visibleCategories: [TrackerCategory] = []
+                                                                                                       Tracker(name: "test4", color: 4, emoji: 5, schedule: [.fri, .sun])])]
+    private var visibleCategories: [TrackerCategory] = [] {
+        didSet {
+            trackersCollectionView.isHidden = visibleCategories.isEmpty
+            contentPlaceholder.isHidden = !visibleCategories.isEmpty
+        }
+    }
     
     private var completedTrackers: [TrackerRecord] = []
-    
     
     private var date: String {
         datePicker.date.toString()
@@ -25,7 +35,6 @@ final class TrackersViewController: UIViewController {
     
     private var dayOfWeek: DayOfWeek {
         datePicker.date.getDayOfWeek()
-        
     }
     
     private lazy var plusButton: UIButton = {
@@ -33,6 +42,7 @@ final class TrackersViewController: UIViewController {
         let image = UIImage(systemName: "plus")
         button.setImage(image, for: .normal)
         button.tintColor = .ypBlack
+        button.addTarget(nil, action: #selector(plusButtonTapped), for: .touchUpInside)
         return button
     }()
     
@@ -47,7 +57,6 @@ final class TrackersViewController: UIViewController {
         let textField = UISearchTextField()
         textField.layer.cornerRadius = 10
         textField.placeholder = "Поиск"
-
         return textField
     }()
         
@@ -98,8 +107,15 @@ final class TrackersViewController: UIViewController {
         addSubviews()
         configure()
         applyLayout()
+        visibleCategories = getVisibleCategories()
+    }
+
+    @objc private func plusButtonTapped() {
+        headForTrackerCreation?()
     }
 }
+
+
 
 
 //MARK: - Collection Flow Layout DataSource
@@ -131,10 +147,7 @@ extension TrackersViewController: UICollectionViewDataSource {
         cell.isMarked = cellIsMarked(at: indexPath)
         cell.daysAmount = daysAmount(at: indexPath)
         return cell
-    }
-    
-    
-    
+    } 
 }
 
 //MARK: - Collection Flow Layout Delegate
@@ -170,7 +183,9 @@ extension TrackersViewController: UICollectionViewDelegateFlowLayout {
                                                   withHorizontalFittingPriority: .required,
                                                   verticalFittingPriority: .required)
     }
-    
+}
+
+extension TrackersViewController: UICollectionViewDelegate {
     func numberOfSections(in collectionView: UICollectionView) -> Int {
         visibleCategories.count
     }
@@ -217,12 +232,6 @@ extension TrackersViewController {
 }
 
 
-
-
-
-
-
-
 //MARK: - Subviews configure + layout
 private extension TrackersViewController {
     func addSubviews() {
@@ -230,7 +239,7 @@ private extension TrackersViewController {
         view.addSubview(headerLabel)
         view.addSubview(datePicker)
         view.addSubview(searchTextField)
-        //view.addSubview(contentPlaceholder)
+        view.addSubview(contentPlaceholder)
         view.addSubview(trackersCollectionView)
         view.addSubview(filtersButton)
     }
@@ -267,12 +276,7 @@ private extension TrackersViewController {
             make.height.equalTo(34)
         }
         
-//        contentPlaceholder.snp.makeConstraints { make in
-//            make.centerX.equalTo(view)
-//            make.top.equalTo(searchTextField.snp.bottom).offset(230)
-//            make.width.equalTo(view)
-//            make.height.equalTo(188)
-//        }
+        
         
         trackersCollectionView.snp.makeConstraints { make in
             make.top.equalTo(searchTextField.snp.bottom).offset(10)
@@ -287,6 +291,13 @@ private extension TrackersViewController {
             make.leading.equalTo(view).offset(130)
             make.trailing.equalTo(view).offset(-130)
             make.bottom.equalTo(view.safeAreaLayoutGuide).offset(-17)
+        }
+        
+        contentPlaceholder.snp.makeConstraints { make in
+            make.centerX.equalTo(view)
+            make.top.equalTo(searchTextField.snp.bottom).offset(230)
+            make.width.equalTo(view)
+            make.height.equalTo(188)
         }
     }
 }
