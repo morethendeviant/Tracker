@@ -6,11 +6,13 @@
 //
 
 protocol CoordinatorsFactoryProtocol {
-    func makeTrackerCoordinator(router: Routable) -> Coordinatable
-//    func makeAuthCoordinator(router: Routable) -> Coordinatable & AuthCoordinatorOutput
     func makeAppCoordinator(router: Routable) -> Coordinatable & AppCoordinatorOutput
+    func makeTrackerCoordinator(router: Routable) -> Coordinatable
+    func makeHabitCreationCoordinator(router: Routable) -> Coordinatable & HabitCreationCoordinatorOutput
+    func makeEventCreationCoordinator(router: Routable) -> Coordinatable & EventCreationCoordinatorOutput
+    func makeCategoryCoordinator(router: Routable) -> Coordinatable & CategoryCoordinatorOutput
+    
     func makeStatisticsCoordinator(router: Routable) -> Coordinatable
-//    func makeProfileCoordinator(router: Routable) -> Coordinatable & ProfileFlowCoordinatorOutput
 }
 
 final class CoordinatorFactory {
@@ -18,23 +20,28 @@ final class CoordinatorFactory {
 }
 
 extension CoordinatorFactory: CoordinatorsFactoryProtocol {
+    func makeAppCoordinator(router: Routable) -> Coordinatable & AppCoordinatorOutput {
+        AppCoordinator(coordinatorsFactory: self, router: router)
+    }
+    
     func makeTrackerCoordinator(router: Routable) -> Coordinatable {
         TrackerCoordinator(coordinatorsFactory: self, modulesFactory: modulesFactory, router: router)
     }
-//
-//    func makeAuthCoordinator(router: Routable) -> Coordinatable & AuthCoordinatorOutput {
-//        AuthCoordinator(factory: modulesFactory, router: router)
-//    }
     
-    func makeAppCoordinator(router: Routable) -> Coordinatable & AppCoordinatorOutput {
-        AppCoordinator(factory: self, router: router)
+    func makeHabitCreationCoordinator(router: Routable) -> Coordinatable & HabitCreationCoordinatorOutput {
+        HabitCreationCoordinator(coordinatorsFactory: self, modulesFactory: modulesFactory, router: router)
+    }
+    
+    func makeEventCreationCoordinator(router: Routable) -> Coordinatable & EventCreationCoordinatorOutput {
+        EventCreationCoordinator(coordinatorsFactory: self, modulesFactory: modulesFactory, router: router)
     }
     
     func makeStatisticsCoordinator(router: Routable) -> Coordinatable {
         StatisticsCoordinator(coordinatorsFactory: self, modulesFactory: modulesFactory, router: router)
     }
-//    
-//    func makeProfileCoordinator(router: Routable) -> Coordinatable & ProfileFlowCoordinatorOutput {
-//        ProfileFlowCoordinator(factory: modulesFactory, router: router)
-//    }
+    
+    func makeCategoryCoordinator(router: Routable) -> Coordinatable & CategoryCoordinatorOutput {
+        CategoryCoordinator(coordinatorsFactory: self, modulesFactory: modulesFactory, router: router)
+    }
+    
 }

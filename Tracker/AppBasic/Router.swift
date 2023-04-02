@@ -11,6 +11,7 @@ protocol Routable {
     func setRootViewController(viewController: Presentable)
     
     func present(_ module: Presentable)
+    func present(_ module: Presentable, dismissCompletion: (() -> Void)?)
     func present(_ module: Presentable, animated: Bool)
     func present(_ module: Presentable, presentationStyle: UIModalPresentationStyle)
     func present(_ module: Presentable, animated: Bool, presentationStyle: UIModalPresentationStyle)
@@ -25,11 +26,12 @@ protocol Routable {
 
 final class Router: NSObject {
     weak var delegate: RouterDelegate?
-    
+    private var completions: [UIViewController : (() -> Void)?]
     private var presentingViewController: Presentable?
     
     init(routerDelegate: RouterDelegate) {
         self.delegate = routerDelegate
+        self.completions = [:]
     }
 }
 
@@ -38,6 +40,12 @@ extension Router: Routable {
     func setRootViewController(viewController: Presentable) {
         presentingViewController = viewController
         delegate?.setRootViewController(presentingViewController)
+    }
+    
+    func present(_ module: Presentable, dismissCompletion: (() -> Void)? = nil) {
+        present(module)
+        addCompletion(dismissCompletion, for: module.toPresent())
+        
     }
     
     func present(_ module: Presentable) {
@@ -93,6 +101,21 @@ extension Router: Routable {
 
 extension Router: UIAdaptivePresentationControllerDelegate {
     func presentationControllerDidDismiss(_ presentationController: UIPresentationController) {
-        self.presentingViewController = presentationController.presentingViewController
+        presentingViewController = presentationController.presentingViewController
+        runCompletion(for: presentationController.presentedViewController)
+    }
+}
+
+private extension Router {
+    func addCompletion(_ completion: (() -> Void)?, for controller: UIViewController?) {
+        if let completion, let controller {
+             completions[controller] = completion
+           }
+    }
+    
+    func runCompletion(for controller: UIViewController) {
+        guard let completion = completions[controller] else { return }
+        completion?()
+        completions.removeValue(forKey: controller)
     }
 }

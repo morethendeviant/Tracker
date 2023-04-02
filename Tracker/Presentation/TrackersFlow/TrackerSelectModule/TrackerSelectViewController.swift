@@ -7,12 +7,12 @@
 
 import UIKit
 
-protocol TrackerCreationCoordinatorProtocol {
+protocol TrackerSelectCoordinatorProtocol {
     var onHeadForHabit: (() -> Void)? { get set }
     var onHeadForEvent: (() -> Void)? { get set }
 }
 
-final class TrackerCreationViewController: BaseViewController, TrackerCreationCoordinatorProtocol {
+final class TrackerSelectViewController: BaseViewController, TrackerSelectCoordinatorProtocol {
     var onHeadForHabit: (() -> Void)?
     var onHeadForEvent: (() -> Void)?
 
@@ -36,7 +36,7 @@ final class TrackerCreationViewController: BaseViewController, TrackerCreationCo
     }
 }
 
-@objc private extension TrackerCreationViewController {
+@objc private extension TrackerSelectViewController {
     func headForHabit() {
         onHeadForHabit?()
     }
@@ -51,7 +51,7 @@ final class TrackerCreationViewController: BaseViewController, TrackerCreationCo
 
 
 //MARK: - Subviews configure + layout
-private extension TrackerCreationViewController {
+private extension TrackerSelectViewController {
     func addSubviews() {
         view.addSubview(newHabit)
         view.addSubview(newEvent)

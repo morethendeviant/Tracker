@@ -17,8 +17,8 @@ final class AppCoordinator : BaseCoordinator, Coordinatable, AppCoordinatorOutpu
     private var factory: CoordinatorsFactoryProtocol
     private var router: Routable
     
-    init(factory: CoordinatorsFactoryProtocol, router: Routable) {
-        self.factory = factory
+    init(coordinatorsFactory: CoordinatorsFactoryProtocol, router: Routable) {
+        self.factory = coordinatorsFactory
         self.router = router
     }
     

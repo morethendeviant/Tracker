@@ -9,17 +9,17 @@ import UIKit
 import SnapKit
 
 protocol TrackersViewCoordinatorProtocol {
-    var headForTrackerCreation: (() -> Void)? { get set }
+    var headForTrackerSelect: (() -> Void)? { get set }
 }
 
 final class TrackersViewController: UIViewController, TrackersViewCoordinatorProtocol {
     
-    var headForTrackerCreation: (() -> Void)?
+    var headForTrackerSelect: (() -> Void)?
     
     private let emojis = ["🙂", "😻", "🌺", "🐶", "❤️", "😱", "😇", "😡", "🥶", "🤔", "🙌", "🍔", "🥦", "🏓", "🥇", "🎸", "🏝️", "😪"]
-    private var categories: [TrackerCategory] = [ TrackerCategory(name: "Домашний уют", trackers: [Tracker(name: "test1", color: 1, emoji: 2, schedule: [.mon, .tue])]),
+    private var categories: [TrackerCategory] = [ TrackerCategory(name: "Домашний уют", trackers: [Tracker(name: "Полить кота", color: 1, emoji: 2, schedule: [.mon, .tue])]),
                                                   TrackerCategory(name: "Радостные мелочи", trackers: [Tracker(name: "test3", color: 3, emoji: 4, schedule: [.fri, .sat]),
-                                                                                                       Tracker(name: "test4", color: 4, emoji: 5, schedule: [.fri, .sun])])]
+                                                                                                       Tracker(name: "Погладить кота", color: 4, emoji: 5, schedule: [.fri, .sun])])]
     private var visibleCategories: [TrackerCategory] = [] {
         didSet {
             trackersCollectionView.isHidden = visibleCategories.isEmpty
@@ -55,6 +55,7 @@ final class TrackersViewController: UIViewController, TrackersViewCoordinatorPro
     
     private lazy var searchTextField: UISearchTextField = {
         let textField = UISearchTextField()
+        textField.delegate = self
         textField.layer.cornerRadius = 10
         textField.placeholder = "Поиск"
         return textField
@@ -109,14 +110,27 @@ final class TrackersViewController: UIViewController, TrackersViewCoordinatorPro
         applyLayout()
         visibleCategories = getVisibleCategories()
     }
-
-    @objc private func plusButtonTapped() {
-        headForTrackerCreation?()
-    }
 }
 
 
+//MARK: - @objc
+@objc private extension TrackersViewController {
+    func plusButtonTapped() {
+        headForTrackerSelect?()
+    }
+}
 
+//MARK: - Text Field Delegate
+extension TrackersViewController: UITextFieldDelegate {
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+        return true
+    }
+    
+    func textFieldDidEndEditing(_ textField: UITextField) {
+       visibleCategories = getVisibleCategories()
+    }
+}
 
 //MARK: - Collection Flow Layout DataSource
 
@@ -225,7 +239,10 @@ extension TrackersViewController {
     
     func getVisibleCategories() -> [TrackerCategory] {
         categories.compactMap { category in
-            let trackers = category.trackers.filter { $0.schedule.contains(dayOfWeek) }
+            var trackers = category.trackers.filter { $0.schedule.contains(dayOfWeek) }
+            if let text = searchTextField.text, !text.isEmpty {
+                trackers = trackers.filter { $0.name.lowercased().contains(text.lowercased()) }
+            }
             return trackers.count > 0 ? TrackerCategory(name: category.name, trackers: trackers) : nil
         }
     }

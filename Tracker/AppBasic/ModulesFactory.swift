@@ -10,10 +10,11 @@ import Foundation
 protocol ModulesFactoryProtocol {
     func makeTrackersView() -> Presentable
     func makeStatisticsView() -> Presentable
-    func makeTrackerCreationView() -> Presentable
+    func makeTrackerSelectView() -> Presentable
     func makeScheduleView() -> Presentable
     func makeHabitCreationView() -> Presentable
     func makeEventCreationView() -> Presentable
+    func makeCategorySelectView() -> Presentable
     
 }
 
@@ -26,8 +27,8 @@ final class ModulesFactory: ModulesFactoryProtocol {
         StatisticsViewController()
     }
     
-    func makeTrackerCreationView() -> Presentable {
-        TrackerCreationViewController(pageTitle: "Создание трекера")
+    func makeTrackerSelectView() -> Presentable {
+        TrackerSelectViewController(pageTitle: "Создание трекера")
     }
     
     func makeScheduleView() -> Presentable {
@@ -43,6 +44,11 @@ final class ModulesFactory: ModulesFactoryProtocol {
         let dataSource = EventCreationDataSource()
         return HabitCreationViewController(pageTitle: "Новое нерегулярное событие", dataSource: dataSource)
     }
+    
+    func makeCategorySelectView() -> Presentable {
+        return CategorySelectViewController(pageTitle: "Категория")
+    }
+    
     
     
 }

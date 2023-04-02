@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import UIKit
 
 final class TrackerCoordinator: BaseCoordinator, Coordinatable {
     var finishFlow: (() -> Void)?
@@ -31,23 +30,35 @@ private extension TrackerCoordinator {
         let trackersView = modulesFactory.makeTrackersView()
         var coordinatorOutput = trackersView as? TrackersViewCoordinatorProtocol
         
-        coordinatorOutput!.headForTrackerCreation = { [weak self] in
+        coordinatorOutput!.headForTrackerSelect = { [weak self] in
             guard let self = self else { return }
             
-            let trackerCreationModule = self.modulesFactory.makeTrackerCreationView()
-            var creationCoordinatorOutput = trackerCreationModule as? TrackerCreationCoordinatorProtocol
+            let trackerSelectModule = self.modulesFactory.makeTrackerSelectView()
+            var creationCoordinatorOutput = trackerSelectModule as? TrackerSelectCoordinatorProtocol
             
             creationCoordinatorOutput?.onHeadForHabit = {
-                let habitView = self.modulesFactory.makeHabitCreationView()
-                self.router.present(habitView)
+                var habitCreationCoordinator = self.coordinatorsFactory.makeHabitCreationCoordinator(router: self.router)
+                
+                habitCreationCoordinator.finishFlow = { [weak habitCreationCoordinator ] in
+                    self.removeDependency(habitCreationCoordinator)
+                }
+                
+                self.addDependency(habitCreationCoordinator)
+                habitCreationCoordinator.startFlow()
             }
             
             creationCoordinatorOutput?.onHeadForEvent = {
-                let eventView = self.modulesFactory.makeEventCreationView()
-                self.router.present(eventView)
+                var eventCreationCoordinator = self.coordinatorsFactory.makeEventCreationCoordinator(router: self.router)
+                
+                eventCreationCoordinator.finishFlow = { [weak eventCreationCoordinator] in
+                    self.removeDependency(eventCreationCoordinator)
+                }
+                
+                self.addDependency(eventCreationCoordinator)
+                eventCreationCoordinator.startFlow()
             }
             
-            self.router.present(trackerCreationModule)
+            self.router.present(trackerSelectModule)
         }
 
         router.addToTabBar(trackersView)

@@ -7,8 +7,28 @@
 
 import UIKit
 
-final class HabitCreationViewController: BaseViewController {
+protocol HabitCreationCoordinatorProtocol {
+    var onCancel: (() -> Void)? { get set }
+    var onConfirm: (() -> Void)? { get set }
+    var onHeadForCategory: (() -> Void)? { get set }
+    var onHeadForSchedule: (() -> Void)? { get set }
+}
 
+protocol EventCreationCoordinatorProtocol {
+    var onCancel: (() -> Void)? { get set }
+    var onConfirm: (() -> Void)? { get set }
+    var onHeadForCategory: (() -> Void)? { get set }
+}
+
+
+final class HabitCreationViewController: BaseViewController, HabitCreationCoordinatorProtocol, EventCreationCoordinatorProtocol {
+    
+    var onCancel: (() -> Void)?
+    var onConfirm: (() -> Void)?
+    var onHeadForCategory: (() -> Void)?
+    var onHeadForSchedule: (() -> Void)?
+
+    
     private let dataSource: UITableViewDataSource
     
     private let emojis = ["🙂", "😻", "🌺", "🐶", "❤️", "😱", "😇", "😡", "🥶", "🤔", "🙌", "🍔", "🥦", "🏓", "🥇", "🎸", "🏝️", "😪"]
@@ -72,8 +92,17 @@ final class HabitCreationViewController: BaseViewController {
         return stack
     }()
     
-    private lazy var cancelButton = BaseButton(style: .cancel, text: "Отменить")
-    private lazy var createButton = BaseButton(style: .disabled, text: "Создать")
+    private lazy var cancelButton: BaseButton = {
+        let button = BaseButton(style: .cancel, text: "Отменить")
+        button.addTarget(nil, action: #selector(cancelButtonTapped), for: .touchUpInside)
+        return button
+    }()
+    
+    private lazy var createButton: BaseButton = {
+        let button = BaseButton(style: .disabled, text: "Создать")
+        button.addTarget(nil, action: #selector(confirmButtonTapped), for: .touchUpInside)
+        return button
+    }()
     
     init(pageTitle: String? = nil, dataSource: UITableViewDataSource) {
         self.dataSource = dataSource
@@ -92,6 +121,26 @@ final class HabitCreationViewController: BaseViewController {
     }
 }
 
+//MARK: - @objc
+@objc private extension HabitCreationViewController {
+    func cancelButtonTapped() {
+        onCancel?()
+    }
+    
+    func confirmButtonTapped() {
+        onConfirm?()
+    }
+    
+    func scheduleCallTapped() {
+        onHeadForSchedule?()
+    }
+    
+    func categoryCellTapped() {
+        onHeadForCategory?()
+    }
+}
+
+//MARK: - Text Field Delegate
 extension HabitCreationViewController: UITextFieldDelegate {
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.resignFirstResponder()
@@ -103,8 +152,6 @@ extension HabitCreationViewController: UITextFieldDelegate {
 extension HabitCreationViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         CGSize(width: 52, height: 52)
-        
-        
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
@@ -148,7 +195,6 @@ extension HabitCreationViewController: UICollectionViewDelegateFlowLayout {
 
         default: break
         }
-        
     }
     
     
@@ -231,6 +277,14 @@ extension HabitCreationViewController: UICollectionViewDataSource {
 extension HabitCreationViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         75
+    }
+    
+    func  tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        switch indexPath.row {
+        case 0: categoryCellTapped()
+        case 1: scheduleCallTapped()
+        default: break
+        }
     }
 }
 
