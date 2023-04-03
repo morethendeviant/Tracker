@@ -11,11 +11,10 @@ protocol ModulesFactoryProtocol {
     func makeTrackersView() -> Presentable
     func makeStatisticsView() -> Presentable
     func makeTrackerSelectView() -> Presentable
-    func makeScheduleView() -> Presentable
+    func makeScheduleView(weekdays: [DayOfWeek]) -> Presentable
     func makeHabitCreationView() -> Presentable
     func makeEventCreationView() -> Presentable
-    func makeCategorySelectView() -> Presentable
-    
+    func makeCategorySelectView(selectedCategory: Int?) -> Presentable
 }
 
 final class ModulesFactory: ModulesFactoryProtocol {
@@ -31,22 +30,22 @@ final class ModulesFactory: ModulesFactoryProtocol {
         TrackerSelectViewController(pageTitle: "Создание трекера")
     }
     
-    func makeScheduleView() -> Presentable {
-        ScheduleViewController(pageTitle: "Расписание")
+    func makeScheduleView(weekdays: [DayOfWeek]) -> Presentable {
+        ScheduleViewController(pageTitle: "Расписание", weekdays: weekdays)
     }
     
     func makeHabitCreationView() -> Presentable {
-        let dataSource = HabitCreationDataSource()
-        return HabitCreationViewController(pageTitle: "Новая привычка", dataSource: dataSource)
+        let tableModel = TrackerCreationTableModel.habit
+        return HabitCreationViewController(pageTitle: "Новая привычка", tableDataModel: tableModel)
     }
     
     func makeEventCreationView() -> Presentable {
-        let dataSource = EventCreationDataSource()
-        return HabitCreationViewController(pageTitle: "Новое нерегулярное событие", dataSource: dataSource)
+        let tableModel = TrackerCreationTableModel.event
+        return HabitCreationViewController(pageTitle: "Новая привычка", tableDataModel: tableModel)
     }
     
-    func makeCategorySelectView() -> Presentable {
-        return CategorySelectViewController(pageTitle: "Категория")
+    func makeCategorySelectView(selectedCategory: Int?) -> Presentable {
+        return CategorySelectViewController(pageTitle: "Категория", selectedCategory: selectedCategory)
     }
     
     

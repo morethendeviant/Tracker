@@ -34,17 +34,23 @@ private extension EventCreationCoordinator {
         let eventView = self.modulesFactory.makeEventCreationView()
         var eventCoordinator = eventView as? EventCreationCoordinatorProtocol
         
-        eventCoordinator?.onCancel = { [weak self] in
+        eventCoordinator?.onConfirm = { [weak self, eventView] in
             self?.router.dismissModule(eventView)
             self?.finishFlow?()
         }
         
-        eventCoordinator?.onHeadForCategory = { [weak self] in
+        eventCoordinator?.onCancel = { [weak self, eventView] in
+            self?.router.dismissModule(eventView)
+            self?.finishFlow?()
+        }
+        
+        eventCoordinator?.onHeadForCategory = { [weak self] category in
             guard let self = self else { return }
             
-            var categoryCoordinator = self.coordinatorsFactory.makeCategoryCoordinator(router: router)
+            var categoryCoordinator = self.coordinatorsFactory.makeCategoryCoordinator(router: router, selectedCategory: category)
             self.addDependency(categoryCoordinator)
-            categoryCoordinator.finishFlow = { [weak categoryCoordinator] in
+            categoryCoordinator.finishFlow = { [weak categoryCoordinator] category in
+                eventCoordinator?.selectCategory(category)
                 self.removeDependency(categoryCoordinator)
             }
             

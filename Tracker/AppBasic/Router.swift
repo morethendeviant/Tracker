@@ -10,17 +10,16 @@ import UIKit
 protocol Routable {
     func setRootViewController(viewController: Presentable)
     
-    func present(_ module: Presentable)
-    func present(_ module: Presentable, dismissCompletion: (() -> Void)?)
-    func present(_ module: Presentable, animated: Bool)
-    func present(_ module: Presentable, presentationStyle: UIModalPresentationStyle)
-    func present(_ module: Presentable, animated: Bool, presentationStyle: UIModalPresentationStyle)
-   
-    func dismissModule(_ module: Presentable)
-    func dismissModule(_ module: Presentable, completion: (() -> Void)?)
-    func dismissModule(_ module: Presentable, animated: Bool, completion: (() -> Void)?)
+    func present(_ module: Presentable?)
+    func present(_ module: Presentable?, dismissCompletion: (() -> Void)?)
+    func present(_ module: Presentable?, animated: Bool)
+    func present(_ module: Presentable?, presentationStyle: UIModalPresentationStyle)
+    func present(_ module: Presentable?, animated: Bool, presentationStyle: UIModalPresentationStyle, dismissCompletion: (() -> Void)?)
+    func dismissModule(_ module: Presentable?)
+    func dismissModule(_ module: Presentable?, completion: (() -> Void)?)
+    func dismissModule(_ module: Presentable?, animated: Bool, completion: (() -> Void)?)
          
-    func addToTabBar(_ module: Presentable)
+    func addToTabBar(_ module: Presentable?)
     //func presentAlert(_ module: Presentable, alert: AlertModel)
 }
 
@@ -42,47 +41,47 @@ extension Router: Routable {
         delegate?.setRootViewController(presentingViewController)
     }
     
-    func present(_ module: Presentable, dismissCompletion: (() -> Void)? = nil) {
-        present(module)
-        addCompletion(dismissCompletion, for: module.toPresent())
-        
+    func present(_ module: Presentable?, dismissCompletion: (() -> Void)? = nil) {
+        present(module, animated: true, presentationStyle: .automatic, dismissCompletion: dismissCompletion)
     }
     
-    func present(_ module: Presentable) {
+    func present(_ module: Presentable?) {
         present(module, animated: true, presentationStyle: .automatic)
     }
     
-    func present(_ module: Presentable, animated: Bool) {
+    func present(_ module: Presentable?, animated: Bool) {
         present(module, animated: animated, presentationStyle: .automatic)
     }
     
-    func present(_ module: Presentable, presentationStyle: UIModalPresentationStyle) {
+    func present(_ module: Presentable?, presentationStyle: UIModalPresentationStyle) {
         present(module, animated: true, presentationStyle: presentationStyle)
     }
     
-    func present(_ module: Presentable, animated: Bool, presentationStyle: UIModalPresentationStyle) {
-        guard let controller = module.toPresent() else { return }
+    func present(_ module: Presentable?, animated: Bool, presentationStyle: UIModalPresentationStyle, dismissCompletion: (() -> Void)? = nil) {
+        guard let controller = module?.toPresent() else { return }
         controller.modalPresentationStyle = presentationStyle
         controller.presentationController?.delegate = self
         presentingViewController?.toPresent()?.present(controller, animated: animated, completion: nil)
         presentingViewController = controller
+        addCompletion(dismissCompletion, for: controller)
     }
     
-    func dismissModule(_ module: Presentable) {
+    func dismissModule(_ module: Presentable?) {
         dismissModule(module, animated: true, completion: nil)
     }
     
-    func dismissModule(_ module: Presentable, completion: (() -> Void)?)  {
+    func dismissModule(_ module: Presentable?, completion: (() -> Void)?)  {
         dismissModule(module, animated: true, completion: completion)
     }
     
-    func dismissModule(_ module: Presentable, animated: Bool, completion: (() -> Void)?) {
-        self.presentingViewController = module.toPresent()?.presentingViewController
-        module.toPresent()?.dismiss(animated: animated, completion: completion)
+    func dismissModule(_ module: Presentable?, animated: Bool, completion: (() -> Void)?) {
+        guard let controller = module?.toPresent() else { return }
+        self.presentingViewController = module?.toPresent()?.presentingViewController
+        controller.dismiss(animated: animated, completion: completion)
     }
     
-    func addToTabBar(_ module: Presentable) {
-        guard let controller = module.toPresent() else { return }
+    func addToTabBar(_ module: Presentable?) {
+        guard let controller = module?.toPresent() else { return }
         guard let rootViewController = presentingViewController as? UITabBarController else { return }
         rootViewController.viewControllers?.forEach { tabBarController in
             if tabBarController !== controller { return }

@@ -35,27 +35,43 @@ private extension HabitCreationCoordinator {
         
         var habitCoordinator = habitView as? HabitCreationCoordinatorProtocol
         
-        habitCoordinator?.onCancel = { [weak self] in
+        habitCoordinator?.onConfirm = { [weak self, habitView] in //TODO: Add confirm logic
             self?.router.dismissModule(habitView)
             self?.finishFlow?()
         }
         
-        habitCoordinator?.onHeadForCategory = { [weak self] in
+        habitCoordinator?.onCancel = { [weak self, habitView] in
+            self?.router.dismissModule(habitView)
+            self?.finishFlow?()
+        }
+        
+        habitCoordinator?.onHeadForCategory = { [weak self] category in
             guard let self = self else { return }
             
-            var categoryCoordinator = self.coordinatorsFactory.makeCategoryCoordinator(router: router)
+            var categoryCoordinator = self.coordinatorsFactory.makeCategoryCoordinator(router: router, selectedCategory: category)
+            
             self.addDependency(categoryCoordinator)
-            categoryCoordinator.finishFlow = { [weak categoryCoordinator] in
+
+
+            categoryCoordinator.finishFlow = { [weak categoryCoordinator] category in
+                habitCoordinator?.selectCategory(category)
                 self.removeDependency(categoryCoordinator)
             }
-            
+
             categoryCoordinator.startFlow()
         }
         
-        habitCoordinator?.onHeadForSchedule = { [weak self] in
+        habitCoordinator?.onHeadForSchedule = { [weak self] weekdays in
             guard let self = self else { return }
             
-            let scheduleView = self.modulesFactory.makeScheduleView()
+            let scheduleView = self.modulesFactory.makeScheduleView(weekdays: weekdays)
+            var scheduleCoordinator = scheduleView as? ScheduleViewCoordinatorProtocol
+            
+            scheduleCoordinator?.onFinish = { [weak scheduleView] selectedWeekdays in
+                habitCoordinator?.returnWithWeekdays(selectedWeekdays)
+                self.router.dismissModule(scheduleView)
+            }
+            
             self.router.present(scheduleView)
         }
         

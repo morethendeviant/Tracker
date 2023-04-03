@@ -10,33 +10,39 @@ import UIKit
 protocol HabitCreationCoordinatorProtocol {
     var onCancel: (() -> Void)? { get set }
     var onConfirm: (() -> Void)? { get set }
-    var onHeadForCategory: (() -> Void)? { get set }
-    var onHeadForSchedule: (() -> Void)? { get set }
+    var onHeadForCategory: ((Int?) -> Void)? { get set }
+    var onHeadForSchedule: (([DayOfWeek]) -> Void)? { get set }
+    
+    func selectCategory(_ category: Int?)
+    func returnWithWeekdays(_ days: [DayOfWeek])
 }
 
 protocol EventCreationCoordinatorProtocol {
     var onCancel: (() -> Void)? { get set }
     var onConfirm: (() -> Void)? { get set }
-    var onHeadForCategory: (() -> Void)? { get set }
+    var onHeadForCategory: ((Int?) -> Void)? { get set }
+    
+    func selectCategory(_ category: Int?)
 }
 
 
-final class HabitCreationViewController: BaseViewController, HabitCreationCoordinatorProtocol, EventCreationCoordinatorProtocol {
+final class HabitCreationViewController: BaseViewController, EventCreationCoordinatorProtocol {
     
     var onCancel: (() -> Void)?
     var onConfirm: (() -> Void)?
-    var onHeadForCategory: (() -> Void)?
-    var onHeadForSchedule: (() -> Void)?
+    var onHeadForCategory: ((Int?) -> Void)?
+    var onHeadForSchedule: (([DayOfWeek]) -> Void)?
 
     
-    private let dataSource: UITableViewDataSource
-    
-    private let emojis = ["🙂", "😻", "🌺", "🐶", "❤️", "😱", "😇", "😡", "🥶", "🤔", "🙌", "🍔", "🥦", "🏓", "🥇", "🎸", "🏝️", "😪"]
-    private let colors = Array(1...18).map { UIColor(named: "ypSelection\($0)") }
+    private var tableContent: [CellContent]
     
     private var emojiSelectedItem: Int?
     private var colorSelectedItem: Int?
     private var selectedItem: IndexPath?
+    private var selectedCategory: Int?
+    private var categories = CategoryContainer.shared
+    
+    private var weekdays: [DayOfWeek] = []
     
     private lazy var mainScrollView: UIScrollView = {
         let scroll = UIScrollView()
@@ -64,7 +70,7 @@ final class HabitCreationViewController: BaseViewController, HabitCreationCoordi
     private lazy var parametersTableView: UITableView = {
         let table = UITableView()
         table.delegate = self
-        table.dataSource = dataSource
+        table.dataSource = self
         table.isScrollEnabled = false
         table.separatorInset = .init(top: 0, left: 16, bottom: 0, right: 16)
         table.separatorColor = .ypGray
@@ -104,8 +110,8 @@ final class HabitCreationViewController: BaseViewController, HabitCreationCoordi
         return button
     }()
     
-    init(pageTitle: String? = nil, dataSource: UITableViewDataSource) {
-        self.dataSource = dataSource
+    init(pageTitle: String? = nil, tableDataModel: TrackerCreationTableModel) {
+        self.tableContent = tableDataModel.defaultTableContent()
         super.init(pageTitle: pageTitle)
     }
     
@@ -132,11 +138,30 @@ final class HabitCreationViewController: BaseViewController, HabitCreationCoordi
     }
     
     func scheduleCallTapped() {
-        onHeadForSchedule?()
+        onHeadForSchedule?(weekdays)
     }
     
     func categoryCellTapped() {
-        onHeadForCategory?()
+        onHeadForCategory?(selectedCategory)
+    }
+}
+
+//MARK: - Habit Creation Coordinator
+extension HabitCreationViewController: HabitCreationCoordinatorProtocol {
+    func selectCategory(_ categoryIndex: Int?) {
+        selectedCategory = categoryIndex
+        
+        if let categoryIndex {
+            tableContent[0] = CellContent(text: tableContent[0].text, detailText: categories.items[categoryIndex])
+            parametersTableView.reloadData()
+        }
+    }
+    
+    func returnWithWeekdays(_ days: [DayOfWeek]) {
+        weekdays = days
+        let weekdaysText = DayOfWeek.shortNamesFor(days)
+        tableContent[1] = CellContent(text: tableContent[1].text, detailText: weekdaysText)
+        parametersTableView.reloadData()
     }
 }
 
@@ -244,32 +269,66 @@ extension HabitCreationViewController: UICollectionViewDelegateFlowLayout {
 extension HabitCreationViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         switch section {
-        case 0: return emojis.count
-        case 1: return colors.count
+        case 0: return Emojis.count
+        case 1: return Colors.count
         default: return 0
         }
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        
         switch indexPath.section {
         case 0: if let cell = collectionView.dequeueReusableCell(withReuseIdentifier: EmojiCollectionViewCell.identifier, for: indexPath) as? EmojiCollectionViewCell {
-            cell.emoji = emojis[indexPath.item]
+            cell.emoji = Emojis[indexPath.item]
             return cell
         }
+            
         case 1: if let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ColorCollectionViewCell.identifier, for: indexPath) as? ColorCollectionViewCell {
-            cell.color = colors[indexPath.item]
+            if let colorName = Colors[indexPath.item] {
+                cell.color = UIColor(named: colorName)
+            }
+            
             return cell
         }
+            
         default: break
         }
-
+        
         fatalError("Cell not found")
         
     }
 
     func numberOfSections(in collectionView: UICollectionView) -> Int {
         2
+    }
+}
+
+//MARK: - Table View Data Source
+extension HabitCreationViewController: UITableViewDataSource {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        tableContent.count
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = UITableViewCell(style: .subtitle, reuseIdentifier: "Cell")
+        cell.backgroundColor = .ypBackground
+        cell.layer.cornerRadius = 16
+        cell.accessoryType = .disclosureIndicator
+        cell.textLabel?.font = .systemFont(ofSize: 17)
+        cell.detailTextLabel?.font = .systemFont(ofSize: 17)
+        cell.selectionStyle = .none
+        
+        cell.textLabel?.textColor = .ypBlack
+        cell.textLabel?.text = tableContent[indexPath.row].text
+        cell.detailTextLabel?.textColor = .ypGray
+        cell.detailTextLabel?.text = tableContent[indexPath.row].detailText
+
+        switch indexPath.row {
+        case 0: cell.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
+        case tableContent.count - 1: cell.layer.maskedCorners = [.layerMinXMaxYCorner, .layerMaxXMaxYCorner]
+        default: cell.layer.maskedCorners = []
+        }
+        
+        return cell
     }
 }
 
@@ -287,14 +346,6 @@ extension HabitCreationViewController: UITableViewDelegate {
         }
     }
 }
-
-//MARK: - Table View Data Source
-//extension HabitCreationViewController: UITableViewDataSource {
-//
-//
-//
-//}
-
 
 //MARK: - Subviews configure + layout
 private extension HabitCreationViewController {

@@ -22,20 +22,23 @@ class BaseButton: UIButton {
     }
 }
 
-private extension BaseButton {
+extension BaseButton {
     func setUpAppearance(for style: Style) {
         switch style {
         case .confirm:
             backgroundColor = .ypBlack
             setTitleColor(.ypWhite, for: .normal)
+            isEnabled = true
         case .disabled:
             backgroundColor = .ypGray
             setTitleColor(.ypWhite, for: .normal)
+            isEnabled = false
         case .cancel:
             backgroundColor = .ypWhite
             setTitleColor(.ypRed, for: .normal)
             layer.borderWidth = 1
             layer.borderColor = UIColor.ypRed?.cgColor
+            isEnabled = true
         }
     }
 }

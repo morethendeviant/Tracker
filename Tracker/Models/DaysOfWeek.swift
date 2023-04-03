@@ -32,8 +32,12 @@ extension DayOfWeek {
         return days[dayNumber]
     }
     
-    static func shortNameFor( _ day: Self) -> String? {
+    static func shortNameFor(_ day: Self) -> String? {
         shortNameFor(day.rawValue)
+    }
+    
+    static func shortNamesFor(_ days: [Self]) -> String? {
+        days.count == 7 ? "Каждый день" : days.compactMap { shortNameFor($0) }.joined(separator: ", ")
     }
     
     static var count: Int {

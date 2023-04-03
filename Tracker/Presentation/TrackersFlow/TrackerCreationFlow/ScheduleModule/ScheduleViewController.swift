@@ -7,9 +7,14 @@
 
 import UIKit
 
-class ScheduleViewController: BaseViewController {
+protocol ScheduleViewCoordinatorProtocol {
+    var onFinish: (([DayOfWeek]) -> Void)? { get set }
+}
+
+class ScheduleViewController: BaseViewController, ScheduleViewCoordinatorProtocol {
+    var onFinish: (([DayOfWeek]) -> Void)?
     
-    private var selectedDays: Set<DayOfWeek> = []
+    private var selectedDays: [DayOfWeek] = []
     
     private lazy var daysOfWeekTableView: UITableView = {
         let table = UITableView()
@@ -21,8 +26,21 @@ class ScheduleViewController: BaseViewController {
         return table
     }()
     
-    private lazy var doneButton = BaseButton(style: .confirm, text: "Готово")
+    private lazy var doneButton: BaseButton = {
+        let button = BaseButton(style: .confirm, text: "Готово")
+        button.addTarget(nil, action: #selector(doneButtonTapped), for: .touchUpInside)
+        return button
+    }()
  
+    init(pageTitle: String?, weekdays: [DayOfWeek]) {
+        selectedDays = weekdays
+        super.init(pageTitle: pageTitle)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         addSubviews()
@@ -30,12 +48,21 @@ class ScheduleViewController: BaseViewController {
         applyLayout()
     }
     
-    @objc func toggleSwitch(sender: UISwitch) {
+}
+
+//MARK: - @objs
+
+@objc private extension ScheduleViewController {
+    func doneButtonTapped() {
+        onFinish?(selectedDays)
+    }
+    
+    func toggleSwitch(sender: UISwitch) {
         let day = DayOfWeek.dayFromNumber(sender.tag)
         if sender.isOn {
-            selectedDays.insert(day)
+            selectedDays.append(day)
         } else {
-            selectedDays.remove(day)
+            selectedDays.removeAll(where: { $0 == day })
         }
     }
 }
@@ -58,6 +85,7 @@ extension ScheduleViewController: UITableViewDataSource {
         daySwitch.tag = indexPath.row
         daySwitch.addTarget(self, action: #selector(toggleSwitch), for: .valueChanged)
         daySwitch.onTintColor = .ypBlue
+        daySwitch.isOn = selectedDays.map { $0.rawValue }.contains(indexPath.row)
         
         let cell = UITableViewCell(style: .default, reuseIdentifier: "Cell")
         cell.backgroundColor = .ypBackground
@@ -73,7 +101,6 @@ extension ScheduleViewController: UITableViewDataSource {
         }
         
         cell.textLabel?.text = DayOfWeek.fullNameFor(indexPath.row)
-        
         return cell
     }
 }

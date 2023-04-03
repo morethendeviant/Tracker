@@ -16,7 +16,6 @@ final class TrackersViewController: UIViewController, TrackersViewCoordinatorPro
     
     var headForTrackerSelect: (() -> Void)?
     
-    private let emojis = ["🙂", "😻", "🌺", "🐶", "❤️", "😱", "😇", "😡", "🥶", "🤔", "🙌", "🍔", "🥦", "🏓", "🥇", "🎸", "🏝️", "😪"]
     private var categories: [TrackerCategory] = [ TrackerCategory(name: "Домашний уют", trackers: [Tracker(name: "Полить кота", color: 1, emoji: 2, schedule: [.mon, .tue])]),
                                                   TrackerCategory(name: "Радостные мелочи", trackers: [Tracker(name: "test3", color: 3, emoji: 4, schedule: [.fri, .sat]),
                                                                                                        Tracker(name: "Погладить кота", color: 4, emoji: 5, schedule: [.fri, .sun])])]
@@ -146,13 +145,12 @@ extension TrackersViewController: UICollectionViewDataSource {
         let tracker = visibleCategories[indexPath.section].trackers[indexPath.item]
         
         cell.color = .ypSelection(tracker.color)
-        cell.emoji = emojis[tracker.color]
+        cell.emoji = Emojis[tracker.color]
         cell.trackerText = tracker.name
         cell.callback = { [weak self] in
-            guard let self else { return }
+            guard let self, date <= Date().toString() else { return }
             
             self.cellIsMarked(at: indexPath) ? self.removeRecord(at: indexPath) : self.addRecord(at: indexPath)
-            
             self.trackersCollectionView.performBatchUpdates {
                 self.trackersCollectionView.reloadItems(at: [indexPath])
             }
