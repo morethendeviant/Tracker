@@ -45,8 +45,6 @@
 		78AA53C029D862890063EB84 /* DaysOfWeek.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78AA53BF29D862890063EB84 /* DaysOfWeek.swift */; };
 		78AA53C529D894800063EB84 /* ModulesFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78AA53C429D894800063EB84 /* ModulesFactory.swift */; };
 		78AA53C729D894980063EB84 /* UIViewController + Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78AA53C629D894980063EB84 /* UIViewController + Ext.swift */; };
-		78AA53CA29D897F10063EB84 /* HabitCreationDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78AA53C929D897F10063EB84 /* HabitCreationDataSource.swift */; };
-		78AA53CC29D898010063EB84 /* EventCreationDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78AA53CB29D898010063EB84 /* EventCreationDataSource.swift */; };
 		78AA53CE29D8A11B0063EB84 /* Router.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78AA53CD29D8A11B0063EB84 /* Router.swift */; };
 		78AA53D029D8A2100063EB84 /* BaseCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78AA53CF29D8A2100063EB84 /* BaseCoordinator.swift */; };
 		78AA53D229D8A2340063EB84 /* CoordinatorFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78AA53D129D8A2340063EB84 /* CoordinatorFactory.swift */; };
@@ -95,8 +93,6 @@
 		78AA53BF29D862890063EB84 /* DaysOfWeek.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DaysOfWeek.swift; sourceTree = "<group>"; };
 		78AA53C429D894800063EB84 /* ModulesFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModulesFactory.swift; sourceTree = "<group>"; };
 		78AA53C629D894980063EB84 /* UIViewController + Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController + Ext.swift"; sourceTree = "<group>"; };
-		78AA53C929D897F10063EB84 /* HabitCreationDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HabitCreationDataSource.swift; sourceTree = "<group>"; };
-		78AA53CB29D898010063EB84 /* EventCreationDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventCreationDataSource.swift; sourceTree = "<group>"; };
 		78AA53CD29D8A11B0063EB84 /* Router.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Router.swift; sourceTree = "<group>"; };
 		78AA53CF29D8A2100063EB84 /* BaseCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseCoordinator.swift; sourceTree = "<group>"; };
 		78AA53D129D8A2340063EB84 /* CoordinatorFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoordinatorFactory.swift; sourceTree = "<group>"; };
@@ -266,7 +262,6 @@
 		78AA53A329D611600063EB84 /* HabitCreation */ = {
 			isa = PBXGroup;
 			children = (
-				78AA53C829D897C80063EB84 /* DataSources */,
 				78AA53AB29D75F9D0063EB84 /* SupplementaryViews */,
 				78AA53A429D611700063EB84 /* CollectionCells */,
 			);
@@ -350,15 +345,6 @@
 				780BF38A29D0EA6F00A3CFA0 /* SceneDelegate.swift */,
 			);
 			path = App;
-			sourceTree = "<group>";
-		};
-		78AA53C829D897C80063EB84 /* DataSources */ = {
-			isa = PBXGroup;
-			children = (
-				78AA53C929D897F10063EB84 /* HabitCreationDataSource.swift */,
-				78AA53CB29D898010063EB84 /* EventCreationDataSource.swift */,
-			);
-			path = DataSources;
 			sourceTree = "<group>";
 		};
 		78AA53D729D8A6820063EB84 /* TrackerSelectModule */ = {
@@ -470,7 +456,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				78AA53CA29D897F10063EB84 /* HabitCreationDataSource.swift in Sources */,
 				780BF38D29D0EA6F00A3CFA0 /* TrackersViewController.swift in Sources */,
 				78AA53AD29D75FC10063EB84 /* HabitCollectionHeaderView.swift in Sources */,
 				78AA53B329D80A9E0063EB84 /* Tracker.swift in Sources */,
@@ -508,7 +493,6 @@
 				78A706D429D9D9EE00932908 /* CategorySelectViewController.swift in Sources */,
 				78AA53B729D80B120063EB84 /* TrackerRecord.swift in Sources */,
 				78AA53A829D735FE0063EB84 /* BaseTextField.swift in Sources */,
-				78AA53CC29D898010063EB84 /* EventCreationDataSource.swift in Sources */,
 				78A706CD29D9889C00932908 /* HabitCreationCoordinator.swift in Sources */,
 				78AA53C029D862890063EB84 /* DaysOfWeek.swift in Sources */,
 				78AA539F29D5FBD30063EB84 /* TrackerSelectViewController.swift in Sources */,
