@@ -21,10 +21,10 @@
 		78A706DA29DA0A5800932908 /* Colors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78A706D929DA0A5800932908 /* Colors.swift */; };
 		78A706DC29DB2AC100932908 /* TrackerCreationTableModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78A706DB29DB2AC100932908 /* TrackerCreationTableModel.swift */; };
 		78A706DE29DB47C300932908 /* CategoryContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78A706DD29DB47C300932908 /* CategoryContainer.swift */; };
+		78A706E029DC829700932908 /* TrackersContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78A706DF29DC829700932908 /* TrackersContainer.swift */; };
 		78AA538829D1FC0E0063EB84 /* MainTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78AA538729D1FC0E0063EB84 /* MainTabBarController.swift */; };
 		78AA538A29D1FD320063EB84 /* UIColor + Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78AA538929D1FD320063EB84 /* UIColor + Ext.swift */; };
 		78AA538E29D2028D0063EB84 /* StatisticsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78AA538D29D2028D0063EB84 /* StatisticsViewController.swift */; };
-		78AA539329D205F50063EB84 /* StubView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78AA539229D205F50063EB84 /* StubView.swift */; };
 		78AA539529D353770063EB84 /* BaseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78AA539429D353760063EB84 /* BaseViewController.swift */; };
 		78AA539729D353990063EB84 /* BaseButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78AA539629D353990063EB84 /* BaseButton.swift */; };
 		78AA539929D3579B0063EB84 /* ContentPlaceholder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78AA539829D3579B0063EB84 /* ContentPlaceholder.swift */; };
@@ -33,7 +33,6 @@
 		78AA53A229D6100A0063EB84 /* HabitCreationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78AA53A129D6100A0063EB84 /* HabitCreationViewController.swift */; };
 		78AA53A629D611C50063EB84 /* EmojiCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78AA53A529D611C50063EB84 /* EmojiCollectionViewCell.swift */; };
 		78AA53A829D735FE0063EB84 /* BaseTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78AA53A729D735FE0063EB84 /* BaseTextField.swift */; };
-		78AA53AA29D739FC0063EB84 /* UIView + Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78AA53A929D739FC0063EB84 /* UIView + Ext.swift */; };
 		78AA53AD29D75FC10063EB84 /* HabitCollectionHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78AA53AC29D75FC10063EB84 /* HabitCollectionHeaderView.swift */; };
 		78AA53AF29D768E60063EB84 /* ColorCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78AA53AE29D768E60063EB84 /* ColorCollectionViewCell.swift */; };
 		78AA53B329D80A9E0063EB84 /* Tracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78AA53B229D80A9E0063EB84 /* Tracker.swift */; };
@@ -69,10 +68,10 @@
 		78A706D929DA0A5800932908 /* Colors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Colors.swift; sourceTree = "<group>"; };
 		78A706DB29DB2AC100932908 /* TrackerCreationTableModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackerCreationTableModel.swift; sourceTree = "<group>"; };
 		78A706DD29DB47C300932908 /* CategoryContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryContainer.swift; sourceTree = "<group>"; };
+		78A706DF29DC829700932908 /* TrackersContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackersContainer.swift; sourceTree = "<group>"; };
 		78AA538729D1FC0E0063EB84 /* MainTabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabBarController.swift; sourceTree = "<group>"; };
 		78AA538929D1FD320063EB84 /* UIColor + Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor + Ext.swift"; sourceTree = "<group>"; };
 		78AA538D29D2028D0063EB84 /* StatisticsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatisticsViewController.swift; sourceTree = "<group>"; };
-		78AA539229D205F50063EB84 /* StubView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StubView.swift; sourceTree = "<group>"; };
 		78AA539429D353760063EB84 /* BaseViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseViewController.swift; sourceTree = "<group>"; };
 		78AA539629D353990063EB84 /* BaseButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseButton.swift; sourceTree = "<group>"; };
 		78AA539829D3579B0063EB84 /* ContentPlaceholder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentPlaceholder.swift; sourceTree = "<group>"; };
@@ -81,7 +80,6 @@
 		78AA53A129D6100A0063EB84 /* HabitCreationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HabitCreationViewController.swift; sourceTree = "<group>"; };
 		78AA53A529D611C50063EB84 /* EmojiCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmojiCollectionViewCell.swift; sourceTree = "<group>"; };
 		78AA53A729D735FE0063EB84 /* BaseTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseTextField.swift; sourceTree = "<group>"; };
-		78AA53A929D739FC0063EB84 /* UIView + Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView + Ext.swift"; sourceTree = "<group>"; };
 		78AA53AC29D75FC10063EB84 /* HabitCollectionHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HabitCollectionHeaderView.swift; sourceTree = "<group>"; };
 		78AA53AE29D768E60063EB84 /* ColorCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorCollectionViewCell.swift; sourceTree = "<group>"; };
 		78AA53B229D80A9E0063EB84 /* Tracker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tracker.swift; sourceTree = "<group>"; };
@@ -191,8 +189,6 @@
 			isa = PBXGroup;
 			children = (
 				78AA538929D1FD320063EB84 /* UIColor + Ext.swift */,
-				78AA539229D205F50063EB84 /* StubView.swift */,
-				78AA53A929D739FC0063EB84 /* UIView + Ext.swift */,
 				78AA53C629D894980063EB84 /* UIViewController + Ext.swift */,
 			);
 			path = UI;
@@ -201,6 +197,8 @@
 		78AA538F29D202F30063EB84 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				78A706DD29DB47C300932908 /* CategoryContainer.swift */,
+				78A706DF29DC829700932908 /* TrackersContainer.swift */,
 				780BF39329D0EA7100A3CFA0 /* LaunchScreen.storyboard */,
 				780BF39129D0EA7100A3CFA0 /* Assets.xcassets */,
 			);
@@ -293,7 +291,6 @@
 				78A706D729DA082C00932908 /* EmojiModel.swift */,
 				78A706D929DA0A5800932908 /* Colors.swift */,
 				78A706DB29DB2AC100932908 /* TrackerCreationTableModel.swift */,
-				78A706DD29DB47C300932908 /* CategoryContainer.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -463,7 +460,6 @@
 				78AA53D429D8A3730063EB84 /* AppCoordinator.swift in Sources */,
 				780BF38929D0EA6F00A3CFA0 /* AppDelegate.swift in Sources */,
 				78A706DE29DB47C300932908 /* CategoryContainer.swift in Sources */,
-				78AA53AA29D739FC0063EB84 /* UIView + Ext.swift in Sources */,
 				78A706D829DA082C00932908 /* EmojiModel.swift in Sources */,
 				78AA538A29D1FD320063EB84 /* UIColor + Ext.swift in Sources */,
 				78AA53C729D894980063EB84 /* UIViewController + Ext.swift in Sources */,
@@ -474,6 +470,7 @@
 				78AA53A229D6100A0063EB84 /* HabitCreationViewController.swift in Sources */,
 				78AA53BA29D814740063EB84 /* TrackersCollectionHeaderView.swift in Sources */,
 				78AA53A629D611C50063EB84 /* EmojiCollectionViewCell.swift in Sources */,
+				78A706E029DC829700932908 /* TrackersContainer.swift in Sources */,
 				78AA53D229D8A2340063EB84 /* CoordinatorFactory.swift in Sources */,
 				78AA539C29D361660063EB84 /* TrackerCollectionViewCell.swift in Sources */,
 				78AA538829D1FC0E0063EB84 /* MainTabBarController.swift in Sources */,
@@ -485,7 +482,6 @@
 				78AA53D629D8A56B0063EB84 /* StatisticsFlowCoordinator.swift in Sources */,
 				78A706D629D9DACE00932908 /* CategoryCoordinator.swift in Sources */,
 				78AA539929D3579B0063EB84 /* ContentPlaceholder.swift in Sources */,
-				78AA539329D205F50063EB84 /* StubView.swift in Sources */,
 				78AA53CE29D8A11B0063EB84 /* Router.swift in Sources */,
 				78AA53C529D894800063EB84 /* ModulesFactory.swift in Sources */,
 				78A706CF29D98B7900932908 /* EventCreationCoordinator.swift in Sources */,

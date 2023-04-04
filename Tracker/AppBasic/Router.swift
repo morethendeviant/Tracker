@@ -18,9 +18,8 @@ protocol Routable {
     func dismissModule(_ module: Presentable?)
     func dismissModule(_ module: Presentable?, completion: (() -> Void)?)
     func dismissModule(_ module: Presentable?, animated: Bool, completion: (() -> Void)?)
-         
+    
     func addToTabBar(_ module: Presentable?)
-    //func presentAlert(_ module: Presentable, alert: AlertModel)
 }
 
 final class Router: NSObject {
@@ -35,7 +34,6 @@ final class Router: NSObject {
 }
 
 extension Router: Routable {
-    
     func setRootViewController(viewController: Presentable) {
         presentingViewController = viewController
         delegate?.setRootViewController(presentingViewController)
@@ -90,11 +88,6 @@ extension Router: Routable {
         viewControllers.append(controller)
         rootViewController.setViewControllers(viewControllers, animated: false)
     }
-    
-//    func presentAlert(_ module: Presentable, alert: AlertModel) {
-//        let controller = module.toPresent() as? AlertPresentable
-//        controller?.presentAlertWith(alert)
-//    }
 }
 
 
@@ -108,8 +101,8 @@ extension Router: UIAdaptivePresentationControllerDelegate {
 private extension Router {
     func addCompletion(_ completion: (() -> Void)?, for controller: UIViewController?) {
         if let completion, let controller {
-             completions[controller] = completion
-           }
+            completions[controller] = completion
+        }
     }
     
     func runCompletion(for controller: UIViewController) {

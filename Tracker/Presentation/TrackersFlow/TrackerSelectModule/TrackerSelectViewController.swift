@@ -31,10 +31,11 @@ final class TrackerSelectViewController: BaseViewController, TrackerSelectCoordi
     override func viewDidLoad() {
         super.viewDidLoad()
         addSubviews()
-        configure()
         applyLayout()
     }
 }
+
+//MARK: - @objc
 
 @objc private extension TrackerSelectViewController {
     func headForHabit() {
@@ -46,21 +47,14 @@ final class TrackerSelectViewController: BaseViewController, TrackerSelectCoordi
     }
 }
 
-
-
-
-
 //MARK: - Subviews configure + layout
+
 private extension TrackerSelectViewController {
     func addSubviews() {
         view.addSubview(newHabit)
         view.addSubview(newEvent)
     }
-    
-    func configure() {
-        
-    }
-    
+
     func applyLayout() {
         newHabit.snp.makeConstraints { make in
             make.centerX.equalTo(view)

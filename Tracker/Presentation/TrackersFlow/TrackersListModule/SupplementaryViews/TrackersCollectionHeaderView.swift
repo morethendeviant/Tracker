@@ -9,7 +9,7 @@ import UIKit
 
 final class TrackersCollectionHeaderView: UICollectionReusableView {
     
-    static let identifier = "CathegoriesHeader"
+    static let identifier = "CategoriesHeader"
     
     var titleLabel: UILabel = {
         let label = UILabel()
@@ -21,7 +21,6 @@ final class TrackersCollectionHeaderView: UICollectionReusableView {
     override init(frame: CGRect) {
         super.init(frame: frame)
         addSubviews()
-        configure()
         applyLayout()
     }
     
@@ -32,15 +31,12 @@ final class TrackersCollectionHeaderView: UICollectionReusableView {
 }
 
 //MARK: - Subviews configure + layout
+
 private extension TrackersCollectionHeaderView {
     func addSubviews() {
         addSubview(titleLabel)
     }
-    
-    func configure() {
-        
-    }
-    
+
     func applyLayout() {
         titleLabel.snp.makeConstraints { make in
             make.bottom.equalTo(self).offset(-12)

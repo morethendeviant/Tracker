@@ -10,6 +10,7 @@ protocol Coordinatable: AnyObject {
 }
 
 class BaseCoordinator {
+    
     var childCoordinators: [Coordinatable] = []
   
     func addDependency(_ coordinator: Coordinatable) {

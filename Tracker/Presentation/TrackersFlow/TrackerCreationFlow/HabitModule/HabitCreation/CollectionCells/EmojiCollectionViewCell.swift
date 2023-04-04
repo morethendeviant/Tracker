@@ -8,10 +8,9 @@
 import UIKit
 
 final class EmojiCollectionViewCell: UICollectionViewCell {
+
     static let identifier = "EmojiCell"
-    
-    
-    
+
     var emoji: String? {
         didSet {
             emojiLabel.text = emoji
@@ -23,20 +22,13 @@ final class EmojiCollectionViewCell: UICollectionViewCell {
             cellIsSelected ? (backgroundColor = .ypLightGray) : (backgroundColor = .clear)
         }
     }
-    
-//    override var isSelected: Bool {
-//        didSet {
-//            isSelected ? (backgroundColor = .ypLightGray) : (backgroundColor = .clear)
-//        }
-//    }
-    
+
     private lazy var emojiLabel: UILabel = {
         let label = UILabel()
         label.textAlignment = .center
         label.font = .systemFont(ofSize: 32)
         return label
     }()
-    
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -52,10 +44,10 @@ final class EmojiCollectionViewCell: UICollectionViewCell {
 }
 
 //MARK: - Subviews configure + layout
+
 private extension EmojiCollectionViewCell {
     func addSubviews() {
         addSubview(emojiLabel)
-        
     }
     
     func configure() {

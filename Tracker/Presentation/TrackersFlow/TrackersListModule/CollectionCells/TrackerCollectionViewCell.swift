@@ -10,9 +10,10 @@ import UIKit
 final class TrackerCollectionViewCell: UICollectionViewCell {
     static let identifier = "TrackerCell"
     
-    var color: UIColor? {
+    var color: String? {
         didSet {
-            colorBackgroundView.backgroundColor = color
+            guard let color else { return }
+            colorBackgroundView.backgroundColor = UIColor(named: color)
         }
     }
     
@@ -49,10 +50,12 @@ final class TrackerCollectionViewCell: UICollectionViewCell {
         didSet {
             if isMarked {
                 plusButton.setImage(UIImage(systemName: "checkmark"), for: .normal)
-                plusButton.backgroundColor = color?.withAlphaComponent(0.3)
+                guard let color else { return }
+                plusButton.backgroundColor = (UIColor(named: color) ?? .white).withAlphaComponent(0.3)
             } else {
                 plusButton.setImage(UIImage(systemName: "plus"), for: .normal)
-                plusButton.backgroundColor = color
+                guard let color else { return }
+                plusButton.backgroundColor = UIColor(named: color)
             }
         }
     }

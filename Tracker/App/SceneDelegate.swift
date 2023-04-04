@@ -12,6 +12,7 @@ protocol RouterDelegate: AnyObject {
 }
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
+    
     var window: UIWindow?
     
     private let coordinatorFactory: CoordinatorsFactoryProtocol = CoordinatorFactory()

@@ -8,13 +8,12 @@
 import UIKit
 
 final class ColorCollectionViewCell: UICollectionViewCell {
+    
     static let identifier = "ColorCell"
     
     private let mainLayer: CALayer = {
         let layer = CALayer()
-        
         layer.cornerRadius = 8
-        
         return layer
     }()
     
@@ -31,7 +30,6 @@ final class ColorCollectionViewCell: UICollectionViewCell {
     
     var color: UIColor? {
         didSet {
-            //backgroundColor = color
             mainLayer.backgroundColor = color?.cgColor
         }
     }
@@ -41,14 +39,7 @@ final class ColorCollectionViewCell: UICollectionViewCell {
             cellIsSelected ? (borderLayer.borderColor = UIColor.ypLightGray?.cgColor) : (borderLayer.borderColor = UIColor.clear.cgColor)
         }
     }
-    
-//    override var isSelected: Bool {
-//        didSet {
-//            isSelected ? (borderLayer.borderColor = UIColor.ypLightGray?.cgColor) : (borderLayer.borderColor = UIColor.clear.cgColor)
-//
-//        }
-//    }
-    
+
     private lazy var colorLabel: UIView = {
         let label = UIView()
         
@@ -59,14 +50,12 @@ final class ColorCollectionViewCell: UICollectionViewCell {
     override init(frame: CGRect) {
         super.init(frame: frame)
         addSubviews()
-        configure()
         applyLayout()
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-        
 }
 
 //MARK: - Subviews configure + layout
@@ -76,20 +65,8 @@ private extension ColorCollectionViewCell {
         layer.addSublayer(mainLayer)
     }
     
-    func configure() {
-        
-//        layer.borderColor = UIColor.ypWhite?.cgColor
-//        layer.borderWidth = 6
-//        layer.cornerRadius = 1
-        
-//        layer.cornerRadius = 8
-//        layer.borderWidth = 3
-//        layer.borderColor = UIColor.clear.cgColor
-    }
-    
     func applyLayout() {
         mainLayer.frame = CGRect(x: 6, y: 6, width: bounds.size.width - 12, height: bounds.size.height - 12)
         borderLayer.frame = bounds
-        
     }
 }

@@ -11,18 +11,20 @@ protocol Presentable: AnyObject {
     func toPresent() -> UIViewController?
 }
 
-//protocol UserDismissable: UIAdaptivePresentationControllerDelegate where Self: UIViewController {
-//    func setUserDismissDelegate()
-//}
-
 extension UIViewController: Presentable {
     func toPresent() -> UIViewController? {
         return self
     }
 }
 
-//extension UIViewController: UserDismissable {
-//    func setUserDismissDelegate() {
-//        presentationController?.delegate = self
-//    }
-//}
+extension UIViewController {
+    func hideKeyboardWhenTappedAround() {
+        let tap = UITapGestureRecognizer(target: self, action: #selector(UIViewController.dismissKeyboard))
+        tap.cancelsTouchesInView = false
+        view.addGestureRecognizer(tap)
+    }
+    
+    @objc func dismissKeyboard() {
+        view.endEditing(true)
+    }
+}

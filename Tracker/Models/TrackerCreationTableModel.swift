@@ -12,7 +12,6 @@ struct CellContent {
     let detailText: String?
 }
 
-
 enum TrackerCreationTableModel {
     case habit, event
     

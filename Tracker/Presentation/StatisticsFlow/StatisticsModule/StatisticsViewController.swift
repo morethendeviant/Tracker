@@ -11,7 +11,6 @@ final class StatisticsViewController: UIViewController {
     
     init() {
         super.init(nibName: nil, bundle: nil)
-        
         tabBarItem = UITabBarItem(title: "Статистика", image: UIImage(named: "hare.fill"), tag: 1)
     }
     
@@ -21,7 +20,5 @@ final class StatisticsViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
     }
-    
 }

@@ -12,12 +12,11 @@ protocol CategorySelectCoordinatorProtocol {
     var onFinish: ((Int?) -> Void)? { get set }
 }
 
-class CategorySelectViewController: BaseViewController, CategorySelectCoordinatorProtocol {
+final class CategorySelectViewController: BaseViewController, CategorySelectCoordinatorProtocol {
     var onHeadForCategoryCreation: (() -> Void)?
     var onFinish: ((Int?) -> Void)?
     
     private var categories = CategoryContainer.shared
-    
     private var selectedCategory: Int?
     
     private lazy var categoriesTableView: UITableView = {
@@ -44,7 +43,6 @@ class CategorySelectViewController: BaseViewController, CategorySelectCoordinato
     }
     
     init(pageTitle: String, selectedCategory: Int?) {
-        print(selectedCategory)
         self.selectedCategory = selectedCategory
         super.init(pageTitle: pageTitle)
     }
@@ -63,6 +61,7 @@ class CategorySelectViewController: BaseViewController, CategorySelectCoordinato
 }
 
 //MARK: - Table View Delegate
+
 extension CategorySelectViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         75
@@ -79,6 +78,7 @@ extension CategorySelectViewController: UITableViewDelegate {
 }
 
 //MARK: - Table View Data Source
+
 extension CategorySelectViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         categories.items.count
@@ -91,9 +91,7 @@ extension CategorySelectViewController: UITableViewDataSource {
         cell.accessoryType = selectedCategory == indexPath.row ? .checkmark : .none
         cell.textLabel?.font = .systemFont(ofSize: 17)
         cell.selectionStyle = .none
-        
-        
-        
+
         switch indexPath.row {
         case 0: cell.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
         case categories.items.count - 1: cell.layer.maskedCorners = [.layerMinXMaxYCorner, .layerMaxXMaxYCorner]
@@ -101,7 +99,6 @@ extension CategorySelectViewController: UITableViewDataSource {
         }
         
         cell.textLabel?.text = categories.items[indexPath.row]
-        
         return cell
     }
 }

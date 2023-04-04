@@ -8,11 +8,10 @@
 import Foundation
 
 struct Colors {
-    private static let colors = Array(1...18).map { "ypSelection\($0)" }
+    private static let colors = Array(0...17).map { "ypSelection\($0 + 1)" }
     
     static subscript(_ index: Int) -> String? {
         guard 0..<colors.count ~= index else { return nil }
-        
         return colors[index]
     }
     

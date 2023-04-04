@@ -7,7 +7,7 @@
 
 import UIKit
 
-class BaseButton: UIButton {
+final class BaseButton: UIButton {
     
     init(style: Style, text: String) {
         super.init(frame: .zero)

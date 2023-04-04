@@ -21,7 +21,6 @@ final class HabitCollectionHeaderView: UICollectionReusableView {
     override init(frame: CGRect) {
         super.init(frame: frame)
         addSubviews()
-        configure()
         applyLayout()
     }
     
@@ -32,13 +31,10 @@ final class HabitCollectionHeaderView: UICollectionReusableView {
 }
 
 //MARK: - Subviews configure + layout
+
 private extension HabitCollectionHeaderView {
     func addSubviews() {
         addSubview(titleLabel)
-    }
-    
-    func configure() {
-        
     }
     
     func applyLayout() {

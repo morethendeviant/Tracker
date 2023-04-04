@@ -19,7 +19,7 @@ protocol ModulesFactoryProtocol {
 
 final class ModulesFactory: ModulesFactoryProtocol {
     func makeTrackersView() -> Presentable {
-        TrackersViewController()
+        return TrackersViewController()
     }
     
     func makeStatisticsView() -> Presentable {
@@ -47,7 +47,4 @@ final class ModulesFactory: ModulesFactoryProtocol {
     func makeCategorySelectView(selectedCategory: Int?) -> Presentable {
         return CategorySelectViewController(pageTitle: "Категория", selectedCategory: selectedCategory)
     }
-    
-    
-    
 }

@@ -10,15 +10,15 @@ import SnapKit
 
 protocol TrackersViewCoordinatorProtocol {
     var headForTrackerSelect: (() -> Void)? { get set }
+    
+    func updateCategories()
 }
 
 final class TrackersViewController: UIViewController, TrackersViewCoordinatorProtocol {
-    
     var headForTrackerSelect: (() -> Void)?
     
-    private var categories: [TrackerCategory] = [ TrackerCategory(name: "Домашний уют", trackers: [Tracker(name: "Полить кота", color: 1, emoji: 2, schedule: [.mon, .tue])]),
-                                                  TrackerCategory(name: "Радостные мелочи", trackers: [Tracker(name: "test3", color: 3, emoji: 4, schedule: [.fri, .sat]),
-                                                                                                       Tracker(name: "Погладить кота", color: 4, emoji: 5, schedule: [.fri, .sun])])]
+    private var categoriesContainer: TrackersCategorizedContainer
+    private var categories: [TrackerCategory]
     private var visibleCategories: [TrackerCategory] = [] {
         didSet {
             trackersCollectionView.isHidden = visibleCategories.isEmpty
@@ -32,13 +32,14 @@ final class TrackersViewController: UIViewController, TrackersViewCoordinatorPro
         datePicker.date.toString()
     }
     
-    private var dayOfWeek: DayOfWeek {
+    private var dayOfWeek: DayOfWeek? {
         datePicker.date.getDayOfWeek()
     }
     
     private lazy var plusButton: UIButton = {
         let button = UIButton()
-        let image = UIImage(systemName: "plus")
+        let image = UIImage(systemName: "plus",
+                            withConfiguration: UIImage.SymbolConfiguration (pointSize: 18, weight: .bold))
         button.setImage(image, for: .normal)
         button.tintColor = .ypBlack
         button.addTarget(nil, action: #selector(plusButtonTapped), for: .touchUpInside)
@@ -52,22 +53,26 @@ final class TrackersViewController: UIViewController, TrackersViewCoordinatorPro
         return label
     }()
     
-    private lazy var searchTextField: UISearchTextField = {
-        let textField = UISearchTextField()
-        textField.delegate = self
-        textField.layer.cornerRadius = 10
-        textField.placeholder = "Поиск"
-        return textField
+    private lazy var searchBar: UISearchBar = {
+        let searchBar = UISearchBar()
+        searchBar.delegate = self
+        searchBar.layer.cornerRadius = 10
+        searchBar.placeholder = "Поиск"
+        searchBar.searchBarStyle = .minimal
+        return searchBar
     }()
         
     private lazy var datePicker: UIDatePicker = {
         let datePicker = UIDatePicker()
         datePicker.addTarget(nil, action: #selector(dateChanged), for: .valueChanged)
-        
         datePicker.layer.cornerRadius = 8
         datePicker.clipsToBounds = true
         datePicker.preferredDatePickerStyle = .compact
         datePicker.locale = Locale(identifier: "ru_RU")
+        var calendar = Calendar(identifier: .gregorian)
+        calendar.firstWeekday = 2
+        datePicker.calendar = calendar
+        
         datePicker.datePickerMode = .date
         return datePicker
     }()
@@ -94,6 +99,8 @@ final class TrackersViewController: UIViewController, TrackersViewCoordinatorPro
     }()
     
     init() {
+        self.categoriesContainer = TrackersCategorizedContainer.shared
+        self.categories = categoriesContainer.categories
         super.init(nibName: nil, bundle: nil)
         tabBarItem = UITabBarItem(title: "Трекеры", image: UIImage(named: "record.circle.fill"), tag: 0)
     }
@@ -107,27 +114,49 @@ final class TrackersViewController: UIViewController, TrackersViewCoordinatorPro
         addSubviews()
         configure()
         applyLayout()
+        hideKeyboardWhenTappedAround()
         visibleCategories = getVisibleCategories()
+    }
+    
+    func updateCategories() {
+        categories = categoriesContainer.categories
+        visibleCategories = getVisibleCategories()
+        trackersCollectionView.reloadData()
     }
 }
 
-
 //MARK: - @objc
+
 @objc private extension TrackersViewController {
     func plusButtonTapped() {
+        searchBar.resignFirstResponder()
         headForTrackerSelect?()
     }
 }
 
-//MARK: - Text Field Delegate
-extension TrackersViewController: UITextFieldDelegate {
-    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        textField.resignFirstResponder()
+//MARK: - Search Bar Delegate
+
+extension TrackersViewController: UISearchBarDelegate {
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        searchBar.resignFirstResponder()
+    }
+
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        visibleCategories = getVisibleCategories()
+        trackersCollectionView.reloadData()
+    }
+    
+    func searchBarShouldBeginEditing(_ searchBar: UISearchBar) -> Bool {
+        searchBar.setShowsCancelButton(true, animated: true)
         return true
     }
     
-    func textFieldDidEndEditing(_ textField: UITextField) {
-       visibleCategories = getVisibleCategories()
+    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        searchBar.text = ""
+        searchBar.endEditing(true)
+        searchBar.setShowsCancelButton(false, animated: true)
+        visibleCategories = getVisibleCategories()
+        trackersCollectionView.reloadData()
     }
 }
 
@@ -144,8 +173,8 @@ extension TrackersViewController: UICollectionViewDataSource {
         }
         let tracker = visibleCategories[indexPath.section].trackers[indexPath.item]
         
-        cell.color = .ypSelection(tracker.color)
-        cell.emoji = Emojis[tracker.color]
+        cell.color = Colors[tracker.color]
+        cell.emoji = Emojis[tracker.emoji]
         cell.trackerText = tracker.name
         cell.callback = { [weak self] in
             guard let self, date <= Date().toString() else { return }
@@ -197,12 +226,13 @@ extension TrackersViewController: UICollectionViewDelegateFlowLayout {
     }
 }
 
+//MARK: - Collection View Delegate
+
 extension TrackersViewController: UICollectionViewDelegate {
     func numberOfSections(in collectionView: UICollectionView) -> Int {
         visibleCategories.count
     }
 }
-
 
 //MARK: - Private Methods
 
@@ -237,8 +267,9 @@ extension TrackersViewController {
     
     func getVisibleCategories() -> [TrackerCategory] {
         categories.compactMap { category in
+            guard let dayOfWeek else { return nil }
             var trackers = category.trackers.filter { $0.schedule.contains(dayOfWeek) }
-            if let text = searchTextField.text, !text.isEmpty {
+            if let text = searchBar.text, !text.isEmpty {
                 trackers = trackers.filter { $0.name.lowercased().contains(text.lowercased()) }
             }
             return trackers.count > 0 ? TrackerCategory(name: category.name, trackers: trackers) : nil
@@ -253,7 +284,7 @@ private extension TrackersViewController {
         view.addSubview(plusButton)
         view.addSubview(headerLabel)
         view.addSubview(datePicker)
-        view.addSubview(searchTextField)
+        view.addSubview(searchBar)
         view.addSubview(contentPlaceholder)
         view.addSubview(trackersCollectionView)
         view.addSubview(filtersButton)
@@ -261,8 +292,6 @@ private extension TrackersViewController {
     
     func configure() {
         view.backgroundColor = .ypWhite
-        
-
     }
     
     func applyLayout() {
@@ -278,7 +307,7 @@ private extension TrackersViewController {
             make.leading.equalTo(view).offset(16)
         }
         
-        searchTextField.snp.makeConstraints { make in
+        searchBar.snp.makeConstraints { make in
             make.top.equalTo(headerLabel.snp.bottom).offset(7)
             make.leading.equalTo(view).offset(16)
             make.trailing.equalTo(view).offset(-16)
@@ -291,13 +320,10 @@ private extension TrackersViewController {
             make.height.equalTo(34)
         }
         
-        
-        
         trackersCollectionView.snp.makeConstraints { make in
-            make.top.equalTo(searchTextField.snp.bottom).offset(10)
+            make.top.equalTo(searchBar.snp.bottom).offset(10)
             make.leading.equalTo(view).offset(16)
             make.trailing.equalTo(view).offset(-16)
-            //make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom)
             make.bottom.equalTo(view)
         }
         
@@ -310,7 +336,7 @@ private extension TrackersViewController {
         
         contentPlaceholder.snp.makeConstraints { make in
             make.centerX.equalTo(view)
-            make.top.equalTo(searchTextField.snp.bottom).offset(230)
+            make.top.equalTo(searchBar.snp.bottom).offset(230)
             make.width.equalTo(view)
             make.height.equalTo(188)
         }

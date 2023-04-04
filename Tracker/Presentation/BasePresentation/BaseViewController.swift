@@ -24,7 +24,6 @@ class BaseViewController: UIViewController {
         addSubviews()
         configure()
         applyLayout()
-        // Do any additional setup after loading the view.
     }
     
     init(pageTitle: String? = nil) {
@@ -40,6 +39,7 @@ class BaseViewController: UIViewController {
 }
 
 //MARK: - Subviews configure + layout
+
 private extension BaseViewController {
     func addSubviews() {
         view.addSubview(titleLabel)

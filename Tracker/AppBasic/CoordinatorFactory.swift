@@ -11,7 +11,6 @@ protocol CoordinatorsFactoryProtocol {
     func makeHabitCreationCoordinator(router: Routable) -> Coordinatable & HabitCreationCoordinator
     func makeEventCreationCoordinator(router: Routable) -> Coordinatable & EventCreationCoordinator
     func makeCategoryCoordinator(router: Routable, selectedCategory: Int?) -> Coordinatable & CategoryCoordinatorOutput
-    
     func makeStatisticsCoordinator(router: Routable) -> Coordinatable
 }
 
@@ -43,5 +42,4 @@ extension CoordinatorFactory: CoordinatorsFactoryProtocol {
     func makeCategoryCoordinator(router: Routable, selectedCategory: Int?) -> Coordinatable & CategoryCoordinatorOutput {
         CategoryCoordinator(coordinatorsFactory: self, modulesFactory: modulesFactory, router: router,selectedCategory: selectedCategory)
     }
-    
 }

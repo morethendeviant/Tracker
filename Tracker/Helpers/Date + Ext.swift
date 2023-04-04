@@ -14,10 +14,10 @@ extension Date {
            return formatter.string(from: self)
        }
     
-    func getDayOfWeek() -> DayOfWeek {
-        let formatter = DateFormatter()
-        return DayOfWeek.allCases[ Calendar.current.component(.weekday, from: self) - 1 ]
-        
-        
+    func getDayOfWeek() -> DayOfWeek? {
+        var customCalendar = Calendar(identifier: .gregorian)
+        customCalendar.firstWeekday = 2
+        guard let dayIndex = customCalendar.ordinality(of: .weekday, in: .weekOfYear, for: self) else { return nil }
+        return DayOfWeek.allCases[ dayIndex - 1]
     }
 }

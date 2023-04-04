@@ -8,11 +8,13 @@
 import Foundation
  
 protocol HabitCreationCoordinatorOutput {
-    var finishFlow: (() -> Void)? { get set }
+    var finishFlowOnCancel: (() -> Void)? { get set }
+    var finishFlowOnCreate: (() -> Void)? { get set }
 }
 
 final class HabitCreationCoordinator: BaseCoordinator, Coordinatable, HabitCreationCoordinatorOutput {
-    var finishFlow: (() -> Void)?
+    var finishFlowOnCancel: (() -> Void)?
+    var finishFlowOnCreate: (() -> Void)?
     
     private var coordinatorsFactory: CoordinatorsFactoryProtocol
     private var modulesFactory: ModulesFactoryProtocol
@@ -35,14 +37,14 @@ private extension HabitCreationCoordinator {
         
         var habitCoordinator = habitView as? HabitCreationCoordinatorProtocol
         
-        habitCoordinator?.onConfirm = { [weak self, habitView] in //TODO: Add confirm logic
+        habitCoordinator?.onCreate = { [weak self, habitView] in
             self?.router.dismissModule(habitView)
-            self?.finishFlow?()
+            self?.finishFlowOnCreate?()
         }
         
         habitCoordinator?.onCancel = { [weak self, habitView] in
             self?.router.dismissModule(habitView)
-            self?.finishFlow?()
+            self?.finishFlowOnCancel?()
         }
         
         habitCoordinator?.onHeadForCategory = { [weak self] category in
@@ -51,8 +53,7 @@ private extension HabitCreationCoordinator {
             var categoryCoordinator = self.coordinatorsFactory.makeCategoryCoordinator(router: router, selectedCategory: category)
             
             self.addDependency(categoryCoordinator)
-
-
+            
             categoryCoordinator.finishFlow = { [weak categoryCoordinator] category in
                 habitCoordinator?.selectCategory(category)
                 self.removeDependency(categoryCoordinator)
@@ -76,7 +77,7 @@ private extension HabitCreationCoordinator {
         }
         
         self.router.present(habitView) { [weak self] in
-            self?.finishFlow?()
+            self?.finishFlowOnCancel?()
         }
     }
 }

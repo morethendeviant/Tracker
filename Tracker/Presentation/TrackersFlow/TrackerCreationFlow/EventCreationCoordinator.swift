@@ -8,11 +8,13 @@
 import Foundation
 
 protocol EventCreationCoordinatorOutput {
-    var finishFlow: (() -> Void)? { get set }
+    var finishFlowOnCancel: (() -> Void)? { get set }
+    var finishFlowOnCreate: (() -> Void)? { get set }
 }
 
 final class EventCreationCoordinator: BaseCoordinator, Coordinatable, EventCreationCoordinatorOutput {
-    var finishFlow: (() -> Void)?
+    var finishFlowOnCancel: (() -> Void)?
+    var finishFlowOnCreate: (() -> Void)?
     
     private var coordinatorsFactory: CoordinatorsFactoryProtocol
     private var modulesFactory: ModulesFactoryProtocol
@@ -34,14 +36,14 @@ private extension EventCreationCoordinator {
         let eventView = self.modulesFactory.makeEventCreationView()
         var eventCoordinator = eventView as? EventCreationCoordinatorProtocol
         
-        eventCoordinator?.onConfirm = { [weak self, eventView] in
+        eventCoordinator?.onCreate = { [weak self, eventView] in
             self?.router.dismissModule(eventView)
-            self?.finishFlow?()
+            self?.finishFlowOnCreate?()
         }
         
         eventCoordinator?.onCancel = { [weak self, eventView] in
             self?.router.dismissModule(eventView)
-            self?.finishFlow?()
+            self?.finishFlowOnCancel?()
         }
         
         eventCoordinator?.onHeadForCategory = { [weak self] category in
@@ -58,7 +60,7 @@ private extension EventCreationCoordinator {
         }
 
         self.router.present(eventView) { [weak self] in
-            self?.finishFlow?()
+            self?.finishFlowOnCancel?()
         }
     }
 }

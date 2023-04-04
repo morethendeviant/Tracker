@@ -9,7 +9,7 @@ import UIKit
 
 protocol HabitCreationCoordinatorProtocol {
     var onCancel: (() -> Void)? { get set }
-    var onConfirm: (() -> Void)? { get set }
+    var onCreate: (() -> Void)? { get set }
     var onHeadForCategory: ((Int?) -> Void)? { get set }
     var onHeadForSchedule: (([DayOfWeek]) -> Void)? { get set }
     
@@ -19,42 +19,56 @@ protocol HabitCreationCoordinatorProtocol {
 
 protocol EventCreationCoordinatorProtocol {
     var onCancel: (() -> Void)? { get set }
-    var onConfirm: (() -> Void)? { get set }
+    var onCreate: (() -> Void)? { get set }
     var onHeadForCategory: ((Int?) -> Void)? { get set }
     
     func selectCategory(_ category: Int?)
 }
 
-
 final class HabitCreationViewController: BaseViewController, EventCreationCoordinatorProtocol {
     
     var onCancel: (() -> Void)?
-    var onConfirm: (() -> Void)?
+    var onCreate: (() -> Void)?
     var onHeadForCategory: ((Int?) -> Void)?
     var onHeadForSchedule: (([DayOfWeek]) -> Void)?
-
+    
+    private var categoryContainer: TrackersCategorizedContainer
+    private var categories: CategoryContainer
     
     private var tableContent: [CellContent]
+    private var emojiSelectedItem: Int? {
+        didSet {
+            checkForConfirm()
+        }
+    }
     
-    private var emojiSelectedItem: Int?
-    private var colorSelectedItem: Int?
+    private var colorSelectedItem: Int? {
+        didSet {
+            checkForConfirm()
+        }
+    }
+    
     private var selectedItem: IndexPath?
-    private var selectedCategory: Int?
-    private var categories = CategoryContainer.shared
+    private var selectedCategory: Int? {
+        didSet {
+            checkForConfirm()
+        }
+    }
     
-    private var weekdays: [DayOfWeek] = []
+    private var weekdays: [DayOfWeek] = [] {
+        didSet {
+            checkForConfirm()
+        }
+    }
     
-    private lazy var mainScrollView: UIScrollView = {
-        let scroll = UIScrollView()
-        
-        return scroll
-    }()
+    private var tracker: Tracker?
+    
+    private lazy var mainScrollView = UIScrollView()
     
     private lazy var mainStackView: UIStackView = {
         let stack = UIStackView()
         stack.alignment = .fill
         stack.axis = .vertical
-        
         return stack
     }()
     
@@ -65,6 +79,15 @@ final class HabitCreationViewController: BaseViewController, EventCreationCoordi
         text.layer.cornerRadius = 16
         text.delegate = self
         return text
+    }()
+    
+    private lazy var maxCharactersLabel: UILabel = {
+        let label = UILabel()
+        label.text = "Ограничение 38 символов"
+        label.font = .systemFont(ofSize: 17)
+        label.textColor = .ypRed
+        label.textAlignment = .center
+        return label
     }()
     
     private lazy var parametersTableView: UITableView = {
@@ -81,7 +104,7 @@ final class HabitCreationViewController: BaseViewController, EventCreationCoordi
         let collection = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
         collection.register(EmojiCollectionViewCell.self, forCellWithReuseIdentifier: EmojiCollectionViewCell.identifier)
         collection.register(ColorCollectionViewCell.self, forCellWithReuseIdentifier: ColorCollectionViewCell.identifier)
-
+        
         collection.register(HabitCollectionHeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: HabitCollectionHeaderView.identifier)
         collection.delegate = self
         collection.dataSource = self
@@ -89,7 +112,7 @@ final class HabitCreationViewController: BaseViewController, EventCreationCoordi
         
         return collection
     }()
-
+    
     private lazy var buttonsStack: UIStackView = {
         let stack = UIStackView()
         stack.axis = .horizontal
@@ -106,11 +129,13 @@ final class HabitCreationViewController: BaseViewController, EventCreationCoordi
     
     private lazy var createButton: BaseButton = {
         let button = BaseButton(style: .disabled, text: "Создать")
-        button.addTarget(nil, action: #selector(confirmButtonTapped), for: .touchUpInside)
+        button.addTarget(nil, action: #selector(createButtonTapped), for: .touchUpInside)
         return button
     }()
     
     init(pageTitle: String? = nil, tableDataModel: TrackerCreationTableModel) {
+        self.categoryContainer = TrackersCategorizedContainer.shared
+        self.categories = CategoryContainer.shared
         self.tableContent = tableDataModel.defaultTableContent()
         super.init(pageTitle: pageTitle)
     }
@@ -124,17 +149,21 @@ final class HabitCreationViewController: BaseViewController, EventCreationCoordi
         addSubviews()
         configure()
         applyLayout()
+        hideKeyboardWhenTappedAround()
     }
 }
 
 //MARK: - @objc
+
 @objc private extension HabitCreationViewController {
     func cancelButtonTapped() {
         onCancel?()
     }
     
-    func confirmButtonTapped() {
-        onConfirm?()
+    func createButtonTapped() {
+        guard let tracker, let selectedCategory else { return }
+        categoryContainer.add(tracker: tracker, forCategory: categories.items[selectedCategory])
+        onCreate?()
     }
     
     func scheduleCallTapped() {
@@ -146,7 +175,28 @@ final class HabitCreationViewController: BaseViewController, EventCreationCoordi
     }
 }
 
+//MARK: - Private Methods
+
+private extension HabitCreationViewController {
+    func checkForConfirm() {
+        if let text = trackerTitleTextField.text, !text.isEmpty, let colorSelectedItem, let emojiSelectedItem, selectedCategory != nil {
+            if tableContent.count == 1 {
+                let weekdays = DayOfWeek.allCases.map { $0 }
+                tracker = Tracker(name: text, color: colorSelectedItem, emoji: emojiSelectedItem, schedule: weekdays)
+            }
+            if tableContent.count == 1, !weekdays.isEmpty {
+                tracker = Tracker(name: text, color: colorSelectedItem, emoji: emojiSelectedItem, schedule: weekdays)
+            }
+            createButton.setUpAppearance(for: .confirm)
+        } else {
+            tracker = nil
+            createButton.setUpAppearance(for: .disabled)
+        }
+    }
+}
+
 //MARK: - Habit Creation Coordinator
+
 extension HabitCreationViewController: HabitCreationCoordinatorProtocol {
     func selectCategory(_ categoryIndex: Int?) {
         selectedCategory = categoryIndex
@@ -166,14 +216,33 @@ extension HabitCreationViewController: HabitCreationCoordinatorProtocol {
 }
 
 //MARK: - Text Field Delegate
+
 extension HabitCreationViewController: UITextFieldDelegate {
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.resignFirstResponder()
         return true
     }
+    
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        return self.textLimit(existingText: textField.text, newText: string, limit: 10)
+    }
+    
+    private func textLimit(existingText: String?, newText: String, limit: Int) -> Bool {
+        let text = existingText ?? ""
+        let isAtLimit = text.count + newText.count <= limit
+        UIView.animate(withDuration: 0.2) { [weak self] in
+            self?.maxCharactersLabel.snp.updateConstraints { make in
+                make.height.equalTo(isAtLimit ? 0: 22)
+            }
+            self?.view.layoutIfNeeded()
+        }
+        
+        return isAtLimit
+    }
 }
 
 //MARK: - Collection Flow Layout Delegate
+
 extension HabitCreationViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         CGSize(width: 52, height: 52)
@@ -184,40 +253,38 @@ extension HabitCreationViewController: UICollectionViewDelegateFlowLayout {
         case 0: guard let cell = collectionView.cellForItem(at: indexPath) as? EmojiCollectionViewCell else { return }
             cell.cellIsSelected = true
             emojiSelectedItem = indexPath.item
-
+            
         case 1: guard let cell = collectionView.cellForItem(at: indexPath) as? ColorCollectionViewCell else { return }
             cell.cellIsSelected = true
             colorSelectedItem = indexPath.item
-
+            
         default: break
         }
     }
     
     func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
         selectedItem = indexPath
-        //collectionView.indexPathsForSelectedItems?.filter({ $0.section == indexPath.section && $0.item != indexPath.item }).forEach({ collectionView.deselectItem(at: $0, animated: false) })
-
         return true
     }
     
     func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
         guard let section = selectedItem?.section else { return }
-
+        
         switch section {
         case 0:
             guard let item = emojiSelectedItem,
                   let cell = collectionView.cellForItem(at: IndexPath(item: item, section: section)) as? EmojiCollectionViewCell
             else { return }
-
+            
             cell.cellIsSelected = false
-
+            
         case 1:
             guard let item = colorSelectedItem,
                   let cell = collectionView.cellForItem(at: IndexPath(item: item, section: section)) as? ColorCollectionViewCell
             else { return }
-
+            
             cell.cellIsSelected = false
-
+            
         default: break
         }
     }
@@ -244,7 +311,7 @@ extension HabitCreationViewController: UICollectionViewDelegateFlowLayout {
         case 1: view.titleLabel.text = "Цвет"
         default: break
         }
-      
+        
         return view
     }
     
@@ -252,7 +319,6 @@ extension HabitCreationViewController: UICollectionViewDelegateFlowLayout {
         
         let indexPath = IndexPath(row: 0, section: section)
         let headerView = self.collectionView(collectionView, viewForSupplementaryElementOfKind: UICollectionView.elementKindSectionHeader, at: indexPath)
-        
         return headerView.systemLayoutSizeFitting(CGSize(width: collectionView.frame.width,
                                                          height: 34),
                                                   withHorizontalFittingPriority: .required,
@@ -266,6 +332,7 @@ extension HabitCreationViewController: UICollectionViewDelegateFlowLayout {
 
 
 //MARK: - Collection View Data Source
+
 extension HabitCreationViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         switch section {
@@ -294,9 +361,8 @@ extension HabitCreationViewController: UICollectionViewDataSource {
         }
         
         fatalError("Cell not found")
-        
     }
-
+    
     func numberOfSections(in collectionView: UICollectionView) -> Int {
         2
     }
@@ -310,18 +376,22 @@ extension HabitCreationViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = UITableViewCell(style: .subtitle, reuseIdentifier: "Cell")
+        cell.selectionStyle = .none
         cell.backgroundColor = .ypBackground
         cell.layer.cornerRadius = 16
         cell.accessoryType = .disclosureIndicator
         cell.textLabel?.font = .systemFont(ofSize: 17)
         cell.detailTextLabel?.font = .systemFont(ofSize: 17)
-        cell.selectionStyle = .none
         
         cell.textLabel?.textColor = .ypBlack
         cell.textLabel?.text = tableContent[indexPath.row].text
         cell.detailTextLabel?.textColor = .ypGray
         cell.detailTextLabel?.text = tableContent[indexPath.row].detailText
-
+        
+        if (indexPath.row == tableContent.count-1) {
+            cell.separatorInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: parametersTableView.bounds.width);
+        }
+        
         switch indexPath.row {
         case 0: cell.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
         case tableContent.count - 1: cell.layer.maskedCorners = [.layerMinXMaxYCorner, .layerMaxXMaxYCorner]
@@ -354,7 +424,10 @@ private extension HabitCreationViewController {
         mainScrollView.addSubview(mainStackView)
         
         mainStackView.addArrangedSubview(trackerTitleTextField)
-        mainStackView.setCustomSpacing(24, after: trackerTitleTextField)
+        mainStackView.setCustomSpacing(8, after: trackerTitleTextField)
+        
+        mainStackView.addArrangedSubview(maxCharactersLabel)
+        mainStackView.setCustomSpacing(16, after: maxCharactersLabel)
         
         mainStackView.addArrangedSubview(parametersTableView)
         mainStackView.setCustomSpacing(16, after: parametersTableView)
@@ -387,6 +460,11 @@ private extension HabitCreationViewController {
         
         trackerTitleTextField.snp.makeConstraints { make in
             make.height.equalTo(75)
+        }
+        
+        maxCharactersLabel.snp.makeConstraints { make in
+            make.height.equalTo(0)
+            
         }
         
         parametersTableView.snp.makeConstraints { make in

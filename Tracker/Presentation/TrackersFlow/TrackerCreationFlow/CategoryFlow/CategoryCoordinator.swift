@@ -34,9 +34,7 @@ final class CategoryCoordinator: BaseCoordinator, Coordinatable, CategoryCoordin
 extension CategoryCoordinator {
     func performFlow(selectedCategory: Int?) {
         let categorySelectView = modulesFactory.makeCategorySelectView(selectedCategory: selectedCategory)
-        
         var categoryCoordinator = categorySelectView as? CategorySelectCoordinatorProtocol
-        
         categoryCoordinator?.onFinish = { [weak self] category in
             self?.router.dismissModule(categorySelectView)
             self?.finishFlow?(category)

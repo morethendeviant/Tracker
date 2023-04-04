@@ -11,7 +11,7 @@ protocol ScheduleViewCoordinatorProtocol {
     var onFinish: (([DayOfWeek]) -> Void)? { get set }
 }
 
-class ScheduleViewController: BaseViewController, ScheduleViewCoordinatorProtocol {
+final class ScheduleViewController: BaseViewController, ScheduleViewCoordinatorProtocol {
     var onFinish: (([DayOfWeek]) -> Void)?
     
     private var selectedDays: [DayOfWeek] = []
@@ -47,7 +47,6 @@ class ScheduleViewController: BaseViewController, ScheduleViewCoordinatorProtoco
         configure()
         applyLayout()
     }
-    
 }
 
 //MARK: - @objs
@@ -68,6 +67,7 @@ class ScheduleViewController: BaseViewController, ScheduleViewCoordinatorProtoco
 }
 
 //MARK: - Table View Delegate
+
 extension ScheduleViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         75
@@ -75,6 +75,7 @@ extension ScheduleViewController: UITableViewDelegate {
 }
 
 //MARK: - Table View Data Source
+
 extension ScheduleViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         DayOfWeek.count
@@ -106,6 +107,7 @@ extension ScheduleViewController: UITableViewDataSource {
 }
 
 //MARK: - Subviews configure + layout
+
 private extension ScheduleViewController {
     func addSubviews() {
         content.addSubview(daysOfWeekTableView)

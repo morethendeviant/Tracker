@@ -19,7 +19,6 @@ private extension MainTabBarController {
         let tabBarAppearance = UITabBarAppearance()
         tabBarAppearance.backgroundColor = .ypWhite
         tabBar.standardAppearance = tabBarAppearance
-        //tabBar.tintColor = .ypBlue
     }
 }
 

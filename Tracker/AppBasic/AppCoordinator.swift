@@ -12,6 +12,7 @@ protocol AppCoordinatorOutput {
 }
 
 final class AppCoordinator : BaseCoordinator, Coordinatable, AppCoordinatorOutput {
+    
     var finishFlow: (() -> Void)?
     
     private var factory: CoordinatorsFactoryProtocol

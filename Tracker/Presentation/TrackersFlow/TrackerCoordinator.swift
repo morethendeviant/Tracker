@@ -37,9 +37,15 @@ private extension TrackerCoordinator {
             var creationCoordinatorOutput = trackerSelectModule as? TrackerSelectCoordinatorProtocol
             
             creationCoordinatorOutput?.onHeadForHabit = {
-                var habitCreationCoordinator = self.coordinatorsFactory.makeHabitCreationCoordinator(router: self.router)
+                let habitCreationCoordinator = self.coordinatorsFactory.makeHabitCreationCoordinator(router: self.router)
                 
-                habitCreationCoordinator.finishFlow = { [weak habitCreationCoordinator ] in
+                habitCreationCoordinator.finishFlowOnCreate = { [weak habitCreationCoordinator ] in
+                    coordinatorOutput?.updateCategories()
+                    self.removeDependency(habitCreationCoordinator)
+                    self.router.dismissModule(trackerSelectModule)
+                }
+                
+                habitCreationCoordinator.finishFlowOnCancel = { [weak habitCreationCoordinator ] in
                     self.removeDependency(habitCreationCoordinator)
                 }
                 
@@ -48,9 +54,15 @@ private extension TrackerCoordinator {
             }
             
             creationCoordinatorOutput?.onHeadForEvent = {
-                var eventCreationCoordinator = self.coordinatorsFactory.makeEventCreationCoordinator(router: self.router)
+                let eventCreationCoordinator = self.coordinatorsFactory.makeEventCreationCoordinator(router: self.router)
                 
-                eventCreationCoordinator.finishFlow = { [weak eventCreationCoordinator] in
+                eventCreationCoordinator.finishFlowOnCreate = { [weak eventCreationCoordinator] in
+                    coordinatorOutput?.updateCategories()
+                    self.removeDependency(eventCreationCoordinator)
+                    self.router.dismissModule(trackerSelectModule)
+                }
+                
+                eventCreationCoordinator.finishFlowOnCancel = { [weak eventCreationCoordinator ] in
                     self.removeDependency(eventCreationCoordinator)
                 }
                 
@@ -63,5 +75,4 @@ private extension TrackerCoordinator {
 
         router.addToTabBar(trackersView)
     }
-    
 }
