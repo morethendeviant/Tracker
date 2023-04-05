@@ -22,6 +22,8 @@ final class BaseButton: UIButton {
     }
 }
 
+//MARK: - Appearance
+
 extension BaseButton {
     func setUpAppearance(for style: Style) {
         switch style {
@@ -42,6 +44,8 @@ extension BaseButton {
         }
     }
 }
+
+//MARK: - Style Enum
 
 extension BaseButton {
     enum Style {

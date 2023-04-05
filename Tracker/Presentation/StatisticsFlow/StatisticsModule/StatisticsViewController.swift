@@ -20,5 +20,23 @@ final class StatisticsViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        addSubviews()
+        configure()
+        applyLayout()
+    }
+}
+
+//MARK: - Subviews configure + layout
+private extension StatisticsViewController {
+    func addSubviews() {
+        
+    }
+    
+    func configure() {
+        view.backgroundColor = .ypWhite
+    }
+    
+    func applyLayout() {
+
     }
 }

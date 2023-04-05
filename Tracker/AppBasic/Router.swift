@@ -90,7 +90,6 @@ extension Router: Routable {
     }
 }
 
-
 extension Router: UIAdaptivePresentationControllerDelegate {
     func presentationControllerDidDismiss(_ presentationController: UIPresentationController) {
         presentingViewController = presentationController.presentingViewController

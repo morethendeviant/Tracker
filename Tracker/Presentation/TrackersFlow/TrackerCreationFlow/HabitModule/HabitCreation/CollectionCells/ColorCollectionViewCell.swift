@@ -26,8 +26,6 @@ final class ColorCollectionViewCell: UICollectionViewCell {
         return layer
     }()
     
-    
-    
     var color: UIColor? {
         didSet {
             mainLayer.backgroundColor = color?.cgColor
@@ -45,7 +43,6 @@ final class ColorCollectionViewCell: UICollectionViewCell {
         
         return label
     }()
-    
     
     override init(frame: CGRect) {
         super.init(frame: frame)

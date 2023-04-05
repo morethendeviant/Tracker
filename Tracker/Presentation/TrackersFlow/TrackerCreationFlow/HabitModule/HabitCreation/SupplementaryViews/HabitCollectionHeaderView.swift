@@ -14,7 +14,6 @@ final class HabitCollectionHeaderView: UICollectionReusableView {
     var titleLabel: UILabel = {
         let label = UILabel()
         label.font = .boldSystemFont(ofSize: 19)
-        
         return label
     }()
     
@@ -27,7 +26,6 @@ final class HabitCollectionHeaderView: UICollectionReusableView {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
 }
 
 //MARK: - Subviews configure + layout
@@ -41,7 +39,6 @@ private extension HabitCollectionHeaderView {
         titleLabel.snp.makeConstraints { make in
             make.bottom.equalTo(self)
             make.leading.equalTo(self).offset(10)
-            
         }
     }
 }

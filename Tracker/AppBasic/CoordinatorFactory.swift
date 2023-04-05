@@ -40,6 +40,6 @@ extension CoordinatorFactory: CoordinatorsFactoryProtocol {
     }
     
     func makeCategoryCoordinator(router: Routable, selectedCategory: Int?) -> Coordinatable & CategoryCoordinatorOutput {
-        CategoryCoordinator(coordinatorsFactory: self, modulesFactory: modulesFactory, router: router,selectedCategory: selectedCategory)
+        CategoryCoordinator(coordinatorsFactory: self, modulesFactory: modulesFactory, router: router, selectedCategory: selectedCategory)
     }
 }

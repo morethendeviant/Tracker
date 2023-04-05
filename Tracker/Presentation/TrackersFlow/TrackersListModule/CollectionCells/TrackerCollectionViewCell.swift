@@ -8,6 +8,7 @@
 import UIKit
 
 final class TrackerCollectionViewCell: UICollectionViewCell {
+    
     static let identifier = "TrackerCell"
     
     var color: String? {
@@ -104,16 +105,12 @@ final class TrackerCollectionViewCell: UICollectionViewCell {
         return button
     }()
     
-    
-    
     override init(frame: CGRect) {
         super.init(frame: .zero)
         addSubviews()
-        configure()
         applyLayout()
     }
 
-    
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -132,11 +129,7 @@ private extension TrackerCollectionViewCell {
         contentView.addSubview(daysCounter)
         contentView.addSubview(plusButton)
     }
-    
-    func configure() {
 
-    }
-    
     func applyLayout() {
         colorBackgroundView.snp.makeConstraints { make in
             make.height.equalTo(90)

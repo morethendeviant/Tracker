@@ -23,6 +23,7 @@ final class ScheduleViewController: BaseViewController, ScheduleViewCoordinatorP
         table.isScrollEnabled = false
         table.separatorInset = .init(top: 0, left: 16, bottom: 0, right: 16)
         table.separatorColor = .ypGray
+        table.layer.cornerRadius = 16
         return table
     }()
     
@@ -31,7 +32,7 @@ final class ScheduleViewController: BaseViewController, ScheduleViewCoordinatorP
         button.addTarget(nil, action: #selector(doneButtonTapped), for: .touchUpInside)
         return button
     }()
- 
+     
     init(pageTitle: String?, weekdays: [DayOfWeek]) {
         selectedDays = weekdays
         super.init(pageTitle: pageTitle)
@@ -66,6 +67,25 @@ final class ScheduleViewController: BaseViewController, ScheduleViewCoordinatorP
     }
 }
 
+//MARK: - Private Methods
+
+private extension ScheduleViewController {
+    func configureCell(_ cell: UITableViewCell, indexPath: IndexPath) {
+        cell.backgroundColor = .ypBackground
+        cell.textLabel?.font = .systemFont(ofSize: 17)
+        cell.selectionStyle = .none
+    }
+    
+    func createDaySwitchFor(indexPath: IndexPath) -> UISwitch {
+        let daySwitch = UISwitch()
+        daySwitch.tag = indexPath.row
+        daySwitch.addTarget(nil, action: #selector(toggleSwitch), for: .valueChanged)
+        daySwitch.onTintColor = .ypBlue
+        daySwitch.isOn = selectedDays.map { $0.rawValue }.contains(indexPath.row)
+        return daySwitch
+    }
+}
+
 //MARK: - Table View Delegate
 
 extension ScheduleViewController: UITableViewDelegate {
@@ -82,25 +102,9 @@ extension ScheduleViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let daySwitch = UISwitch()
-        daySwitch.tag = indexPath.row
-        daySwitch.addTarget(self, action: #selector(toggleSwitch), for: .valueChanged)
-        daySwitch.onTintColor = .ypBlue
-        daySwitch.isOn = selectedDays.map { $0.rawValue }.contains(indexPath.row)
-        
         let cell = UITableViewCell(style: .default, reuseIdentifier: "Cell")
-        cell.backgroundColor = .ypBackground
-        cell.layer.cornerRadius = 16
-        cell.accessoryView = daySwitch
-        cell.textLabel?.font = .systemFont(ofSize: 17)
-        cell.selectionStyle = .none
-        
-        switch indexPath.row {
-        case 0: cell.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
-        case DayOfWeek.count - 1: cell.layer.maskedCorners = [.layerMinXMaxYCorner, .layerMaxXMaxYCorner]
-        default: cell.layer.maskedCorners = []
-        }
-        
+        configureCell(cell, indexPath: indexPath)
+        cell.accessoryView = createDaySwitchFor(indexPath: indexPath)
         cell.textLabel?.text = DayOfWeek.fullNameFor(indexPath.row)
         return cell
     }
@@ -123,7 +127,7 @@ private extension ScheduleViewController {
             make.top.equalTo(content)
             make.leading.equalTo(content).offset(16)
             make.trailing.equalTo(content).offset(-16)
-            make.bottom.equalTo(doneButton.snp.top).offset(-47)
+            make.height.equalTo(daysOfWeekTableView.numberOfRows(inSection: 0) * 75 - 1)
         }
         
         doneButton.snp.makeConstraints { make in

@@ -36,6 +36,12 @@ final class HabitCreationViewController: BaseViewController, EventCreationCoordi
     private var categories: CategoryContainer
     
     private var tableContent: [CellContent]
+    
+    private var trackerTitle: String? {
+        didSet {
+            checkForConfirm()
+        }
+    }
     private var emojiSelectedItem: Int? {
         didSet {
             checkForConfirm()
@@ -97,6 +103,7 @@ final class HabitCreationViewController: BaseViewController, EventCreationCoordi
         table.isScrollEnabled = false
         table.separatorInset = .init(top: 0, left: 16, bottom: 0, right: 16)
         table.separatorColor = .ypGray
+        table.layer.cornerRadius = 16
         return table
     }()
     
@@ -179,12 +186,12 @@ final class HabitCreationViewController: BaseViewController, EventCreationCoordi
 
 private extension HabitCreationViewController {
     func checkForConfirm() {
-        if let text = trackerTitleTextField.text, !text.isEmpty, let colorSelectedItem, let emojiSelectedItem, selectedCategory != nil {
+        if let text = trackerTitle, !text.isEmpty, let colorSelectedItem, let emojiSelectedItem, selectedCategory != nil {
             if tableContent.count == 1 {
                 let weekdays = DayOfWeek.allCases.map { $0 }
                 tracker = Tracker(name: text, color: colorSelectedItem, emoji: emojiSelectedItem, schedule: weekdays)
             }
-            if tableContent.count == 1, !weekdays.isEmpty {
+            if tableContent.count == 2, !weekdays.isEmpty {
                 tracker = Tracker(name: text, color: colorSelectedItem, emoji: emojiSelectedItem, schedule: weekdays)
             }
             createButton.setUpAppearance(for: .confirm)
@@ -192,6 +199,16 @@ private extension HabitCreationViewController {
             tracker = nil
             createButton.setUpAppearance(for: .disabled)
         }
+    }
+    
+    func configureCell(_ cell: UITableViewCell, for indexPath: IndexPath) {
+        cell.selectionStyle = .none
+        cell.backgroundColor = .ypBackground
+        cell.accessoryType = .disclosureIndicator
+        cell.textLabel?.font = .systemFont(ofSize: 17)
+        cell.detailTextLabel?.font = .systemFont(ofSize: 17)
+        cell.detailTextLabel?.textColor = .ypGray
+        cell.textLabel?.textColor = .ypBlack
     }
 }
 
@@ -219,6 +236,7 @@ extension HabitCreationViewController: HabitCreationCoordinatorProtocol {
 
 extension HabitCreationViewController: UITextFieldDelegate {
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        trackerTitle = textField.text
         textField.resignFirstResponder()
         return true
     }
@@ -236,7 +254,7 @@ extension HabitCreationViewController: UITextFieldDelegate {
             }
             self?.view.layoutIfNeeded()
         }
-        
+        trackerTitle = isAtLimit ? text + newText : text
         return isAtLimit
     }
 }
@@ -277,18 +295,15 @@ extension HabitCreationViewController: UICollectionViewDelegateFlowLayout {
             else { return }
             
             cell.cellIsSelected = false
-            
         case 1:
             guard let item = colorSelectedItem,
                   let cell = collectionView.cellForItem(at: IndexPath(item: item, section: section)) as? ColorCollectionViewCell
             else { return }
             
             cell.cellIsSelected = false
-            
         default: break
         }
     }
-    
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
         5
@@ -329,7 +344,6 @@ extension HabitCreationViewController: UICollectionViewDelegateFlowLayout {
         UIEdgeInsets(top: 24, left: 0, bottom: 24, right: 0)
     }
 }
-
 
 //MARK: - Collection View Data Source
 
@@ -376,28 +390,9 @@ extension HabitCreationViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = UITableViewCell(style: .subtitle, reuseIdentifier: "Cell")
-        cell.selectionStyle = .none
-        cell.backgroundColor = .ypBackground
-        cell.layer.cornerRadius = 16
-        cell.accessoryType = .disclosureIndicator
-        cell.textLabel?.font = .systemFont(ofSize: 17)
-        cell.detailTextLabel?.font = .systemFont(ofSize: 17)
-        
-        cell.textLabel?.textColor = .ypBlack
+        configureCell(cell, for: indexPath)
         cell.textLabel?.text = tableContent[indexPath.row].text
-        cell.detailTextLabel?.textColor = .ypGray
         cell.detailTextLabel?.text = tableContent[indexPath.row].detailText
-        
-        if (indexPath.row == tableContent.count-1) {
-            cell.separatorInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: parametersTableView.bounds.width);
-        }
-        
-        switch indexPath.row {
-        case 0: cell.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
-        case tableContent.count - 1: cell.layer.maskedCorners = [.layerMinXMaxYCorner, .layerMaxXMaxYCorner]
-        default: cell.layer.maskedCorners = []
-        }
-        
         return cell
     }
 }
@@ -468,7 +463,7 @@ private extension HabitCreationViewController {
         }
         
         parametersTableView.snp.makeConstraints { make in
-            make.height.equalTo(parametersTableView.numberOfRows(inSection: 0) * 75)
+            make.height.equalTo(parametersTableView.numberOfRows(inSection: 0) * 75 - 1)
         }
         
         parametersCollectionView.snp.makeConstraints { make in
@@ -478,6 +473,5 @@ private extension HabitCreationViewController {
         buttonsStack.snp.makeConstraints { make in
             make.height.equalTo(60)
         }
-        
     }
 }

@@ -5,8 +5,6 @@
 //  Created by Aleksandr Velikanov on 01.04.2023.
 //
 
-import Foundation
-
 protocol AppCoordinatorOutput {
     var finishFlow: (() -> Void)? { get set }
 }

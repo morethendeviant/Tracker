@@ -29,9 +29,9 @@ final class ContentPlaceholder: UIView {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
-    
 }
+
+//MARK: - Private methods
 
 private extension ContentPlaceholder {
     func setUpContent(with style: Style) {
@@ -45,7 +45,6 @@ private extension ContentPlaceholder {
         case .statistics: break
         }
     }
-    
 }
 
 //MARK: - Subviews configure + layout
@@ -54,11 +53,7 @@ private extension ContentPlaceholder {
         addSubview(imageView)
         addSubview(label)
     }
-    
-    func configure() {
-        
-    }
-    
+
     func applyLayout() {
         imageView.snp.makeConstraints { make in
             make.width.height.equalTo(80)
@@ -70,11 +65,8 @@ private extension ContentPlaceholder {
             make.top.equalTo(imageView.snp.bottom).offset(8)
             make.centerX.equalTo(self)
         }
-        
-        
     }
 }
-
 
 extension ContentPlaceholder {
     enum Style {

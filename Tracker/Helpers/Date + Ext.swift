@@ -20,4 +20,10 @@ extension Date {
         guard let dayIndex = customCalendar.ordinality(of: .weekday, in: .weekOfYear, for: self) else { return nil }
         return DayOfWeek.allCases[ dayIndex - 1]
     }
+    
+    func onlyDate() -> Date {
+        let components = Calendar.current.dateComponents([.year, .month, .day], from: self)
+        let date = Calendar.current.date(from: components)
+        return date!
+    }
 }

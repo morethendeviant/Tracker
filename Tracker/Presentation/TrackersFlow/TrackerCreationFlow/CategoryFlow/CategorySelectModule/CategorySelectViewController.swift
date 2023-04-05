@@ -16,7 +16,7 @@ final class CategorySelectViewController: BaseViewController, CategorySelectCoor
     var onHeadForCategoryCreation: (() -> Void)?
     var onFinish: ((Int?) -> Void)?
     
-    private var categories = CategoryContainer.shared
+    private var categories = CategoryContainer.shared.items
     private var selectedCategory: Int?
     
     private lazy var categoriesTableView: UITableView = {
@@ -26,6 +26,7 @@ final class CategorySelectViewController: BaseViewController, CategorySelectCoor
         table.isScrollEnabled = false
         table.separatorInset = .init(top: 0, left: 16, bottom: 0, right: 16)
         table.separatorColor = .ypGray
+        table.layer.cornerRadius = 16
         return table
     }()
     
@@ -60,6 +61,17 @@ final class CategorySelectViewController: BaseViewController, CategorySelectCoor
     }
 }
 
+//MARK: - Private Methods
+
+private extension CategorySelectViewController {
+    func configureCell(_ cell: UITableViewCell, for indexPath: IndexPath) {
+        cell.backgroundColor = .ypBackground
+        cell.accessoryType = selectedCategory == indexPath.row ? .checkmark : .none
+        cell.textLabel?.font = .systemFont(ofSize: 17)
+        cell.selectionStyle = .none
+    }
+}
+
 //MARK: - Table View Delegate
 
 extension CategorySelectViewController: UITableViewDelegate {
@@ -72,6 +84,7 @@ extension CategorySelectViewController: UITableViewDelegate {
         selectedCategory = indexPath.row
         onFinish?(selectedCategory)
     }
+    
     func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
         categoriesTableView.cellForRow(at: indexPath)?.accessoryType = .none
     }
@@ -81,24 +94,14 @@ extension CategorySelectViewController: UITableViewDelegate {
 
 extension CategorySelectViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        categories.items.count
+        categories.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = UITableViewCell(style: .default, reuseIdentifier: "Cell")
-        cell.backgroundColor = .ypBackground
-        cell.layer.cornerRadius = 16
-        cell.accessoryType = selectedCategory == indexPath.row ? .checkmark : .none
-        cell.textLabel?.font = .systemFont(ofSize: 17)
-        cell.selectionStyle = .none
-
-        switch indexPath.row {
-        case 0: cell.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
-        case categories.items.count - 1: cell.layer.maskedCorners = [.layerMinXMaxYCorner, .layerMaxXMaxYCorner]
-        default: cell.layer.maskedCorners = []
-        }
+        configureCell(cell, for: indexPath)
         
-        cell.textLabel?.text = categories.items[indexPath.row]
+        cell.textLabel?.text = categories[indexPath.row]
         return cell
     }
 }
@@ -119,7 +122,7 @@ private extension CategorySelectViewController {
             make.top.equalTo(content)
             make.leading.equalTo(content).offset(16)
             make.trailing.equalTo(content).offset(-16)
-            make.bottom.equalTo(addButton.snp.top).offset(-47)
+            make.height.equalTo(categoriesTableView.numberOfRows(inSection: 0) * 75 - 1)
         }
         
         addButton.snp.makeConstraints { make in

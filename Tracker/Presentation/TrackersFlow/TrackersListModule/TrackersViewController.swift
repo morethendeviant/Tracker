@@ -26,10 +26,10 @@ final class TrackersViewController: UIViewController, TrackersViewCoordinatorPro
         }
     }
     
-    private var completedTrackers: [TrackerRecord] = []
+    private var completedTrackers: Set<TrackerRecord> = []
     
-    private var date: String {
-        datePicker.date.toString()
+    private var date: Date {
+        datePicker.date.onlyDate()
     }
     
     private var dayOfWeek: DayOfWeek? {
@@ -83,6 +83,7 @@ final class TrackersViewController: UIViewController, TrackersViewCoordinatorPro
         let collection = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
         collection.register(TrackerCollectionViewCell.self, forCellWithReuseIdentifier: TrackerCollectionViewCell.identifier)
         collection.register(TrackersCollectionHeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: TrackersCollectionHeaderView.identifier)
+        collection.register(TrackersCollectionFooterView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionFooter, withReuseIdentifier: TrackersCollectionFooterView.identifier)
         collection.delegate = self
         collection.dataSource = self
         return collection
@@ -117,7 +118,11 @@ final class TrackersViewController: UIViewController, TrackersViewCoordinatorPro
         hideKeyboardWhenTappedAround()
         visibleCategories = getVisibleCategories()
     }
-    
+}
+
+//MARK: - Trackers View Coordinator Protocol
+
+extension TrackersViewController {
     func updateCategories() {
         categories = categoriesContainer.categories
         visibleCategories = getVisibleCategories()
@@ -160,7 +165,7 @@ extension TrackersViewController: UISearchBarDelegate {
     }
 }
 
-//MARK: - Collection Flow Layout DataSource
+//MARK: - Collection DataSource
 
 extension TrackersViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -171,14 +176,14 @@ extension TrackersViewController: UICollectionViewDataSource {
         guard let cell = trackersCollectionView.dequeueReusableCell(withReuseIdentifier: TrackerCollectionViewCell.identifier, for: indexPath) as? TrackerCollectionViewCell else {
             fatalError("cell not found")
         }
+        
         let tracker = visibleCategories[indexPath.section].trackers[indexPath.item]
         
         cell.color = Colors[tracker.color]
         cell.emoji = Emojis[tracker.emoji]
         cell.trackerText = tracker.name
         cell.callback = { [weak self] in
-            guard let self, date <= Date().toString() else { return }
-            
+            guard let self, date <= Date().onlyDate() else { return }
             self.cellIsMarked(at: indexPath) ? self.removeRecord(at: indexPath) : self.addRecord(at: indexPath)
             self.trackersCollectionView.performBatchUpdates {
                 self.trackersCollectionView.reloadItems(at: [indexPath])
@@ -206,16 +211,23 @@ extension TrackersViewController: UICollectionViewDelegateFlowLayout {
         var id: String
         switch kind {
         case UICollectionView.elementKindSectionHeader: id = TrackersCollectionHeaderView.identifier
+        case UICollectionView.elementKindSectionFooter: id = TrackersCollectionFooterView.identifier
         default: id = ""
         }
         
-        guard let view = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: id, for: indexPath) as? TrackersCollectionHeaderView else { return UICollectionReusableView()}
-        view.titleLabel.text = visibleCategories[indexPath.section].name
-        return view
+        if let view = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: id, for: indexPath) as? TrackersCollectionHeaderView {
+            view.titleLabel.text = visibleCategories[indexPath.section].name
+            return view
+        }
+        
+        if let view = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: id, for: indexPath) as? TrackersCollectionFooterView {
+            return view
+        }
+        
+        return UICollectionReusableView()
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
-        
         let indexPath = IndexPath(row: 0, section: section)
         let headerView = self.collectionView(collectionView, viewForSupplementaryElementOfKind: UICollectionView.elementKindSectionHeader, at: indexPath)
         
@@ -223,6 +235,10 @@ extension TrackersViewController: UICollectionViewDelegateFlowLayout {
                                                          height: 62),
                                                   withHorizontalFittingPriority: .required,
                                                   verticalFittingPriority: .required)
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForFooterInSection section: Int) -> CGSize {
+        section == visibleCategories.count - 1 ? CGSize(width: 0, height: 80) : CGSize(width: 0, height: 0)
     }
 }
 
@@ -240,18 +256,18 @@ extension TrackersViewController {
     func addRecord(at index: IndexPath) {
         let id = visibleCategories[index.section].trackers[index.item].id
         let trackerRecord = TrackerRecord(id: id, date: date)
-        completedTrackers.append(trackerRecord)
+        completedTrackers.insert(trackerRecord)
     }
     
     func removeRecord(at index: IndexPath) {
         let id = visibleCategories[index.section].trackers[index.item].id
-        completedTrackers.removeAll(where: { $0.id == id && $0.date == date } )
+        let trackerRecord = TrackerRecord(id: id, date: date)
+        completedTrackers.remove(trackerRecord)
     }
     
     func cellIsMarked(at index: IndexPath) -> Bool {
         let id = visibleCategories[index.section].trackers[index.item].id
         return completedTrackers.filter( {$0.id == id && $0.date == date} ).count > 0
-        
     }
     
     func daysAmount(at index: IndexPath) -> Int {
@@ -277,16 +293,15 @@ extension TrackersViewController {
     }
 }
 
-
 //MARK: - Subviews configure + layout
 private extension TrackersViewController {
     func addSubviews() {
+        view.addSubview(trackersCollectionView)
         view.addSubview(plusButton)
         view.addSubview(headerLabel)
         view.addSubview(datePicker)
         view.addSubview(searchBar)
         view.addSubview(contentPlaceholder)
-        view.addSubview(trackersCollectionView)
         view.addSubview(filtersButton)
     }
     
@@ -297,43 +312,42 @@ private extension TrackersViewController {
     func applyLayout() {
         plusButton.snp.makeConstraints { make in
             make.height.width.equalTo(19)
-            
             make.top.equalTo(view.safeAreaLayoutGuide).offset(13)
             make.leading.equalTo(view).offset(18)
         }
-        
+
         headerLabel.snp.makeConstraints { make in
             make.top.equalTo(plusButton.snp.bottom).offset(13)
             make.leading.equalTo(view).offset(16)
         }
-        
+
         searchBar.snp.makeConstraints { make in
             make.top.equalTo(headerLabel.snp.bottom).offset(7)
             make.leading.equalTo(view).offset(16)
             make.trailing.equalTo(view).offset(-16)
         }
-        
+
         datePicker.snp.makeConstraints { make in
             make.top.equalTo(plusButton.snp.bottom).offset(13)
             make.trailing.equalTo(view).offset(-16)
             make.width.equalTo(100)
             make.height.equalTo(34)
         }
-        
+
         trackersCollectionView.snp.makeConstraints { make in
             make.top.equalTo(searchBar.snp.bottom).offset(10)
             make.leading.equalTo(view).offset(16)
             make.trailing.equalTo(view).offset(-16)
-            make.bottom.equalTo(view)
+            make.bottom.equalToSuperview()
         }
-        
+
         filtersButton.snp.makeConstraints { make in
             make.height.equalTo(50)
             make.leading.equalTo(view).offset(130)
             make.trailing.equalTo(view).offset(-130)
             make.bottom.equalTo(view.safeAreaLayoutGuide).offset(-17)
         }
-        
+
         contentPlaceholder.snp.makeConstraints { make in
             make.centerX.equalTo(view)
             make.top.equalTo(searchBar.snp.bottom).offset(230)

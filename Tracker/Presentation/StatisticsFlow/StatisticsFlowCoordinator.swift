@@ -32,5 +32,4 @@ private extension StatisticsCoordinator {
         let statisticsView = modulesFactory.makeStatisticsView()
         router.addToTabBar(statisticsView)
     }
-    
 }
