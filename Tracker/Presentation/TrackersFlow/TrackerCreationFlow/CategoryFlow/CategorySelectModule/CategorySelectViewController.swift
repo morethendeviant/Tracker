@@ -119,17 +119,17 @@ private extension CategorySelectViewController {
     
     func applyLayout() {
         categoriesTableView.snp.makeConstraints { make in
-            make.top.equalTo(content)
-            make.leading.equalTo(content).offset(16)
-            make.trailing.equalTo(content).offset(-16)
+            make.top.equalToSuperview()
+            make.leading.equalToSuperview().offset(16)
+            make.trailing.equalToSuperview().offset(-16)
             make.height.equalTo(categoriesTableView.numberOfRows(inSection: 0) * 75 - 1)
         }
         
         addButton.snp.makeConstraints { make in
-            make.leading.equalTo(content).offset(20)
-            make.trailing.equalTo(content).offset(-20)
+            make.leading.equalToSuperview().offset(20)
+            make.trailing.equalToSuperview().offset(-20)
             make.height.equalTo(60)
-            make.bottom.equalTo(content).offset(-50)
+            make.bottom.equalToSuperview().offset(-50)
         }
     }
 }

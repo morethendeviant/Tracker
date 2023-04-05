@@ -57,18 +57,18 @@ private extension TrackerSelectViewController {
 
     func applyLayout() {
         newHabit.snp.makeConstraints { make in
-            make.centerX.equalTo(view)
-            make.top.equalTo(view).offset(344)
+            make.centerX.equalToSuperview()
+            make.top.equalToSuperview().offset(344)
             make.height.equalTo(60)
-            make.leading.equalTo(view).offset(20)
-            make.trailing.equalTo(view).offset(-20)
+            make.leading.equalToSuperview().offset(20)
+            make.trailing.equalToSuperview().offset(-20)
         }
         newEvent.snp.makeConstraints { make in
-            make.centerX.equalTo(view)
+            make.centerX.equalToSuperview()
             make.top.equalTo(newHabit.snp.bottom).offset(16)
             make.height.equalTo(60)
-            make.leading.equalTo(view).offset(20)
-            make.trailing.equalTo(view).offset(-20)
+            make.leading.equalToSuperview().offset(20)
+            make.trailing.equalToSuperview().offset(-20)
         }
     }
 }

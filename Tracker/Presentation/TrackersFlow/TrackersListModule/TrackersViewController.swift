@@ -313,45 +313,45 @@ private extension TrackersViewController {
         plusButton.snp.makeConstraints { make in
             make.height.width.equalTo(19)
             make.top.equalTo(view.safeAreaLayoutGuide).offset(13)
-            make.leading.equalTo(view).offset(18)
+            make.leading.equalToSuperview().offset(18)
         }
 
         headerLabel.snp.makeConstraints { make in
             make.top.equalTo(plusButton.snp.bottom).offset(13)
-            make.leading.equalTo(view).offset(16)
+            make.leading.equalToSuperview().offset(16)
         }
 
         searchBar.snp.makeConstraints { make in
             make.top.equalTo(headerLabel.snp.bottom).offset(7)
-            make.leading.equalTo(view).offset(16)
-            make.trailing.equalTo(view).offset(-16)
+            make.leading.equalToSuperview().offset(16)
+            make.trailing.equalToSuperview().offset(-16)
         }
 
         datePicker.snp.makeConstraints { make in
             make.top.equalTo(plusButton.snp.bottom).offset(13)
-            make.trailing.equalTo(view).offset(-16)
+            make.trailing.equalToSuperview().offset(-16)
             make.width.equalTo(100)
             make.height.equalTo(34)
         }
 
         trackersCollectionView.snp.makeConstraints { make in
             make.top.equalTo(searchBar.snp.bottom).offset(10)
-            make.leading.equalTo(view).offset(16)
-            make.trailing.equalTo(view).offset(-16)
+            make.leading.equalToSuperview().offset(16)
+            make.trailing.equalToSuperview().offset(-16)
             make.bottom.equalToSuperview()
         }
 
         filtersButton.snp.makeConstraints { make in
             make.height.equalTo(50)
-            make.leading.equalTo(view).offset(130)
-            make.trailing.equalTo(view).offset(-130)
+            make.leading.equalToSuperview().offset(130)
+            make.trailing.equalToSuperview().offset(-130)
             make.bottom.equalTo(view.safeAreaLayoutGuide).offset(-17)
         }
 
         contentPlaceholder.snp.makeConstraints { make in
-            make.centerX.equalTo(view)
+            make.centerX.equalToSuperview()
             make.top.equalTo(searchBar.snp.bottom).offset(230)
-            make.width.equalTo(view)
+            make.width.equalToSuperview()
             make.height.equalTo(188)
         }
     }

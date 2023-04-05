@@ -442,10 +442,10 @@ private extension HabitCreationViewController {
     
     func applyLayout() {
         mainScrollView.snp.makeConstraints { make in
-            make.top.equalTo(content)
-            make.leading.equalTo(content).offset(16)
-            make.trailing.equalTo(content).offset(-16)
-            make.bottom.equalTo(content)
+            make.top.equalToSuperview()
+            make.leading.equalToSuperview().offset(16)
+            make.trailing.equalToSuperview().offset(-16)
+            make.bottom.equalToSuperview()
         }
         
         mainStackView.snp.makeConstraints { make in
@@ -459,7 +459,6 @@ private extension HabitCreationViewController {
         
         maxCharactersLabel.snp.makeConstraints { make in
             make.height.equalTo(0)
-            
         }
         
         parametersTableView.snp.makeConstraints { make in
