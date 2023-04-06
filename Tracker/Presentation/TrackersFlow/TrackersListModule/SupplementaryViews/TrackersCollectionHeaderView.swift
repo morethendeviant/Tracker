@@ -39,8 +39,7 @@ private extension TrackersCollectionHeaderView {
     func applyLayout() {
         titleLabel.snp.makeConstraints { make in
             make.bottom.equalTo(self).offset(-12)
-            make.leading.equalTo(self).offset(10)
-            
+            make.leading.equalTo(self).offset(26)
         }
     }
 }

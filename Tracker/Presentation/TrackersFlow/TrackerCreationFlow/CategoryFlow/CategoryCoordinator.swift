@@ -35,9 +35,11 @@ extension CategoryCoordinator {
     func performFlow(selectedCategory: Int?) {
         let categorySelectView = modulesFactory.makeCategorySelectView(selectedCategory: selectedCategory)
         var categoryCoordinator = categorySelectView as? CategorySelectCoordinatorProtocol
-        categoryCoordinator?.onFinish = { [weak self] category in
-            self?.router.dismissModule(categorySelectView)
-            self?.finishFlow?(category)
+        
+        categoryCoordinator?.onFinish = { [weak self, weak categorySelectView] category in
+            guard let self else { return }
+            self.router.dismissModule(categorySelectView)
+            self.finishFlow?(category)
         }
         
         router.present(categorySelectView) { [weak self] in

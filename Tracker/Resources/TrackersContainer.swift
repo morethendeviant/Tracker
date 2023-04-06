@@ -13,7 +13,8 @@ final class TrackersCategorizedContainer {
     
     private(set) var categories: [TrackerCategory] =
     [TrackerCategory(name: "Домашний уют",
-                     trackers: [Tracker(name: "Полить кота", color: 1, emoji: 2, schedule: [.mon, .tue])]),
+                     trackers: [Tracker(name: "Полить кота", color: 1, emoji: 2, schedule: [.mon, .tue]),
+                                Tracker(name: "Полить кота", color: 1, emoji: 2, schedule: [.mon, .tue])]),
      TrackerCategory(name: "Радостные мелочи",
                      trackers: [Tracker(name: "Сдать задание", color: 2, emoji: 1, schedule: [.tue, .sat]),
                                 Tracker(name: "Погладить цветы", color: 3, emoji: 5, schedule: [.mon, .sat])]),

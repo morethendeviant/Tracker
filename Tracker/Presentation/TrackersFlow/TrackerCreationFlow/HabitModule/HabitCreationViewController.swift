@@ -7,7 +7,7 @@
 
 import UIKit
 
-protocol HabitCreationCoordinatorProtocol {
+protocol HabitCreationCoordinatorProtocol: AnyObject {
     var onCancel: (() -> Void)? { get set }
     var onCreate: (() -> Void)? { get set }
     var onHeadForCategory: ((Int?) -> Void)? { get set }
@@ -17,7 +17,7 @@ protocol HabitCreationCoordinatorProtocol {
     func returnWithWeekdays(_ days: [DayOfWeek])
 }
 
-protocol EventCreationCoordinatorProtocol {
+protocol EventCreationCoordinatorProtocol: AnyObject {
     var onCancel: (() -> Void)? { get set }
     var onCreate: (() -> Void)? { get set }
     var onHeadForCategory: ((Int?) -> Void)? { get set }
@@ -442,15 +442,12 @@ private extension HabitCreationViewController {
     
     func applyLayout() {
         mainScrollView.snp.makeConstraints { make in
-            make.top.equalToSuperview()
-            make.leading.equalToSuperview().offset(16)
-            make.trailing.equalToSuperview().offset(-16)
-            make.bottom.equalToSuperview()
+            make.edges.equalToSuperview()
         }
         
         mainStackView.snp.makeConstraints { make in
-            make.edges.equalTo(mainScrollView.contentLayoutGuide)
-            make.width.equalTo(mainScrollView.frameLayoutGuide)
+            make.edges.equalTo(mainScrollView.contentLayoutGuide).inset(16)
+            make.width.equalTo(mainScrollView.frameLayoutGuide).inset(16)
         }
         
         trackerTitleTextField.snp.makeConstraints { make in

@@ -36,26 +36,28 @@ private extension EventCreationCoordinator {
         let eventView = self.modulesFactory.makeEventCreationView()
         var eventCoordinator = eventView as? EventCreationCoordinatorProtocol
         
-        eventCoordinator?.onCreate = { [weak self, eventView] in
-            self?.router.dismissModule(eventView)
-            self?.finishFlowOnCreate?()
+        eventCoordinator?.onCreate = { [weak self, weak eventView] in
+            guard let self else { return }
+            self.router.dismissModule(eventView)
+            self.finishFlowOnCreate?()
+        }
+
+        eventCoordinator?.onCancel = { [weak self, weak eventView] in
+            guard let self else { return }
+            self.router.dismissModule(eventView)
+            self.finishFlowOnCancel?()
         }
         
-        eventCoordinator?.onCancel = { [weak self, eventView] in
-            self?.router.dismissModule(eventView)
-            self?.finishFlowOnCancel?()
-        }
-        
-        eventCoordinator?.onHeadForCategory = { [weak self] category in
-            guard let self = self else { return }
-            
+        eventCoordinator?.onHeadForCategory = { [weak self, weak eventCoordinator] category in
+            guard let self else { return }
+
             var categoryCoordinator = self.coordinatorsFactory.makeCategoryCoordinator(router: router, selectedCategory: category)
             self.addDependency(categoryCoordinator)
             categoryCoordinator.finishFlow = { [weak categoryCoordinator] category in
                 eventCoordinator?.selectCategory(category)
                 self.removeDependency(categoryCoordinator)
             }
-            
+
             categoryCoordinator.startFlow()
         }
 

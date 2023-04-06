@@ -74,6 +74,7 @@ extension Router: Routable {
     
     func dismissModule(_ module: Presentable?, animated: Bool, completion: (() -> Void)?) {
         guard let controller = module?.toPresent() else { return }
+        deleteCompletion(for: presentingViewController?.toPresent())
         self.presentingViewController = module?.toPresent()?.presentingViewController
         controller.dismiss(animated: animated, completion: completion)
     }
@@ -107,6 +108,11 @@ private extension Router {
     func runCompletion(for controller: UIViewController) {
         guard let completion = completions[controller] else { return }
         completion?()
+        completions.removeValue(forKey: controller)
+    }
+    
+    func deleteCompletion(for controller: UIViewController?) {
+        guard let controller else { return }
         completions.removeValue(forKey: controller)
     }
 }

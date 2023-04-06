@@ -8,7 +8,7 @@
 import UIKit
 import SnapKit
 
-protocol TrackersViewCoordinatorProtocol {
+protocol TrackersViewCoordinatorProtocol: AnyObject {
     var headForTrackerSelect: (() -> Void)? { get set }
     
     func updateCategories()
@@ -59,6 +59,7 @@ final class TrackersViewController: UIViewController, TrackersViewCoordinatorPro
         searchBar.layer.cornerRadius = 10
         searchBar.placeholder = "Поиск"
         searchBar.searchBarStyle = .minimal
+        searchBar.directionalLayoutMargins = NSDirectionalEdgeInsets(top: 0, leading: 16, bottom: 0, trailing: 16)
         return searchBar
     }()
         
@@ -240,6 +241,10 @@ extension TrackersViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForFooterInSection section: Int) -> CGSize {
         section == visibleCategories.count - 1 ? CGSize(width: 0, height: 80) : CGSize(width: 0, height: 0)
     }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
+        UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
+    }
 }
 
 //MARK: - Collection View Delegate
@@ -323,8 +328,7 @@ private extension TrackersViewController {
 
         searchBar.snp.makeConstraints { make in
             make.top.equalTo(headerLabel.snp.bottom).offset(7)
-            make.leading.equalToSuperview().offset(16)
-            make.trailing.equalToSuperview().offset(-16)
+            make.leading.trailing.equalToSuperview()
         }
 
         datePicker.snp.makeConstraints { make in
@@ -336,9 +340,7 @@ private extension TrackersViewController {
 
         trackersCollectionView.snp.makeConstraints { make in
             make.top.equalTo(searchBar.snp.bottom).offset(10)
-            make.leading.equalToSuperview().offset(16)
-            make.trailing.equalToSuperview().offset(-16)
-            make.bottom.equalToSuperview()
+            make.leading.trailing.bottom.equalToSuperview()
         }
 
         filtersButton.snp.makeConstraints { make in
