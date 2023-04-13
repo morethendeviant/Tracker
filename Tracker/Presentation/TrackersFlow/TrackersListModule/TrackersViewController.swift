@@ -17,7 +17,8 @@ protocol TrackersViewCoordinatorProtocol: AnyObject {
 final class TrackersViewController: UIViewController, TrackersViewCoordinatorProtocol {
     var headForTrackerSelect: (() -> Void)?
     
-    private var categoriesContainer: TrackersCategorizedContainer
+    private var categoryDataStore: TrackerCategoryStore = DataStore()
+    private var recordDataStore: TrackerRecordStore = DataStore()
     private var categories: [TrackerCategory]
     private var visibleCategories: [TrackerCategory] = [] {
         didSet {
@@ -26,7 +27,9 @@ final class TrackersViewController: UIViewController, TrackersViewCoordinatorPro
         }
     }
     
-    private var completedTrackers: Set<TrackerRecord> = []
+    private var completedTrackers: Set<TrackerRecord> {
+        try! recordDataStore.read() //TODO: Handle Error
+    }
     
     private var date: Date {
         datePicker.date.onlyDate()
@@ -101,8 +104,7 @@ final class TrackersViewController: UIViewController, TrackersViewCoordinatorPro
     }()
     
     init() {
-        self.categoriesContainer = TrackersCategorizedContainer.shared
-        self.categories = categoriesContainer.categories
+        self.categories = categoryDataStore.read()
         super.init(nibName: nil, bundle: nil)
         tabBarItem = UITabBarItem(title: "Трекеры", image: UIImage(named: "record.circle.fill"), tag: 0)
     }
@@ -125,7 +127,7 @@ final class TrackersViewController: UIViewController, TrackersViewCoordinatorPro
 
 extension TrackersViewController {
     func updateCategories() {
-        categories = categoriesContainer.categories
+        categories = categoryDataStore.read()
         visibleCategories = getVisibleCategories()
         trackersCollectionView.reloadData()
     }
@@ -261,17 +263,19 @@ extension TrackersViewController {
     func addRecord(at index: IndexPath) {
         let id = visibleCategories[index.section].trackers[index.item].id
         let trackerRecord = TrackerRecord(id: id, date: date)
-        completedTrackers.insert(trackerRecord)
+        try! recordDataStore.add(trackerRecord) //TODO: Handle Error
+        
     }
     
     func removeRecord(at index: IndexPath) {
         let id = visibleCategories[index.section].trackers[index.item].id
         let trackerRecord = TrackerRecord(id: id, date: date)
-        completedTrackers.remove(trackerRecord)
+        try! recordDataStore.delete(trackerRecord) //TODO: Handle Error
     }
     
     func cellIsMarked(at index: IndexPath) -> Bool {
         let id = visibleCategories[index.section].trackers[index.item].id
+        print("tracker id === ", id)
         return completedTrackers.filter( {$0.id == id && $0.date == date} ).count > 0
     }
     

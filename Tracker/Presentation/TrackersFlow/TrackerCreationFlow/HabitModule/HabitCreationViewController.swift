@@ -32,8 +32,9 @@ final class HabitCreationViewController: BaseViewController, EventCreationCoordi
     var onHeadForCategory: ((Int?) -> Void)?
     var onHeadForSchedule: (([DayOfWeek]) -> Void)?
     
-    private var categoryContainer: TrackersCategorizedContainer
+    //private var categoryContainer: TrackersCategorizedContainer
     private var categories: CategoryContainer
+    private var dataStore: TrackerCategoryStore = DataStore() //TODO: Refactor
     
     private var tableContent: [CellContent]
     
@@ -141,7 +142,7 @@ final class HabitCreationViewController: BaseViewController, EventCreationCoordi
     }()
     
     init(pageTitle: String? = nil, tableDataModel: TrackerCreationTableModel) {
-        self.categoryContainer = TrackersCategorizedContainer.shared
+        //self.categoryContainer = TrackersCategorizedContainer.shared
         self.categories = CategoryContainer.shared
         self.tableContent = tableDataModel.defaultTableContent()
         super.init(pageTitle: pageTitle)
@@ -167,9 +168,13 @@ final class HabitCreationViewController: BaseViewController, EventCreationCoordi
         onCancel?()
     }
     
-    func createButtonTapped() {
+    func createButtonTapped() throws {
         guard let tracker, let selectedCategory else { return }
-        categoryContainer.add(tracker: tracker, forCategory: categories.items[selectedCategory])
+       // let trackerCategory = TrackerCategory(name: categories.items[selectedCategory], trackers: [tracker])
+        
+        try dataStore.add(tracker, for: categories.items[selectedCategory])
+        
+        //categoryContainer.add(tracker: tracker, forCategory: categories.items[selectedCategory])
         onCreate?()
     }
     
