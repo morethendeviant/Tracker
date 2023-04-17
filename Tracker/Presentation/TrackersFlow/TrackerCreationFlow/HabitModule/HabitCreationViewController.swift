@@ -160,7 +160,7 @@ final class HabitCreationViewController: BaseViewController, EventCreationCoordi
     }
 }
 
-//MARK: - @objc
+// MARK: - @objc
 
 @objc private extension HabitCreationViewController {
     func cancelButtonTapped() {
@@ -169,11 +169,8 @@ final class HabitCreationViewController: BaseViewController, EventCreationCoordi
     
     func createButtonTapped() throws {
         guard let tracker, let selectedCategory else { return }
-       // let trackerCategory = TrackerCategory(name: categories.items[selectedCategory], trackers: [tracker])
         
         try dataStore.add(tracker, for: categories.items[selectedCategory])
-        
-        //categoryContainer.add(tracker: tracker, forCategory: categories.items[selectedCategory])
         onCreate?()
     }
     
@@ -186,7 +183,7 @@ final class HabitCreationViewController: BaseViewController, EventCreationCoordi
     }
 }
 
-//MARK: - Private Methods
+// MARK: - Private Methods
 
 private extension HabitCreationViewController {
     func checkForConfirm() {
@@ -216,7 +213,7 @@ private extension HabitCreationViewController {
     }
 }
 
-//MARK: - Habit Creation Coordinator
+// MARK: - Habit Creation Coordinator
 
 extension HabitCreationViewController: HabitCreationCoordinatorProtocol {
     func selectCategory(_ categoryIndex: Int?) {
@@ -236,7 +233,7 @@ extension HabitCreationViewController: HabitCreationCoordinatorProtocol {
     }
 }
 
-//MARK: - Text Field Delegate
+// MARK: - Text Field Delegate
 
 extension HabitCreationViewController: UITextFieldDelegate {
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
@@ -263,7 +260,7 @@ extension HabitCreationViewController: UITextFieldDelegate {
     }
 }
 
-//MARK: - Collection Flow Layout Delegate
+// MARK: - Collection Flow Layout Delegate
 
 extension HabitCreationViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
@@ -349,7 +346,7 @@ extension HabitCreationViewController: UICollectionViewDelegateFlowLayout {
     }
 }
 
-//MARK: - Collection View Data Source
+// MARK: - Collection View Data Source
 
 extension HabitCreationViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -386,7 +383,7 @@ extension HabitCreationViewController: UICollectionViewDataSource {
     }
 }
 
-//MARK: - Table View Data Source
+// MARK: - Table View Data Source
 extension HabitCreationViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         tableContent.count
@@ -401,7 +398,7 @@ extension HabitCreationViewController: UITableViewDataSource {
     }
 }
 
-//MARK: - Table View Delegate
+// MARK: - Table View Delegate
 extension HabitCreationViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         75
@@ -416,7 +413,7 @@ extension HabitCreationViewController: UITableViewDelegate {
     }
 }
 
-//MARK: - Subviews configure + layout
+// MARK: - Subviews configure + layout
 private extension HabitCreationViewController {
     func addSubviews() {
         content.addSubview(mainScrollView)

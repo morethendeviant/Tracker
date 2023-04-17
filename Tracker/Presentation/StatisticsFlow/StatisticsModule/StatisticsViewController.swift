@@ -26,7 +26,7 @@ final class StatisticsViewController: UIViewController {
     }
 }
 
-//MARK: - Subviews configure + layout
+// MARK: - Subviews configure + layout
 private extension StatisticsViewController {
     func addSubviews() {
         

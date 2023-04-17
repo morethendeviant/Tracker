@@ -7,7 +7,7 @@
 
 import UIKit
 
-//MARK: - Presentable
+// MARK: - Presentable
 
 protocol Presentable: AnyObject {
     func toPresent() -> UIViewController?
@@ -19,7 +19,7 @@ extension UIViewController: Presentable {
     }
 }
 
-//MARK: - Hide Keyboard On Tap
+// MARK: - Hide Keyboard On Tap
 
 extension UIViewController {
     func hideKeyboardWhenTappedAround(completion: (() -> Void)? = nil) {

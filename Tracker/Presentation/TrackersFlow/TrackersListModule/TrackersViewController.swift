@@ -37,7 +37,7 @@ final class TrackersViewController: UIViewController, TrackersViewCoordinatorPro
     private lazy var plusButton: UIButton = {
         let button = UIButton()
         let image = UIImage(systemName: "plus",
-                            withConfiguration: UIImage.SymbolConfiguration (pointSize: 18, weight: .bold))
+                            withConfiguration: UIImage.SymbolConfiguration(pointSize: 18, weight: .bold))
         button.setImage(image, for: .normal)
         button.tintColor = .ypBlack
         button.addTarget(nil, action: #selector(plusButtonTapped), for: .touchUpInside)
@@ -125,7 +125,7 @@ final class TrackersViewController: UIViewController, TrackersViewCoordinatorPro
     }
 }
 
-//MARK: - Search Bar Delegate
+// MARK: - Search Bar Delegate
 
 extension TrackersViewController: UISearchBarDelegate {
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
@@ -149,7 +149,7 @@ extension TrackersViewController: UISearchBarDelegate {
     }
 }
 
-//MARK: - Collection DataSource
+// MARK: - Collection DataSource
 
 extension TrackersViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -168,7 +168,12 @@ extension TrackersViewController: UICollectionViewDataSource {
         cell.trackerText = tracker.name
         cell.callback = { [weak self] indexPath in
             guard let self, self.date <= Date().onlyDate() else { return }
-            self.cellIsMarked(at: indexPath) ? self.removeRecord(at: indexPath) : self.addRecord(at: indexPath)
+            
+            if self.cellIsMarked(at: indexPath) {
+                self.removeRecord(at: indexPath)
+            } else {
+                self.addRecord(at: indexPath)
+            }
         }
         
         cell.isMarked = cellIsMarked(at: indexPath)
@@ -179,7 +184,7 @@ extension TrackersViewController: UICollectionViewDataSource {
     } 
 }
 
-//MARK: - Collection Flow Layout Delegate
+// MARK: - Collection Flow Layout Delegate
 
 extension TrackersViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
@@ -228,7 +233,7 @@ extension TrackersViewController: UICollectionViewDelegateFlowLayout {
     }
 }
 
-//MARK: - Collection View Delegate
+// MARK: - Collection View Delegate
 
 extension TrackersViewController: UICollectionViewDelegate {
     func numberOfSections(in collectionView: UICollectionView) -> Int {
@@ -244,7 +249,7 @@ extension TrackersViewController: UICollectionViewDelegate {
     }
 }
 
-//MARK: - @objc
+// MARK: - @objc
 
 @objc private extension TrackersViewController {
     func plusButtonTapped() {
@@ -258,7 +263,7 @@ extension TrackersViewController: UICollectionViewDelegate {
     }
 }
 
-//MARK: - Private Methods
+// MARK: - Private Methods
 
 private extension TrackersViewController {
     func addRecord(at indexPath: IndexPath) {
@@ -284,7 +289,7 @@ private extension TrackersViewController {
     }
 }
 
-//MARK: - Data Provider Delegate
+// MARK: - Data Provider Delegate
 extension TrackersViewController: DataProviderDelegate {
     func didUpdate(_ update: TrackersStoreUpdate) {
         trackersCollectionView.performBatchUpdates {
@@ -315,22 +320,26 @@ extension TrackersViewController: DataProviderDelegate {
     }
 }
 
-//MARK: - Menu Interaction Delegate
+// MARK: - Menu Interaction Delegate
 
 extension TrackersViewController: UIContextMenuInteractionDelegate {
     func contextMenuInteraction(_ interaction: UIContextMenuInteraction, configurationForMenuAtLocation location: CGPoint) -> UIContextMenuConfiguration? {
-        guard let location = interaction.view?.convert(location, to: trackersCollectionView), let indexPath = trackersCollectionView.indexPathForItem(at: location) else { return UIContextMenuConfiguration() }
+        guard let location = interaction.view?.convert(location, to: trackersCollectionView),
+                let indexPath = trackersCollectionView.indexPathForItem(at: location)
+        else {
+            return UIContextMenuConfiguration()
+        }
         
-        let configuration = UIContextMenuConfiguration(identifier: nil, previewProvider: nil) { [weak self] actions -> UIMenu in
-            let pin = UIAction(title: "Закрепить", image: UIImage(systemName: "pin")) { action in
-                print("pin") //TODO: - Implement pin ability
+        let configuration = UIContextMenuConfiguration(identifier: nil, previewProvider: nil) { [weak self] _ -> UIMenu in
+            let pin = UIAction(title: "Закрепить", image: UIImage(systemName: "pin")) { _ in
+                print("pin") // TODO: - Implement pin ability
             }
             
-            let edit = UIAction(title: "Редактировать", image: UIImage(systemName: "pencil")) { action in
-                print("edit") //TODO: - Implement edit ability
+            let edit = UIAction(title: "Редактировать", image: UIImage(systemName: "pencil")) { _ in
+                print("edit") // TODO: - Implement edit ability
             }
             
-            let delete = UIAction(title: "Удалить", image: UIImage(systemName: "trash.fill"), attributes: .destructive) { action in
+            let delete = UIAction(title: "Удалить", image: UIImage(systemName: "trash.fill"), attributes: .destructive) { _ in
                 self?.dataProvider?.deleteTracker(at: indexPath)
             }
             
@@ -341,7 +350,7 @@ extension TrackersViewController: UIContextMenuInteractionDelegate {
     }
 }
 
-//MARK: - Subviews configure + layout
+// MARK: - Subviews configure + layout
 
 private extension TrackersViewController {
     func addSubviews() {

@@ -50,7 +50,7 @@ final class ScheduleViewController: BaseViewController, ScheduleViewCoordinatorP
     }
 }
 
-//MARK: - @objs
+// MARK: - @objs
 
 @objc private extension ScheduleViewController {
     func doneButtonTapped() {
@@ -67,7 +67,7 @@ final class ScheduleViewController: BaseViewController, ScheduleViewCoordinatorP
     }
 }
 
-//MARK: - Private Methods
+// MARK: - Private Methods
 
 private extension ScheduleViewController {
     func configureCell(_ cell: UITableViewCell, indexPath: IndexPath) {
@@ -86,7 +86,7 @@ private extension ScheduleViewController {
     }
 }
 
-//MARK: - Table View Delegate
+// MARK: - Table View Delegate
 
 extension ScheduleViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -94,7 +94,7 @@ extension ScheduleViewController: UITableViewDelegate {
     }
 }
 
-//MARK: - Table View Data Source
+// MARK: - Table View Data Source
 
 extension ScheduleViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -110,7 +110,7 @@ extension ScheduleViewController: UITableViewDataSource {
     }
 }
 
-//MARK: - Subviews configure + layout
+// MARK: - Subviews configure + layout
 
 private extension ScheduleViewController {
     func addSubviews() {

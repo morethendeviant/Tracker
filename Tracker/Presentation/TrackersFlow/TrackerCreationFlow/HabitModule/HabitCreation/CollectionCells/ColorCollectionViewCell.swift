@@ -55,7 +55,8 @@ final class ColorCollectionViewCell: UICollectionViewCell {
     }
 }
 
-//MARK: - Subviews configure + layout
+// MARK: - Subviews configure + layout
+
 private extension ColorCollectionViewCell {
     func addSubviews() {
         layer.addSublayer(borderLayer)

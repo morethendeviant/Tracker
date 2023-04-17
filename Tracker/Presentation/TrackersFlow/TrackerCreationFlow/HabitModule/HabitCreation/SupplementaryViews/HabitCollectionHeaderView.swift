@@ -28,7 +28,7 @@ final class HabitCollectionHeaderView: UICollectionReusableView {
     }
 }
 
-//MARK: - Subviews configure + layout
+// MARK: - Subviews configure + layout
 
 private extension HabitCollectionHeaderView {
     func addSubviews() {

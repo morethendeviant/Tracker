@@ -39,7 +39,7 @@ final class TrackerCollectionViewCell: UICollectionViewCell {
                 switch lastDigit {
                 case 1: suffix = "день"
                 case 2, 3, 4: suffix = "дня"
-                case 5, 6, 7, 8, 9 , 0: suffix = "дней"
+                case 5, 6, 7, 8, 9, 0: suffix = "дней"
                 default: suffix = ""
                 }
                 daysCounter.text = "\(daysAmount) " + suffix
@@ -125,7 +125,7 @@ final class TrackerCollectionViewCell: UICollectionViewCell {
 
 }
 
-//MARK: - Private Methods
+// MARK: - Private Methods
 
 private extension TrackerCollectionViewCell {
     @objc func plusButtonTapped() {
@@ -139,7 +139,7 @@ private extension TrackerCollectionViewCell {
     }
 }
 
-//MARK: - Subviews configure + layout
+// MARK: - Subviews configure + layout
 
 private extension TrackerCollectionViewCell {
     func addSubviews() {

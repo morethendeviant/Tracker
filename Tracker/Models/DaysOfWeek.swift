@@ -8,7 +8,7 @@
 import Foundation
 
 enum DayOfWeek: Int, CaseIterable {
-    case mon, tue, wed, thu, fri, sat ,sun
+    case mon, tue, wed, thu, fri, sat, sun
 }
 
 extension DayOfWeek {

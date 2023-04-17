@@ -14,20 +14,18 @@ protocol TrackerDataStoreProtocol {
 }
 
 protocol TrackerRecordDataStoreProtocol {
-    func addRecord(tracker: TrackerManagedObject, date: Date) throws
+    func addRecord(trackerObject: TrackerManagedObject, date: Date) throws
     func deleteRecord(_ id: String, date: Date?) throws
     func getRecord(_ id: String, date: Date?) throws -> TrackerRecordManagedObject?
 }
 
-//MARK: - Data Store
+// MARK: - Data Store
 
 final class DataStore {
     let context = Context.shared
-
-    
 }
 
-//MARK: - Category Data Store
+// MARK: - Category Data Store
 
 extension DataStore {
     private func getCategoryFor(name: String, storing tracker: TrackerManagedObject) -> TrackerCategoryManagedObject {
@@ -58,12 +56,12 @@ extension DataStore {
     }
 }
 
-//MARK: - Tracker Data Store
+// MARK: - Tracker Data Store
 
 extension DataStore: TrackerDataStoreProtocol {
     func add(_ tracker: Tracker, for categoryName: String) throws {
         let trackerObject = TrackerManagedObject(context: context)
-        trackerObject.iD = tracker.id
+        trackerObject.id = tracker.id
         trackerObject.color = Int16(tracker.color)
         trackerObject.emoji = Int16(tracker.emoji)
         trackerObject.name = tracker.name
@@ -81,21 +79,21 @@ extension DataStore: TrackerDataStoreProtocol {
         
         context.delete(tracker)
         try context.save()
-        if let categoryObject = try getCategoryFor(name: category.name), categoryObject.trackers.count == 0 {
+        if let categoryObject = try getCategoryFor(name: category.name), categoryObject.trackers.isEmpty {
             try deleteCategory(categoryObject)
         }
     }
 }
 
-//MARK: - Record Data Store
+// MARK: - Record Data Store
 
 extension DataStore: TrackerRecordDataStoreProtocol {
-    func addRecord(tracker: TrackerManagedObject, date: Date) throws {
+    func addRecord(trackerObject: TrackerManagedObject, date: Date) throws {
         let recordObject = TrackerRecordManagedObject(context: context)
-        recordObject.iD = tracker.iD
+        recordObject.id = trackerObject.id
         recordObject.date = date
-        recordObject.tracker = tracker
-        tracker.addToRecords(recordObject)
+        recordObject.tracker = trackerObject
+        trackerObject.addToRecords(recordObject)
         try context.save()
     }
     
@@ -105,11 +103,11 @@ extension DataStore: TrackerRecordDataStoreProtocol {
         try context.save()
     }
     
-    func getRecord(_ id: String, date: Date?) throws -> TrackerRecordManagedObject?  {
+    func getRecord(_ id: String, date: Date?) throws -> TrackerRecordManagedObject? {
         let request = NSFetchRequest<TrackerRecordManagedObject>(entityName: "TrackerRecordCoreData")
         request.returnsObjectsAsFaults = false
         var compoundPredicate: [NSPredicate] = []
-        compoundPredicate.append(NSPredicate(format: "%K == %@", #keyPath(TrackerRecordManagedObject.iD), id))
+        compoundPredicate.append(NSPredicate(format: "%K == %@", #keyPath(TrackerRecordManagedObject.id), id))
         if let date {
             compoundPredicate.append(NSPredicate(format: "%K == %@", #keyPath(TrackerRecordManagedObject.date), date as CVarArg))
         }
@@ -118,4 +116,3 @@ extension DataStore: TrackerRecordDataStoreProtocol {
         return record
     }
 }
-

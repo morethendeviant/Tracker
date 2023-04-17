@@ -34,7 +34,7 @@ final class HabitCreationCoordinator: BaseCoordinator, Coordinatable, HabitCreat
 private extension HabitCreationCoordinator {
     func performFlow() {
         let habitView = self.modulesFactory.makeHabitCreationView()
-        var habitCoordinator = habitView as? HabitCreationCoordinatorProtocol
+        let habitCoordinator = habitView as? HabitCreationCoordinatorProtocol
         
         habitCoordinator?.onCreate = { [weak self, weak habitView] in
             guard let self else { return }

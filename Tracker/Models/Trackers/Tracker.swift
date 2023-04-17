@@ -25,7 +25,7 @@ struct Tracker {
 
 extension Tracker {
     init(managedItem: TrackerManagedObject) {
-        self.id = managedItem.iD
+        self.id = managedItem.id
         self.name = managedItem.name
         self.color = Int(managedItem.color)
         self.emoji = Int(managedItem.emoji)

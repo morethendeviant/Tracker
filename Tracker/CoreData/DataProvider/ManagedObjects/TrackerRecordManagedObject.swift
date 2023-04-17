@@ -9,7 +9,7 @@ import CoreData
 
 @objc(TrackerRecordManagedObject)
 final class TrackerRecordManagedObject: NSManagedObject {
-    @NSManaged var iD: String
+    @NSManaged var id: String
     @NSManaged var date: Date
     @NSManaged var tracker: TrackerManagedObject
 }

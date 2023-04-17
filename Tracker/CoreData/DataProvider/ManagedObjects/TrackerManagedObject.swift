@@ -9,7 +9,7 @@ import CoreData
 
 @objc(TrackerManagedObject)
 final class TrackerManagedObject: NSManagedObject {
-    @NSManaged var iD: String
+    @NSManaged var id: String
     @NSManaged var name: String
     @NSManaged var color: Int16
     @NSManaged var emoji: Int16

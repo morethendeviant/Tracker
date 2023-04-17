@@ -29,7 +29,7 @@ final class TrackersCollectionHeaderView: UICollectionReusableView {
     }
 }
 
-//MARK: - Subviews configure + layout
+// MARK: - Subviews configure + layout
 
 private extension TrackersCollectionHeaderView {
     func addSubviews() {

@@ -27,7 +27,7 @@ protocol Routable {
 
 final class Router: NSObject {
     weak var delegate: RouterDelegate?
-    private var completions: [UIViewController : (() -> Void)?]
+    private var completions: [UIViewController: (() -> Void)?]
     private var presentingViewController: Presentable?
     
     init(routerDelegate: RouterDelegate) {
@@ -71,7 +71,7 @@ extension Router: Routable {
         dismissModule(module, animated: true, completion: nil)
     }
     
-    func dismissModule(_ module: Presentable?, completion: (() -> Void)?)  {
+    func dismissModule(_ module: Presentable?, completion: (() -> Void)?) {
         dismissModule(module, animated: true, completion: completion)
     }
     

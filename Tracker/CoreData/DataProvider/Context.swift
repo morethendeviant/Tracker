@@ -7,7 +7,7 @@
 
 import CoreData
 
-final class Context{
+final class Context {
     static let shared = Context().context
     
     private let persistentContainer: NSPersistentContainer

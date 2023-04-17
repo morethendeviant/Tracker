@@ -53,7 +53,7 @@ final class CategorySelectViewController: BaseViewController, CategorySelectCoor
     }
 }
 
-//MARK: - @objs
+// MARK: - @objs
 
 @objc private extension CategorySelectViewController {
     func addButtonTapped() {
@@ -61,7 +61,7 @@ final class CategorySelectViewController: BaseViewController, CategorySelectCoor
     }
 }
 
-//MARK: - Private Methods
+// MARK: - Private Methods
 
 private extension CategorySelectViewController {
     func configureCell(_ cell: UITableViewCell, for indexPath: IndexPath) {
@@ -72,7 +72,7 @@ private extension CategorySelectViewController {
     }
 }
 
-//MARK: - Table View Delegate
+// MARK: - Table View Delegate
 
 extension CategorySelectViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -90,7 +90,7 @@ extension CategorySelectViewController: UITableViewDelegate {
     }
 }
 
-//MARK: - Table View Data Source
+// MARK: - Table View Data Source
 
 extension CategorySelectViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -106,7 +106,8 @@ extension CategorySelectViewController: UITableViewDataSource {
     }
 }
 
-//MARK: - Subviews configure + layout
+// MARK: - Subviews configure + layout
+
 private extension CategorySelectViewController {
     func addSubviews() {
         content.addSubview(categoriesTableView)

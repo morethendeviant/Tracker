@@ -31,7 +31,7 @@ final class ContentPlaceholder: UIView {
     }
 }
 
-//MARK: - Private methods
+// MARK: - Private methods
 
 private extension ContentPlaceholder {
     func setUpContent(with style: Style) {
@@ -47,7 +47,7 @@ private extension ContentPlaceholder {
     }
 }
 
-//MARK: - Subviews configure + layout
+// MARK: - Subviews configure + layout
 private extension ContentPlaceholder {
     func addSubviews() {
         addSubview(imageView)

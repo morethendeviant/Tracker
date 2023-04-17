@@ -28,12 +28,10 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     }
 }
 
-//MARK: - Router Delegate
+// MARK: - Router Delegate
 
 extension SceneDelegate: RouterDelegate {
     func setRootViewController(_ viewController: Presentable?) {
         window?.rootViewController = viewController?.toPresent()
     }
 }
-
-

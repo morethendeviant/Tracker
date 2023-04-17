@@ -121,25 +121,25 @@ extension DataProvider: DataProviderProtocol {
     func addRecord(at indexPath: IndexPath, for date: Date) {
         let trackerObject = fetchedResultsController.object(at: indexPath)
         do {
-            try trackerRecordDataStore.addRecord(tracker: trackerObject, date: date )
+            try trackerRecordDataStore.addRecord(trackerObject: trackerObject, date: date )
         } catch {
             errorHandlerDelegate?.handleError(message: error.localizedDescription)
         }
     }
     
     func deleteRecord(at indexPath: IndexPath, for date: Date) {
-        let tracker = fetchedResultsController.object(at: indexPath)        
+        let trackerObject = fetchedResultsController.object(at: indexPath)
         do {
-            try trackerRecordDataStore.deleteRecord(tracker.iD, date: date)
+            try trackerRecordDataStore.deleteRecord(trackerObject.id, date: date)
         } catch {
             errorHandlerDelegate?.handleError(message: error.localizedDescription)
         }
     }
     
     func checkRecord(at indexPath: IndexPath, for date: Date) -> Bool {
-        let tracker = fetchedResultsController.object(at: indexPath)
+        let trackerObject = fetchedResultsController.object(at: indexPath)
         do {
-            return try trackerRecordDataStore.getRecord(tracker.iD, date: date) != nil
+            return try trackerRecordDataStore.getRecord(trackerObject.id, date: date) != nil
         } catch {
             errorHandlerDelegate?.handleError(message: error.localizedDescription)
             return false
@@ -188,4 +188,3 @@ extension DataProvider: NSFetchedResultsControllerDelegate {
         }
     }
 }
-

@@ -189,7 +189,6 @@
 		786BF14429ED6B6D009317E5 /* Models */ = {
 			isa = PBXGroup;
 			children = (
-				784BCA7429E85BDD00D1A14E /* TrackerCoreDataModel.xcdatamodeld */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -250,6 +249,7 @@
 		78AA538F29D202F30063EB84 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				784BCA7429E85BDD00D1A14E /* TrackerCoreDataModel.xcdatamodeld */,
 				78A706DD29DB47C300932908 /* CategoryContainer.swift */,
 				780BF39329D0EA7100A3CFA0 /* LaunchScreen.storyboard */,
 				780BF39129D0EA7100A3CFA0 /* Assets.xcassets */,
@@ -440,6 +440,7 @@
 				780BF38129D0EA6E00A3CFA0 /* Sources */,
 				780BF38229D0EA6E00A3CFA0 /* Frameworks */,
 				780BF38329D0EA6E00A3CFA0 /* Resources */,
+				786BF14A29ED766B009317E5 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -500,6 +501,26 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		786BF14A29ED766B009317E5 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "if which swiftlint >/dev/null; then\n  swiftlint\nelse\n  echo \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi\n";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		780BF38129D0EA6E00A3CFA0 /* Sources */ = {

@@ -9,7 +9,7 @@ protocol AppCoordinatorOutput {
     var finishFlow: (() -> Void)? { get set }
 }
 
-final class AppCoordinator : BaseCoordinator, Coordinatable, AppCoordinatorOutput {
+final class AppCoordinator: BaseCoordinator, Coordinatable, AppCoordinatorOutput {
     
     var finishFlow: (() -> Void)?
     

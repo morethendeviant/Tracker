@@ -17,7 +17,7 @@ enum TrackerCreationTableModel {
     
     func defaultTableContent() -> [CellContent] {
         switch self {
-        case .habit: return [CellContent(text: "Категория", detailText: nil) , CellContent(text: "Расписание", detailText: nil)]
+        case .habit: return [CellContent(text: "Категория", detailText: nil), CellContent(text: "Расписание", detailText: nil)]
         case .event: return [CellContent(text: "Категория", detailText: nil)]
         }
     }

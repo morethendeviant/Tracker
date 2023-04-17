@@ -34,7 +34,7 @@ final class EventCreationCoordinator: BaseCoordinator, Coordinatable, EventCreat
 private extension EventCreationCoordinator {
     func performFlow() {
         let eventView = self.modulesFactory.makeEventCreationView()
-        var eventCoordinator = eventView as? EventCreationCoordinatorProtocol
+        let eventCoordinator = eventView as? EventCreationCoordinatorProtocol
         
         eventCoordinator?.onCreate = { [weak self, weak eventView] in
             guard let self else { return }

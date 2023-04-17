@@ -7,7 +7,7 @@
     <entity name="TrackerCoreData" representedClassName="TrackerManagedObject" syncable="YES">
         <attribute name="color" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="emoji" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
-        <attribute name="iD" attributeType="String"/>
+        <attribute name="id" attributeType="String"/>
         <attribute name="name" attributeType="String"/>
         <attribute name="schedule" attributeType="String"/>
         <relationship name="category" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="TrackerCategoryCoreData" inverseName="trackers" inverseEntity="TrackerCategoryCoreData"/>
@@ -15,7 +15,7 @@
     </entity>
     <entity name="TrackerRecordCoreData" representedClassName="TrackerRecordManagedObject" syncable="YES">
         <attribute name="date" attributeType="Date" usesScalarValueType="NO"/>
-        <attribute name="iD" attributeType="String"/>
+        <attribute name="id" attributeType="String"/>
         <relationship name="tracker" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="TrackerCoreData" inverseName="records" inverseEntity="TrackerCoreData"/>
     </entity>
 </model>

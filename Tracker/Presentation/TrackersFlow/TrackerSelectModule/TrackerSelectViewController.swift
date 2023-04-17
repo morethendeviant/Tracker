@@ -35,7 +35,7 @@ final class TrackerSelectViewController: BaseViewController, TrackerSelectCoordi
     }
 }
 
-//MARK: - @objc
+// MARK: - @objc
 
 @objc private extension TrackerSelectViewController {
     func headForHabit() {
@@ -47,7 +47,7 @@ final class TrackerSelectViewController: BaseViewController, TrackerSelectCoordi
     }
 }
 
-//MARK: - Subviews configure + layout
+// MARK: - Subviews configure + layout
 
 private extension TrackerSelectViewController {
     func addSubviews() {
