@@ -40,14 +40,18 @@ extension DayOfWeek {
         days.count == 7 ? "Каждый день" : days.compactMap { shortNameFor($0) }.joined(separator: ", ")
     }
     
-    static func daysToBinary(_ days: [Self]) -> String {
-        Self.allCases.map { days.contains($0) ? "1" : "0" }.joined()
+    static func daysToNumbers(_ days: [Self]) -> String {
+        Self.allCases.map { days.contains($0) ? "\($0.rawValue + 1)" : "0" }.joined()
     }
     
-    static func binaryToDays(_ binaryString: String) -> [Self] {
+    static func numbersToDays(_ binaryString: String) -> [Self] {
         var days: [Self] = []
-        binaryString.enumerated().forEach { if Int(String($1)) == 1 { days.append(Self.allCases[$0]) }  }
+        binaryString.enumerated().forEach { if Int(String($1)) != 0 { days.append(Self.allCases[$0]) }  }
         return days
+    }
+    
+    static func dayToBinary(_ day: Self) -> String {
+        String(day.rawValue + 1)
     }
     
     static var count: Int {

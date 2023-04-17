@@ -61,7 +61,15 @@ final class TrackerCollectionViewCell: UICollectionViewCell {
         }
     }
     
-    var callback: (() -> Void)?
+    var interaction: UIInteraction? {
+        didSet {
+            if let interaction {
+                colorBackgroundView.addInteraction(interaction)
+            }
+        }
+    }
+    
+    var callback: ((IndexPath) -> Void)?
     
     private let colorBackgroundView: UIView = {
         let view = UIView()
@@ -114,18 +122,30 @@ final class TrackerCollectionViewCell: UICollectionViewCell {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+
+}
+
+//MARK: - Private Methods
+
+private extension TrackerCollectionViewCell {
+    @objc func plusButtonTapped() {
+        guard let indexPath = getIndexPath() else { return }
+        callback?(indexPath)
+    }
     
-    @objc private func plusButtonTapped() {
-        callback?()
+    func getIndexPath() -> IndexPath? {
+        guard let superView = self.superview as? UICollectionView else { return nil }
+        return superView.indexPath(for: self)
     }
 }
 
 //MARK: - Subviews configure + layout
+
 private extension TrackerCollectionViewCell {
     func addSubviews() {
         contentView.addSubview(colorBackgroundView)
-        contentView.addSubview(emojiLabel)
-        contentView.addSubview(trackerLabel)
+        colorBackgroundView.addSubview(emojiLabel)
+        colorBackgroundView.addSubview(trackerLabel)
         contentView.addSubview(daysCounter)
         contentView.addSubview(plusButton)
     }
@@ -138,8 +158,8 @@ private extension TrackerCollectionViewCell {
         
         emojiLabel.snp.makeConstraints { make in
             make.width.height.equalTo(24)
-            make.top.equalTo(self.snp.top).offset(12)
-            make.leading.equalTo(self.snp.leading).offset(12)
+            make.top.equalTo(colorBackgroundView.snp.top).offset(12)
+            make.leading.equalTo(colorBackgroundView.snp.leading).offset(12)
         }
         
         trackerLabel.snp.makeConstraints { make in

@@ -32,9 +32,8 @@ final class HabitCreationViewController: BaseViewController, EventCreationCoordi
     var onHeadForCategory: ((Int?) -> Void)?
     var onHeadForSchedule: (([DayOfWeek]) -> Void)?
     
-    //private var categoryContainer: TrackersCategorizedContainer
     private var categories: CategoryContainer
-    private var dataStore: TrackerCategoryStore = DataStore() //TODO: Refactor
+    private var dataStore: TrackerDataStoreProtocol
     
     private var tableContent: [CellContent]
     
@@ -141,10 +140,10 @@ final class HabitCreationViewController: BaseViewController, EventCreationCoordi
         return button
     }()
     
-    init(pageTitle: String? = nil, tableDataModel: TrackerCreationTableModel) {
-        //self.categoryContainer = TrackersCategorizedContainer.shared
+    init(pageTitle: String? = nil, tableDataModel: TrackerCreationTableModel, dataStore: TrackerDataStoreProtocol) {
         self.categories = CategoryContainer.shared
         self.tableContent = tableDataModel.defaultTableContent()
+        self.dataStore = dataStore
         super.init(pageTitle: pageTitle)
     }
     
@@ -247,7 +246,7 @@ extension HabitCreationViewController: UITextFieldDelegate {
     }
     
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-        return self.textLimit(existingText: textField.text, newText: string, limit: 10)
+        return self.textLimit(existingText: textField.text, newText: string, limit: 38)
     }
     
     private func textLimit(existingText: String?, newText: String, limit: Int) -> Bool {

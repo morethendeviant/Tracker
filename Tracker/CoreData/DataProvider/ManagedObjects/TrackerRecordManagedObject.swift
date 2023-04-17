@@ -7,8 +7,9 @@
 
 import CoreData
 
-@objc(TrackerRecordManagedItem)
-public class TrackerRecordManagedItem: NSManagedObject {
+@objc(TrackerRecordManagedObject)
+final class TrackerRecordManagedObject: NSManagedObject {
     @NSManaged var iD: String
     @NSManaged var date: Date
+    @NSManaged var tracker: TrackerManagedObject
 }

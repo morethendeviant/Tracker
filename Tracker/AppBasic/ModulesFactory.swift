@@ -18,6 +18,8 @@ protocol ModulesFactoryProtocol {
 }
 
 final class ModulesFactory: ModulesFactoryProtocol {
+    let dataStore: TrackerDataStoreProtocol = DataStore()
+    
     func makeTrackersView() -> Presentable {
         return TrackersViewController()
     }
@@ -36,12 +38,12 @@ final class ModulesFactory: ModulesFactoryProtocol {
     
     func makeHabitCreationView() -> Presentable {
         let tableModel = TrackerCreationTableModel.habit
-        return HabitCreationViewController(pageTitle: "Новая привычка", tableDataModel: tableModel)
+        return HabitCreationViewController(pageTitle: "Новая привычка", tableDataModel: tableModel, dataStore: dataStore)
     }
     
     func makeEventCreationView() -> Presentable {
         let tableModel = TrackerCreationTableModel.event
-        return HabitCreationViewController(pageTitle: "Новая привычка", tableDataModel: tableModel)
+        return HabitCreationViewController(pageTitle: "Новая привычка", tableDataModel: tableModel, dataStore: dataStore)
     }
     
     func makeCategorySelectView(selectedCategory: Int?) -> Presentable {

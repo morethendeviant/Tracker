@@ -22,3 +22,13 @@ struct Tracker {
         self.schedule = schedule
     }
 }
+
+extension Tracker {
+    init(managedItem: TrackerManagedObject) {
+        self.id = managedItem.iD
+        self.name = managedItem.name
+        self.color = Int(managedItem.color)
+        self.emoji = Int(managedItem.emoji)
+        self.schedule = DayOfWeek.numbersToDays(managedItem.schedule)
+    }
+}
