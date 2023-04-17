@@ -22,8 +22,14 @@ extension Date {
     }
     
     func onlyDate() -> Date {
-        let components = Calendar.current.dateComponents([.year, .month, .day], from: self)
+        var calendar = Calendar(identifier: .gregorian)
+        let components = calendar.dateComponents([.year, .month, .day], from: self.toCurrentTimezone())
         let date = Calendar.current.date(from: components)
         return date!
+    }
+    
+    func toCurrentTimezone() -> Date {
+        let timeZoneDifference = TimeInterval(TimeZone.current.secondsFromGMT())
+        return self.addingTimeInterval(timeZoneDifference)
     }
 }

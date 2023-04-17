@@ -17,8 +17,8 @@ final class Context {
         let modelName = "TrackerCoreDataModel"
         self.persistentContainer = {
             let container = NSPersistentContainer(name: modelName)
-            container.loadPersistentStores(completionHandler: { (storeDescription, error) in
-                if let error = error as NSError? {
+            container.loadPersistentStores(completionHandler: { (_, error) in
+                if error != nil {
                     fatalError("Can't load persistent container")
                 }
             })
