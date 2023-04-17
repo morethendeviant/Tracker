@@ -71,11 +71,11 @@ final class DataProvider: NSObject {
 
 extension DataProvider: DataProviderProtocol {
     var numberOfSections: Int {
-        return fetchedResultsController.sections?.count ?? 0
+        fetchedResultsController.sections?.count ?? 0
     }
     
     func sectionName(_ indexPath: IndexPath) -> String? {
-        fetchedResultsController.object(at: indexPath).category.name
+        return fetchedResultsController.object(at: indexPath).category.name
     }
     
     func getTrackers(name: String? = nil, weekday: DayOfWeek? = nil) {
@@ -94,7 +94,6 @@ extension DataProvider: DataProviderProtocol {
         fetchRequest.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: compoundPredicateSubpredicates)
         do {
             try fetchedResultsController.performFetch()
-            fetchedResultsController.fetchedObjects?.forEach {print("+++", $0.name, $0.category.name)}
         } catch {
             errorHandlerDelegate?.handleError(message: error.localizedDescription)
         }

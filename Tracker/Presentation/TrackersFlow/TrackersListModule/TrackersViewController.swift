@@ -239,12 +239,17 @@ extension TrackersViewController: UICollectionViewDelegate {
     func numberOfSections(in collectionView: UICollectionView) -> Int {
         let numberOfSections = dataProvider?.numberOfSections ?? 0
         if numberOfSections == 0 {
-            trackersCollectionView.isHidden = true
+            if let text = searchBar.text, text.isEmpty {
+                contentPlaceholder.setUpContent(with: .trackers)
+            } else {
+                contentPlaceholder.setUpContent(with: .search)
+            }
+            
             contentPlaceholder.isHidden = false
         } else {
-            trackersCollectionView.isHidden = false
             contentPlaceholder.isHidden = true
         }
+        
         return numberOfSections
     }
 }
@@ -359,7 +364,7 @@ private extension TrackersViewController {
         view.addSubview(headerLabel)
         view.addSubview(datePicker)
         view.addSubview(searchBar)
-        view.addSubview(contentPlaceholder)
+        trackersCollectionView.addSubview(contentPlaceholder)
         view.addSubview(filtersButton)
     }
     
@@ -405,7 +410,7 @@ private extension TrackersViewController {
 
         contentPlaceholder.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
-            make.top.equalTo(searchBar.snp.bottom).offset(230)
+            make.centerY.equalToSuperview()
             make.width.equalToSuperview()
             make.height.equalTo(188)
         }

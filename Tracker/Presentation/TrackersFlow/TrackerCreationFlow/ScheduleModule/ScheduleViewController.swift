@@ -16,6 +16,19 @@ final class ScheduleViewController: BaseViewController, ScheduleViewCoordinatorP
     
     private var selectedDays: [DayOfWeek] = []
     
+    private var mainScrollView: UIScrollView = {
+        let scroll = UIScrollView()
+        
+        return scroll
+    }()
+    
+    private lazy var mainStackView: UIStackView = {
+        let stack = UIStackView()
+        stack.alignment = .fill
+        stack.axis = .vertical
+        return stack
+    }()
+    
     private lazy var daysOfWeekTableView: UITableView = {
         let table = UITableView()
         table.delegate = self
@@ -114,8 +127,12 @@ extension ScheduleViewController: UITableViewDataSource {
 
 private extension ScheduleViewController {
     func addSubviews() {
-        content.addSubview(daysOfWeekTableView)
-        content.addSubview(doneButton)
+        content.addSubview(mainScrollView)
+        
+        mainScrollView.addSubview(mainStackView)
+        mainStackView.addArrangedSubview(daysOfWeekTableView)
+        mainStackView.setCustomSpacing(50, after: daysOfWeekTableView)
+        mainStackView.addArrangedSubview(doneButton)
     }
     
     func configure() {
@@ -123,18 +140,21 @@ private extension ScheduleViewController {
     }
     
     func applyLayout() {
+        mainScrollView.snp.makeConstraints { make in
+            make.edges.equalToSuperview()
+        }
+        
+        mainStackView.snp.makeConstraints { make in
+            make.edges.equalTo(mainScrollView.contentLayoutGuide).inset(16)
+            make.width.equalTo(mainScrollView.frameLayoutGuide).inset(16)
+        }
+        
         daysOfWeekTableView.snp.makeConstraints { make in
-            make.top.equalToSuperview()
-            make.leading.equalToSuperview().offset(16)
-            make.trailing.equalToSuperview().offset(-16)
             make.height.equalTo(daysOfWeekTableView.numberOfRows(inSection: 0) * 75 - 1)
         }
         
         doneButton.snp.makeConstraints { make in
-            make.leading.equalToSuperview().offset(20)
-            make.trailing.equalToSuperview().offset(-20)
             make.height.equalTo(60)
-            make.bottom.equalToSuperview().offset(-50)
         }
     }
 }
