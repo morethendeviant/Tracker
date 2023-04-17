@@ -21,7 +21,7 @@ protocol DataProviderProtocol {
     var numberOfSections: Int { get }
     
     func numberOfItemsInSection(_ section: Int) -> Int
-    func sectionName(_ section: Int) -> String?
+    func sectionName(_ indexPath: IndexPath) -> String?
     
     func tracker(at indexPath: IndexPath) -> Tracker?
     func getTrackers(name: String?, weekday: DayOfWeek?)
@@ -71,11 +71,11 @@ final class DataProvider: NSObject {
 
 extension DataProvider: DataProviderProtocol {
     var numberOfSections: Int {
-        fetchedResultsController.sections?.count ?? 0
+        return fetchedResultsController.sections?.count ?? 0
     }
     
-    func sectionName(_ section: Int) -> String? {
-        fetchedResultsController.sections?[section].name
+    func sectionName(_ indexPath: IndexPath) -> String? {
+        fetchedResultsController.object(at: indexPath).category.name
     }
     
     func getTrackers(name: String? = nil, weekday: DayOfWeek? = nil) {
@@ -91,10 +91,10 @@ extension DataProvider: DataProviderProtocol {
             compoundPredicateSubpredicates.append(predicate)
         }
         
-        fetchRequest.sortDescriptors = [NSSortDescriptor(key: "name", ascending: true)]
         fetchRequest.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: compoundPredicateSubpredicates)
         do {
             try fetchedResultsController.performFetch()
+            fetchedResultsController.fetchedObjects?.forEach {print("+++", $0.name, $0.category.name)}
         } catch {
             errorHandlerDelegate?.handleError(message: error.localizedDescription)
         }

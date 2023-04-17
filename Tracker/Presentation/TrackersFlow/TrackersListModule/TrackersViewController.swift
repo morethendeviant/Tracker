@@ -204,7 +204,7 @@ extension TrackersViewController: UICollectionViewDelegateFlowLayout {
         }
         
         if let view = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: id, for: indexPath) as? TrackersCollectionHeaderView {
-            view.titleLabel.text = dataProvider?.sectionName(indexPath.section)
+            view.titleLabel.text = dataProvider?.sectionName(indexPath)
             return view
         }
         
