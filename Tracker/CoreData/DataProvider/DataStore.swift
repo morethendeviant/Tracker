@@ -8,7 +8,7 @@
 import Foundation
 import CoreData
 
-protocol TrackerCategoryProtocol {
+protocol TrackerCategoryDataStoreProtocol {
     func addCategory(categoryName: String) throws -> TrackerCategoryManagedObject
     func getCategoryFor(name: String) throws -> TrackerCategoryManagedObject?
     func deleteCategory(_ category: TrackerCategoryManagedObject) throws
@@ -33,7 +33,7 @@ final class DataStore {
 
 // MARK: - Category Data Store
 
-extension DataStore {
+extension DataStore: TrackerDataStoreProtocol {
     @discardableResult
     func addCategory(categoryName: String) throws -> TrackerCategoryManagedObject {
         let categoryObject = TrackerCategoryManagedObject(context: context)
@@ -70,7 +70,7 @@ extension DataStore {
 
 // MARK: - Tracker Data Store
 
-extension DataStore: TrackerDataStoreProtocol {
+extension DataStore: TrackerCategoryDataStoreProtocol {
     func add(_ tracker: Tracker, for categoryName: String) throws {
         let trackerObject = TrackerManagedObject(context: context)
         trackerObject.setFrom(tracker: tracker)

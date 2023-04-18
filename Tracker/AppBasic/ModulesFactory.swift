@@ -14,7 +14,8 @@ protocol ModulesFactoryProtocol {
     func makeScheduleView(weekdays: [DayOfWeek]) -> Presentable
     func makeHabitCreationView() -> Presentable
     func makeEventCreationView() -> Presentable
-    func makeCategorySelectView(selectedCategory: Int?) -> Presentable
+    func makeCategorySelectView(selectedCategory: String?) -> Presentable
+    func makeCategoryCreateView() -> Presentable
 }
 
 final class ModulesFactory: ModulesFactoryProtocol {
@@ -46,7 +47,11 @@ final class ModulesFactory: ModulesFactoryProtocol {
         return HabitCreationViewController(pageTitle: "Новая привычка", tableDataModel: tableModel, dataStore: dataStore)
     }
     
-    func makeCategorySelectView(selectedCategory: Int?) -> Presentable {
+    func makeCategorySelectView(selectedCategory: String?) -> Presentable {
         return CategorySelectViewController(pageTitle: "Категория", selectedCategory: selectedCategory)
+    }
+    
+    func makeCategoryCreateView() -> Presentable {
+        return CategoryCreateViewController(pageTitle: "Новая категория")
     }
 }

@@ -13,7 +13,7 @@ protocol TrackersViewCoordinatorProtocol: AnyObject {
     var headForError: ((String) -> Void)? { get set }
 }
 
-protocol DataProviderDelegate: AnyObject {
+protocol TrackerDataProviderDelegate: AnyObject {
     func didUpdate(_ update: TrackersStoreUpdate)
 }
 
@@ -25,7 +25,7 @@ final class TrackersViewController: UIViewController, TrackersViewCoordinatorPro
     var headForTrackerSelect: (() -> Void)?
     var headForError: ((String) -> Void)?
     
-    private var dataProvider: DataProviderProtocol?
+    private var dataProvider: TrackersDataProviderProtocol?
     private var date: Date {
         datePicker.date.onlyDate()
     }
@@ -295,7 +295,7 @@ private extension TrackersViewController {
 }
 
 // MARK: - Data Provider Delegate
-extension TrackersViewController: DataProviderDelegate {
+extension TrackersViewController: TrackerDataProviderDelegate {
     func didUpdate(_ update: TrackersStoreUpdate) {
         trackersCollectionView.performBatchUpdates {
             if let insertedIndexPath = update.insertedIndex {

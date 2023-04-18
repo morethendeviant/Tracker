@@ -17,7 +17,7 @@ struct TrackersStoreUpdate {
     var deletedIndex: IndexPath?
 }
 
-protocol DataProviderProtocol {
+protocol TrackersDataProviderProtocol {
     var numberOfSections: Int { get }
     
     func numberOfItemsInSection(_ section: Int) -> Int
@@ -34,7 +34,7 @@ protocol DataProviderProtocol {
 }
 
 final class TrackersDataProvider: NSObject {
-    weak var delegate: DataProviderDelegate?
+    weak var delegate: TrackerDataProviderDelegate?
     weak var errorHandlerDelegate: ErrorHandlerDelegate?
     
     private let context: NSManagedObjectContext
@@ -61,7 +61,7 @@ final class TrackersDataProvider: NSObject {
         return fetchedResultsController
     }()
     
-    init(weekday: DayOfWeek, delegate: DataProviderDelegate, errorHandlerDelegate: ErrorHandlerDelegate? ) throws {
+    init(weekday: DayOfWeek, delegate: TrackerDataProviderDelegate, errorHandlerDelegate: ErrorHandlerDelegate? ) throws {
         fetchRequest.predicate = NSPredicate(format: "%K CONTAINS[n] %@", #keyPath(TrackerManagedObject.schedule), DayOfWeek.dayToBinary(weekday))
         self.delegate = delegate
         self.errorHandlerDelegate = errorHandlerDelegate
@@ -71,7 +71,7 @@ final class TrackersDataProvider: NSObject {
 
 // MARK: - Data Provider
 
-extension TrackersDataProvider: DataProviderProtocol {
+extension TrackersDataProvider: TrackersDataProviderProtocol {
     var numberOfSections: Int {
         fetchedResultsController.sections?.count ?? 0
     }

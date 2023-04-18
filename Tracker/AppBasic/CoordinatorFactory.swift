@@ -10,7 +10,7 @@ protocol CoordinatorsFactoryProtocol {
     func makeTrackerCoordinator(router: Routable) -> Coordinatable
     func makeHabitCreationCoordinator(router: Routable) -> Coordinatable & HabitCreationCoordinator
     func makeEventCreationCoordinator(router: Routable) -> Coordinatable & EventCreationCoordinator
-    func makeCategoryCoordinator(router: Routable, selectedCategory: Int?) -> Coordinatable & CategoryCoordinatorOutput
+    func makeCategoryCoordinator(router: Routable, selectedCategory: String?) -> Coordinatable & CategoryCoordinatorOutput
     func makeStatisticsCoordinator(router: Routable) -> Coordinatable
 }
 
@@ -39,7 +39,7 @@ extension CoordinatorFactory: CoordinatorsFactoryProtocol {
         StatisticsCoordinator(coordinatorsFactory: self, modulesFactory: modulesFactory, router: router)
     }
     
-    func makeCategoryCoordinator(router: Routable, selectedCategory: Int?) -> Coordinatable & CategoryCoordinatorOutput {
+    func makeCategoryCoordinator(router: Routable, selectedCategory: String?) -> Coordinatable & CategoryCoordinatorOutput {
         CategoryCoordinator(coordinatorsFactory: self, modulesFactory: modulesFactory, router: router, selectedCategory: selectedCategory)
     }
 }

@@ -7,23 +7,31 @@
 
 import UIKit
 
-protocol CategorySelectCoordinatorProtocol {
+protocol CategorySelectCoordinatorProtocol: AnyObject {
     var onHeadForCategoryCreation: (() -> Void)? { get set }
-    var onFinish: ((Int?) -> Void)? { get set }
+    var onFinish: ((String?) -> Void)? { get set }
+    var headForError: ((String) -> Void)? { get set }
+    
+    func setNewCategory(_: String)
 }
 
-final class CategorySelectViewController: BaseViewController, CategorySelectCoordinatorProtocol {
+protocol TrackerCategoryDataProviderDelegate: AnyObject {
+    func didUpdate(_ update: TrackersCategoryStoreUpdate)
+}
+
+final class CategorySelectViewController: BaseViewController {
     var onHeadForCategoryCreation: (() -> Void)?
-    var onFinish: ((Int?) -> Void)?
+    var onFinish: ((String?) -> Void)?
+    var headForError: ((String) -> Void)?
     
-    private var categories = CategoryContainer.shared.items
-    private var selectedCategory: Int?
+    private var dataProvider: TrackerCategoriesDataProviderProtocol?
+    private var selectedCategory: String?
     
     private lazy var categoriesTableView: UITableView = {
         let table = UITableView()
         table.delegate = self
         table.dataSource = self
-        table.isScrollEnabled = false
+        table.isScrollEnabled = true
         table.separatorInset = .init(top: 0, left: 16, bottom: 0, right: 16)
         table.separatorColor = .ypGray
         table.layer.cornerRadius = 16
@@ -41,15 +49,32 @@ final class CategorySelectViewController: BaseViewController, CategorySelectCoor
         addSubviews()
         configure()
         applyLayout()
+        hideKeyboardWhenTappedAround()
     }
     
-    init(pageTitle: String, selectedCategory: Int?) {
+    init(pageTitle: String, selectedCategory: String?) {
         self.selectedCategory = selectedCategory
         super.init(pageTitle: pageTitle)
+        
+        self.dataProvider = {
+            do {
+                try dataProvider = TrackerCategoriesDataProvider(delegate: self, errorHandlerDelegate: self)
+                return dataProvider
+            } catch {
+                handleError(message: "Данные недоступны")
+                return nil
+            }
+        }()
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+}
+
+extension CategorySelectViewController: CategorySelectCoordinatorProtocol {
+    func setNewCategory(_ category: String) {
+        dataProvider?.addCategory(category)
     }
 }
 
@@ -66,7 +91,15 @@ final class CategorySelectViewController: BaseViewController, CategorySelectCoor
 private extension CategorySelectViewController {
     func configureCell(_ cell: UITableViewCell, for indexPath: IndexPath) {
         cell.backgroundColor = .ypBackground
-        cell.accessoryType = selectedCategory == indexPath.row ? .checkmark : .none
+        
+        if let selectedCategory,
+           let text = cell.textLabel?.text,
+           selectedCategory == text {
+            cell.accessoryType = .checkmark
+        } else {
+            cell.accessoryType = .none
+        }
+        
         cell.textLabel?.font = .systemFont(ofSize: 17)
         cell.selectionStyle = .none
     }
@@ -81,7 +114,7 @@ extension CategorySelectViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         categoriesTableView.cellForRow(at: indexPath)?.accessoryType = .checkmark
-        selectedCategory = indexPath.row
+        selectedCategory = categoriesTableView.cellForRow(at: indexPath)?.textLabel?.text
         onFinish?(selectedCategory)
     }
     
@@ -94,15 +127,63 @@ extension CategorySelectViewController: UITableViewDelegate {
 
 extension CategorySelectViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        categories.count
+        dataProvider?.numberOfItemsInSection(section) ?? 0
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = UITableViewCell(style: .default, reuseIdentifier: "Cell")
+        cell.contentView.addInteraction(UIContextMenuInteraction(delegate: self))
+        cell.textLabel?.text = dataProvider?.categoryName(at: indexPath)
         configureCell(cell, for: indexPath)
-        
-        cell.textLabel?.text = categories[indexPath.row]
         return cell
+    }
+}
+
+extension CategorySelectViewController: TrackerCategoryDataProviderDelegate {
+    func didUpdate(_ update: TrackersCategoryStoreUpdate) {
+        categoriesTableView.performBatchUpdates {
+            if let insertedIndexPath = update.insertedIndex {
+                categoriesTableView.insertRows(at: [insertedIndexPath], with: .fade)
+            }
+            
+            if let deletedIndexPath = update.deletedIndex {
+                categoriesTableView.deleteRows(at: [deletedIndexPath], with: .fade)
+            }
+            
+            if let updatedIndexPath = update.updatedIndex {
+                categoriesTableView.reloadRows(at: [updatedIndexPath], with: .fade)
+            }
+        }
+        categoriesTableView.snp.updateConstraints { make in
+            make.height.equalTo(categoriesTableView.numberOfRows(inSection: 0) * 75 - 1)
+        }
+        view.layoutIfNeeded()
+    }
+}
+
+// MARK: - Menu Interaction Delegate
+
+extension CategorySelectViewController: UIContextMenuInteractionDelegate {
+    func contextMenuInteraction(_ interaction: UIContextMenuInteraction, configurationForMenuAtLocation location: CGPoint) -> UIContextMenuConfiguration? {
+        guard let location = interaction.view?.convert(location, to: categoriesTableView),
+              let indexPath = categoriesTableView.indexPathForRow(at: location)
+        else {
+            return UIContextMenuConfiguration()
+        }
+        
+        let configuration = UIContextMenuConfiguration(identifier: nil, previewProvider: nil) { [weak self] _ -> UIMenu in
+            let edit = UIAction(title: "Редактировать", image: UIImage(systemName: "pencil")) { _ in
+                // TODO: - Implement edit ability
+            }
+            
+            let delete = UIAction(title: "Удалить", image: UIImage(systemName: "trash.fill"), attributes: .destructive) { _ in
+                self?.dataProvider?.deleteCategory(at: indexPath)
+            }
+            
+            return UIMenu(children: [edit, delete])
+        }
+        
+        return configuration
     }
 }
 
@@ -132,5 +213,11 @@ private extension CategorySelectViewController {
             make.height.equalTo(60)
             make.bottom.equalToSuperview().offset(-50)
         }
+    }
+}
+
+extension CategorySelectViewController: ErrorHandlerDelegate {
+    func handleError(message: String) {
+        headForError?(message)
     }
 }

@@ -8,18 +8,18 @@
 import Foundation
 
 protocol CategoryCoordinatorOutput {
-    var finishFlow: ((Int?) -> Void)? { get set }
+    var finishFlow: ((String?) -> Void)? { get set }
 }
 
 final class CategoryCoordinator: BaseCoordinator, Coordinatable, CategoryCoordinatorOutput {
-    var finishFlow: ((Int?) -> Void)?
+    var finishFlow: ((String?) -> Void)?
     
     private var coordinatorsFactory: CoordinatorsFactoryProtocol
     private var modulesFactory: ModulesFactoryProtocol
     private var router: Routable
-    private var selectedCategory: Int?
+    private var selectedCategory: String?
     
-    init(coordinatorsFactory: CoordinatorsFactoryProtocol, modulesFactory: ModulesFactoryProtocol, router: Routable, selectedCategory: Int?) {
+    init(coordinatorsFactory: CoordinatorsFactoryProtocol, modulesFactory: ModulesFactoryProtocol, router: Routable, selectedCategory: String?) {
         self.coordinatorsFactory = coordinatorsFactory
         self.modulesFactory = modulesFactory
         self.router = router
@@ -32,18 +32,32 @@ final class CategoryCoordinator: BaseCoordinator, Coordinatable, CategoryCoordin
 }
 
 extension CategoryCoordinator {
-    func performFlow(selectedCategory: Int?) {
+    func performFlow(selectedCategory: String?) {
         let categorySelectView = modulesFactory.makeCategorySelectView(selectedCategory: selectedCategory)
-        var categoryCoordinator = categorySelectView as? CategorySelectCoordinatorProtocol
+        let categorySelectCoordinator = categorySelectView as? CategorySelectCoordinatorProtocol
         
-        categoryCoordinator?.onFinish = { [weak self, weak categorySelectView] category in
+        categorySelectCoordinator?.onFinish = { [weak self, weak categorySelectView] category in
             guard let self else { return }
             self.router.dismissModule(categorySelectView)
             self.finishFlow?(category)
         }
         
+        categorySelectCoordinator?.onHeadForCategoryCreation = { [weak self, weak categorySelectCoordinator] in
+            guard let self else { return }
+            let categoryCreateView = modulesFactory.makeCategoryCreateView()
+            let categoryCreateCoordinator = categoryCreateView as? CategoryCreateCoordinatorProtocol
+            
+            categoryCreateCoordinator?.onReturnWithDone = { [weak categoryCreateView] categoryName in
+                categorySelectCoordinator?.setNewCategory(categoryName)
+                self.router.dismissModule(categoryCreateView)
+            }
+
+            self.router.present(categoryCreateView)
+        }
+        
         router.present(categorySelectView) { [weak self] in
-            self?.finishFlow?(nil)
+            
+            self?.finishFlow?(selectedCategory)
         }
     }
 }

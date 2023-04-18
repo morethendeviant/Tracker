@@ -10,29 +10,28 @@ import UIKit
 protocol HabitCreationCoordinatorProtocol: AnyObject {
     var onCancel: (() -> Void)? { get set }
     var onCreate: (() -> Void)? { get set }
-    var onHeadForCategory: ((Int?) -> Void)? { get set }
+    var onHeadForCategory: ((String?) -> Void)? { get set }
     var onHeadForSchedule: (([DayOfWeek]) -> Void)? { get set }
     
-    func selectCategory(_ category: Int?)
+    func selectCategory(_ category: String?)
     func returnWithWeekdays(_ days: [DayOfWeek])
 }
 
 protocol EventCreationCoordinatorProtocol: AnyObject {
     var onCancel: (() -> Void)? { get set }
     var onCreate: (() -> Void)? { get set }
-    var onHeadForCategory: ((Int?) -> Void)? { get set }
+    var onHeadForCategory: ((String?) -> Void)? { get set }
     
-    func selectCategory(_ category: Int?)
+    func selectCategory(_ category: String?)
 }
 
 final class HabitCreationViewController: BaseViewController, EventCreationCoordinatorProtocol {
     
     var onCancel: (() -> Void)?
     var onCreate: (() -> Void)?
-    var onHeadForCategory: ((Int?) -> Void)?
+    var onHeadForCategory: ((String?) -> Void)?
     var onHeadForSchedule: (([DayOfWeek]) -> Void)?
     
-    private var categories: CategoryContainer
     private var dataStore: TrackerDataStoreProtocol
     
     private var tableContent: [CellContent]
@@ -55,7 +54,7 @@ final class HabitCreationViewController: BaseViewController, EventCreationCoordi
     }
     
     private var selectedItem: IndexPath?
-    private var selectedCategory: Int? {
+    private var selectedCategory: String? {
         didSet {
             checkForConfirm()
         }
@@ -141,7 +140,6 @@ final class HabitCreationViewController: BaseViewController, EventCreationCoordi
     }()
     
     init(pageTitle: String? = nil, tableDataModel: TrackerCreationTableModel, dataStore: TrackerDataStoreProtocol) {
-        self.categories = CategoryContainer.shared
         self.tableContent = tableDataModel.defaultTableContent()
         self.dataStore = dataStore
         super.init(pageTitle: pageTitle)
@@ -170,7 +168,7 @@ final class HabitCreationViewController: BaseViewController, EventCreationCoordi
     func createButtonTapped() throws {
         guard let tracker, let selectedCategory else { return }
         
-        try dataStore.add(tracker, for: categories.items[selectedCategory])
+        try dataStore.add(tracker, for: selectedCategory)
         onCreate?()
     }
     
@@ -216,11 +214,11 @@ private extension HabitCreationViewController {
 // MARK: - Habit Creation Coordinator
 
 extension HabitCreationViewController: HabitCreationCoordinatorProtocol {
-    func selectCategory(_ categoryIndex: Int?) {
-        selectedCategory = categoryIndex
+    func selectCategory(_ category: String?) {
+        selectedCategory = category
         
-        if let categoryIndex {
-            tableContent[0] = CellContent(text: tableContent[0].text, detailText: categories.items[categoryIndex])
+        if let category {
+            tableContent[0] = CellContent(text: tableContent[0].text, detailText: category)
             parametersTableView.reloadData()
         }
     }
