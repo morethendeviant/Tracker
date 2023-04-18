@@ -12,7 +12,7 @@ protocol Coordinatable: AnyObject {
 class BaseCoordinator {
     
     private var childCoordinators: [Coordinatable] = []
-  
+    
     func addDependency(_ coordinator: Coordinatable) {
         childCoordinators.forEach { childCoordinator in
             if childCoordinator === coordinator { return }

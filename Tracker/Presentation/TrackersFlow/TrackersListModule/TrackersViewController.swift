@@ -60,7 +60,7 @@ final class TrackersViewController: UIViewController, TrackersViewCoordinatorPro
         searchBar.directionalLayoutMargins = NSDirectionalEdgeInsets(top: 0, leading: 16, bottom: 0, trailing: 16)
         return searchBar
     }()
-        
+    
     private lazy var datePicker: UIDatePicker = {
         let datePicker = UIDatePicker()
         datePicker.addTarget(nil, action: #selector(dateChanged), for: .valueChanged)
@@ -76,7 +76,7 @@ final class TrackersViewController: UIViewController, TrackersViewCoordinatorPro
     }()
     
     private lazy var contentPlaceholder = ContentPlaceholder(style: .trackers)
-
+    
     private lazy var trackersCollectionView: UICollectionView = {
         let collection = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
         collection.register(TrackerCollectionViewCell.self, forCellWithReuseIdentifier: TrackerCollectionViewCell.identifier)
@@ -103,7 +103,7 @@ final class TrackersViewController: UIViewController, TrackersViewCoordinatorPro
         
         self.dataProvider = {
             do {
-                try dataProvider = DataProvider(weekday: dayOfWeek, delegate: self, errorHandlerDelegate: self)
+                try dataProvider = TrackersDataProvider(weekday: dayOfWeek, delegate: self, errorHandlerDelegate: self)
                 return dataProvider
             } catch {
                 handleError(message: "Данные недоступны")
@@ -131,7 +131,7 @@ extension TrackersViewController: UISearchBarDelegate {
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         searchBar.resignFirstResponder()
     }
-
+    
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         getVisibleCategories()
     }
@@ -179,7 +179,7 @@ extension TrackersViewController: UICollectionViewDataSource {
         cell.isMarked = cellIsMarked(at: indexPath)
         cell.daysAmount = daysAmount(at: indexPath)
         cell.interaction = UIContextMenuInteraction(delegate: self)
-
+        
         return cell
     } 
 }
@@ -204,7 +204,7 @@ extension TrackersViewController: UICollectionViewDelegateFlowLayout {
         }
         
         if let view = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: id, for: indexPath) as? TrackersCollectionHeaderView {
-            view.titleLabel.text = dataProvider?.sectionName(indexPath)
+            view.titleLabel.text = dataProvider?.sectionName(indexPath.section)
             return view
         }
         
@@ -287,7 +287,7 @@ private extension TrackersViewController {
     func daysAmount(at indexPath: IndexPath) -> Int {
         dataProvider?.recordsAmount(at: indexPath) ?? 0
     }
-
+    
     func getVisibleCategories() {
         dataProvider?.getTrackers(name: searchBar.text, weekday: dayOfWeek)
         trackersCollectionView.reloadData()
@@ -301,15 +301,15 @@ extension TrackersViewController: DataProviderDelegate {
             if let insertedIndexPath = update.insertedIndex {
                 trackersCollectionView.insertItems(at: [insertedIndexPath])
             }
-
+            
             if let insertedSection = update.insertedSection {
                 trackersCollectionView.insertSections(insertedSection)
             }
-
+            
             if let deletedIndexPath = update.deletedIndex {
                 trackersCollectionView.deleteItems(at: [deletedIndexPath])
             }
-
+            
             if let deletedSection = update.deletedSection {
                 trackersCollectionView.deleteSections(deletedSection)
             }
@@ -317,7 +317,7 @@ extension TrackersViewController: DataProviderDelegate {
             if let updatedIndexPath = update.updatedIndex {
                 trackersCollectionView.reloadItems(at: [updatedIndexPath])
             }
-
+            
             if let updatedSection = update.updatedSection {
                 trackersCollectionView.reloadSections(updatedSection)
             }
@@ -330,18 +330,18 @@ extension TrackersViewController: DataProviderDelegate {
 extension TrackersViewController: UIContextMenuInteractionDelegate {
     func contextMenuInteraction(_ interaction: UIContextMenuInteraction, configurationForMenuAtLocation location: CGPoint) -> UIContextMenuConfiguration? {
         guard let location = interaction.view?.convert(location, to: trackersCollectionView),
-                let indexPath = trackersCollectionView.indexPathForItem(at: location)
+              let indexPath = trackersCollectionView.indexPathForItem(at: location)
         else {
             return UIContextMenuConfiguration()
         }
         
         let configuration = UIContextMenuConfiguration(identifier: nil, previewProvider: nil) { [weak self] _ -> UIMenu in
             let pin = UIAction(title: "Закрепить", image: UIImage(systemName: "pin")) { _ in
-                print("pin") // TODO: - Implement pin ability
+                // TODO: - Implement pin ability
             }
             
             let edit = UIAction(title: "Редактировать", image: UIImage(systemName: "pencil")) { _ in
-                print("edit") // TODO: - Implement edit ability
+                // TODO: - Implement edit ability
             }
             
             let delete = UIAction(title: "Удалить", image: UIImage(systemName: "trash.fill"), attributes: .destructive) { _ in
@@ -378,36 +378,36 @@ private extension TrackersViewController {
             make.top.equalTo(view.safeAreaLayoutGuide).offset(13)
             make.leading.equalToSuperview().offset(18)
         }
-
+        
         headerLabel.snp.makeConstraints { make in
             make.top.equalTo(plusButton.snp.bottom).offset(13)
             make.leading.equalToSuperview().offset(16)
         }
-
+        
         searchBar.snp.makeConstraints { make in
             make.top.equalTo(headerLabel.snp.bottom).offset(7)
             make.leading.trailing.equalToSuperview()
         }
-
+        
         datePicker.snp.makeConstraints { make in
             make.top.equalTo(plusButton.snp.bottom).offset(13)
             make.trailing.equalToSuperview().offset(-16)
             make.width.equalTo(100)
             make.height.equalTo(34)
         }
-
+        
         trackersCollectionView.snp.makeConstraints { make in
             make.top.equalTo(searchBar.snp.bottom).offset(10)
             make.leading.trailing.bottom.equalToSuperview()
         }
-
+        
         filtersButton.snp.makeConstraints { make in
             make.height.equalTo(50)
             make.leading.equalToSuperview().offset(130)
             make.trailing.equalToSuperview().offset(-130)
             make.bottom.equalTo(view.safeAreaLayoutGuide).offset(-17)
         }
-
+        
         contentPlaceholder.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
             make.centerY.equalToSuperview()

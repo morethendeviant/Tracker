@@ -55,7 +55,7 @@
 		78AA53DB29D8A6D40063EB84 /* TrackerCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78AA53DA29D8A6D40063EB84 /* TrackerCoordinator.swift */; };
 		78C2689829E88BC700E8B6EC /* TrackerManagedObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78C2689729E88BC700E8B6EC /* TrackerManagedObject.swift */; };
 		78C2689A29E8924600E8B6EC /* TrackerRecordManagedObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78C2689929E8924600E8B6EC /* TrackerRecordManagedObject.swift */; };
-		78C2689C29E9BADE00E8B6EC /* DataProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78C2689B29E9BADE00E8B6EC /* DataProvider.swift */; };
+		78C2689C29E9BADE00E8B6EC /* TrackersDataProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78C2689B29E9BADE00E8B6EC /* TrackersDataProvider.swift */; };
 		78C2689E29E9BD5900E8B6EC /* TrackerCategoryManagedObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78C2689D29E9BD5900E8B6EC /* TrackerCategoryManagedObject.swift */; };
 /* End PBXBuildFile section */
 
@@ -109,7 +109,7 @@
 		78AA53DA29D8A6D40063EB84 /* TrackerCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackerCoordinator.swift; sourceTree = "<group>"; };
 		78C2689729E88BC700E8B6EC /* TrackerManagedObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackerManagedObject.swift; sourceTree = "<group>"; };
 		78C2689929E8924600E8B6EC /* TrackerRecordManagedObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackerRecordManagedObject.swift; sourceTree = "<group>"; };
-		78C2689B29E9BADE00E8B6EC /* DataProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataProvider.swift; sourceTree = "<group>"; };
+		78C2689B29E9BADE00E8B6EC /* TrackersDataProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackersDataProvider.swift; sourceTree = "<group>"; };
 		78C2689D29E9BD5900E8B6EC /* TrackerCategoryManagedObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackerCategoryManagedObject.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -159,7 +159,7 @@
 		784BCA7729E85DAD00D1A14E /* DataProvider */ = {
 			isa = PBXGroup;
 			children = (
-				78C2689B29E9BADE00E8B6EC /* DataProvider.swift */,
+				78C2689B29E9BADE00E8B6EC /* TrackersDataProvider.swift */,
 				786BF13F29EC38EA009317E5 /* DataStore.swift */,
 				786BF14129EC41F4009317E5 /* Context.swift */,
 				786BF13A29EC145B009317E5 /* ManagedObjects */,
@@ -559,7 +559,7 @@
 				78A706DA29DA0A5800932908 /* Colors.swift in Sources */,
 				78AA53D629D8A56B0063EB84 /* StatisticsFlowCoordinator.swift in Sources */,
 				78A706D629D9DACE00932908 /* CategoryCoordinator.swift in Sources */,
-				78C2689C29E9BADE00E8B6EC /* DataProvider.swift in Sources */,
+				78C2689C29E9BADE00E8B6EC /* TrackersDataProvider.swift in Sources */,
 				78C2689A29E8924600E8B6EC /* TrackerRecordManagedObject.swift in Sources */,
 				78AA539929D3579B0063EB84 /* ContentPlaceholder.swift in Sources */,
 				78AA53CE29D8A11B0063EB84 /* Router.swift in Sources */,

@@ -1,5 +1,5 @@
 //
-//  DataProvider.swift
+//  TrackersDataProvider.swift
 //  Tracker
 //
 //  Created by Aleksandr Velikanov on 14.04.2023.
@@ -21,7 +21,7 @@ protocol DataProviderProtocol {
     var numberOfSections: Int { get }
     
     func numberOfItemsInSection(_ section: Int) -> Int
-    func sectionName(_ indexPath: IndexPath) -> String?
+    func sectionName(_ section: Int) -> String?
     
     func tracker(at indexPath: IndexPath) -> Tracker?
     func getTrackers(name: String?, weekday: DayOfWeek?)
@@ -33,7 +33,7 @@ protocol DataProviderProtocol {
     func recordsAmount(at indexPath: IndexPath) -> Int
 }
 
-final class DataProvider: NSObject {
+final class TrackersDataProvider: NSObject {
     weak var delegate: DataProviderDelegate?
     weak var errorHandlerDelegate: ErrorHandlerDelegate?
     
@@ -51,7 +51,7 @@ final class DataProvider: NSObject {
     private var fetchRequest = NSFetchRequest<TrackerManagedObject>(entityName: "TrackerCoreData")
     
     private lazy var fetchedResultsController: NSFetchedResultsController<TrackerManagedObject> = {
-        fetchRequest.sortDescriptors = [NSSortDescriptor(key: "name", ascending: true)]
+        fetchRequest.sortDescriptors = [NSSortDescriptor(key: "category.name", ascending: true)]
         let fetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest,
                                                                   managedObjectContext: context,
                                                                   sectionNameKeyPath: #keyPath(TrackerManagedObject.category.name),
@@ -69,13 +69,15 @@ final class DataProvider: NSObject {
     }
 }
 
-extension DataProvider: DataProviderProtocol {
+// MARK: - Data Provider
+
+extension TrackersDataProvider: DataProviderProtocol {
     var numberOfSections: Int {
         fetchedResultsController.sections?.count ?? 0
     }
     
-    func sectionName(_ indexPath: IndexPath) -> String? {
-        return fetchedResultsController.object(at: indexPath).category.name
+    func sectionName(_ section: Int) -> String? {
+        fetchedResultsController.sections?[section].name
     }
     
     func getTrackers(name: String? = nil, weekday: DayOfWeek? = nil) {
@@ -151,7 +153,9 @@ extension DataProvider: DataProviderProtocol {
     }
 }
 
-extension DataProvider: NSFetchedResultsControllerDelegate {
+// MARK: - Fetch Results Controller Delegate
+
+extension TrackersDataProvider: NSFetchedResultsControllerDelegate {
     func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
         delegate?.didUpdate(TrackersStoreUpdate(
             insertedSection: insertedSection,

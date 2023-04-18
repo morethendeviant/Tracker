@@ -31,6 +31,8 @@ final class EventCreationCoordinator: BaseCoordinator, Coordinatable, EventCreat
     }
 }
 
+// MARK: - Private Methods
+
 private extension EventCreationCoordinator {
     func performFlow() {
         let eventView = self.modulesFactory.makeEventCreationView()

@@ -43,27 +43,27 @@ private extension TrackerCoordinator {
                     self.removeDependency(habitCreationCoordinator)
                     self.router.dismissModule(trackerSelectModule)
                 }
-
+                
                 habitCreationCoordinator.finishFlowOnCancel = { [weak habitCreationCoordinator ] in
                     self.removeDependency(habitCreationCoordinator)
                 }
-
+                
                 self.addDependency(habitCreationCoordinator)
                 habitCreationCoordinator.startFlow()
             }
             
             trackerSelectCoordinatorOutput?.onHeadForEvent = { [weak trackerSelectModule] in
                 let eventCreationCoordinator = self.coordinatorsFactory.makeEventCreationCoordinator(router: self.router)
-
+                
                 eventCreationCoordinator.finishFlowOnCreate = { [weak eventCreationCoordinator] in
                     self.removeDependency(eventCreationCoordinator)
                     self.router.dismissModule(trackerSelectModule)
                 }
-
+                
                 eventCreationCoordinator.finishFlowOnCancel = { [weak eventCreationCoordinator ] in
                     self.removeDependency(eventCreationCoordinator)
                 }
-
+                
                 self.addDependency(eventCreationCoordinator)
                 eventCreationCoordinator.startFlow()
             }
@@ -74,7 +74,7 @@ private extension TrackerCoordinator {
         coordinatorOutput?.headForError = { [weak self] message in
             self?.router.presentAlert(message: message)
         }
-
+        
         router.addToTabBar(trackersView)
     }
 }

@@ -24,4 +24,13 @@ final class TrackerManagedObject: NSManagedObject {
     func removeFromRecords(_ record: TrackerRecordManagedObject) {
         records.remove(record)
     }
+    
+    func setFrom(tracker: Tracker) {
+        self.id = tracker.id
+        self.color = Int16(tracker.color)
+        self.emoji = Int16(tracker.emoji)
+        self.name = tracker.name
+        self.schedule = DayOfWeek.daysToNumbers(tracker.schedule)
+        self.records = []
+    }
 }

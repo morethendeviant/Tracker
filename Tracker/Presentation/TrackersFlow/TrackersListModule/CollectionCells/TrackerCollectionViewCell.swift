@@ -77,7 +77,7 @@ final class TrackerCollectionViewCell: UICollectionViewCell {
         view.clipsToBounds = true
         return view
     }()
- 
+    
     private let emojiLabel: UILabel = {
         let label = UILabel()
         label.font = .systemFont(ofSize: 13)
@@ -118,11 +118,11 @@ final class TrackerCollectionViewCell: UICollectionViewCell {
         addSubviews()
         applyLayout()
     }
-
+    
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-
+    
 }
 
 // MARK: - Private Methods
@@ -149,7 +149,7 @@ private extension TrackerCollectionViewCell {
         contentView.addSubview(daysCounter)
         contentView.addSubview(plusButton)
     }
-
+    
     func applyLayout() {
         colorBackgroundView.snp.makeConstraints { make in
             make.height.equalTo(90)

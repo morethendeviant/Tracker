@@ -31,6 +31,8 @@ final class HabitCreationCoordinator: BaseCoordinator, Coordinatable, HabitCreat
     }
 }
 
+// MARK: - Private Methods
+
 private extension HabitCreationCoordinator {
     func performFlow() {
         let habitView = self.modulesFactory.makeHabitCreationView()
