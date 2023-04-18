@@ -35,6 +35,7 @@ final class CategorySelectViewController: BaseViewController {
         table.separatorInset = .init(top: 0, left: 16, bottom: 0, right: 16)
         table.separatorColor = .ypGray
         table.layer.cornerRadius = 16
+        //table.contentInset = .init(top: 0, left: 16, bottom: 0, right: 16)
         return table
     }()
     
@@ -155,7 +156,14 @@ extension CategorySelectViewController: TrackerCategoryDataProviderDelegate {
             }
         }
         categoriesTableView.snp.updateConstraints { make in
-            make.height.equalTo(categoriesTableView.numberOfRows(inSection: 0) * 75 - 1)
+            let height = categoriesTableView.numberOfRows(inSection: 0) * 75 - 1
+            if height > 450 {
+                make.height.equalTo(450)
+                categoriesTableView.isScrollEnabled = true
+            } else {
+                make.height.equalTo(categoriesTableView.numberOfRows(inSection: 0) * 75 - 1)
+                categoriesTableView.isScrollEnabled = false
+            }
         }
         view.layoutIfNeeded()
     }
@@ -204,7 +212,14 @@ private extension CategorySelectViewController {
             make.top.equalToSuperview()
             make.leading.equalToSuperview().offset(16)
             make.trailing.equalToSuperview().offset(-16)
-            make.height.equalTo(categoriesTableView.numberOfRows(inSection: 0) * 75 - 1)
+            let height = categoriesTableView.numberOfRows(inSection: 0) * 75 - 1
+            if height > 450 {
+                make.height.equalTo(450)
+                categoriesTableView.isScrollEnabled = true
+            } else {
+                make.height.equalTo(categoriesTableView.numberOfRows(inSection: 0) * 75 - 1)
+                categoriesTableView.isScrollEnabled = false
+            }
         }
         
         addButton.snp.makeConstraints { make in
