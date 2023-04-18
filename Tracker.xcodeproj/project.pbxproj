@@ -165,7 +165,6 @@
 				78C2689B29E9BADE00E8B6EC /* TrackersDataProvider.swift */,
 				786BF13F29EC38EA009317E5 /* DataStore.swift */,
 				786BF14129EC41F4009317E5 /* Context.swift */,
-				786BF13A29EC145B009317E5 /* ManagedObjects */,
 			);
 			path = DataProvider;
 			sourceTree = "<group>";
@@ -183,6 +182,7 @@
 		786BF14329ED6B5C009317E5 /* CoreData */ = {
 			isa = PBXGroup;
 			children = (
+				786BF13A29EC145B009317E5 /* ManagedObjects */,
 				784BCA7729E85DAD00D1A14E /* DataProvider */,
 			);
 			path = CoreData;
