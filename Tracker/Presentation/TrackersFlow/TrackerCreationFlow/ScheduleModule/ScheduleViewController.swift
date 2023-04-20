@@ -30,13 +30,16 @@ final class ScheduleViewController: BaseViewController, ScheduleViewCoordinatorP
     }()
     
     private lazy var daysOfWeekTableView: UITableView = {
-        let table = UITableView()
+        let table = UITableView(frame: .zero, style: .insetGrouped)
         table.delegate = self
         table.dataSource = self
-        table.isScrollEnabled = false
-        table.separatorInset = .init(top: 0, left: 16, bottom: 0, right: 16)
+        table.isScrollEnabled = true
+        //table.separatorInset = .init(top: 0, left: 16, bottom: 0, right: 16)
+        table.backgroundColor = .ypWhite
+        table.tableHeaderView = UIView(frame: CGRect(x: 0, y: 0, width: 0, height: CGFloat.leastNonzeroMagnitude))
+        table.tableFooterView = UIView(frame: CGRect(x: 0, y: 0, width: 0, height: CGFloat.leastNonzeroMagnitude))
         table.separatorColor = .ypGray
-        table.layer.cornerRadius = 16
+        //table.layer.cornerRadius = 16
         return table
     }()
     
@@ -127,12 +130,8 @@ extension ScheduleViewController: UITableViewDataSource {
 
 private extension ScheduleViewController {
     func addSubviews() {
-        content.addSubview(mainScrollView)
-        
-        mainScrollView.addSubview(mainStackView)
-        mainStackView.addArrangedSubview(daysOfWeekTableView)
-        mainStackView.setCustomSpacing(50, after: daysOfWeekTableView)
-        mainStackView.addArrangedSubview(doneButton)
+        content.addSubview(daysOfWeekTableView)
+        content.addSubview(doneButton)
     }
     
     func configure() {
@@ -140,21 +139,16 @@ private extension ScheduleViewController {
     }
     
     func applyLayout() {
-        mainScrollView.snp.makeConstraints { make in
-            make.edges.equalToSuperview()
-        }
-        
-        mainStackView.snp.makeConstraints { make in
-            make.edges.equalTo(mainScrollView.contentLayoutGuide).inset(16)
-            make.width.equalTo(mainScrollView.frameLayoutGuide).inset(16)
-        }
-        
         daysOfWeekTableView.snp.makeConstraints { make in
-            make.height.equalTo(daysOfWeekTableView.numberOfRows(inSection: 0) * 75 - 1)
+            make.top.equalToSuperview()
+            make.leading.trailing.equalToSuperview()
+            make.bottom.equalTo(doneButton.snp.top).offset(-50)
         }
         
         doneButton.snp.makeConstraints { make in
             make.height.equalTo(60)
+            make.leading.trailing.equalToSuperview().inset(16)
+            make.bottom.equalToSuperview().inset(50)
         }
     }
 }

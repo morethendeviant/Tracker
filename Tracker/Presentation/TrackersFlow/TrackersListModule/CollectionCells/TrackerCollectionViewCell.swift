@@ -163,8 +163,7 @@ private extension TrackerCollectionViewCell {
         }
         
         trackerLabel.snp.makeConstraints { make in
-            make.leading.equalTo(colorBackgroundView).offset(12)
-            make.trailing.bottom.equalTo(colorBackgroundView).offset(-12)
+            make.leading.trailing.equalTo(colorBackgroundView).inset(12)
         }
         
         plusButton.snp.makeConstraints { make in

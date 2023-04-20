@@ -28,14 +28,14 @@ final class CategorySelectViewController: BaseViewController {
     private var selectedCategory: String?
     
     private lazy var categoriesTableView: UITableView = {
-        let table = UITableView()
+        let table = UITableView(frame: .zero, style: .insetGrouped)
         table.delegate = self
         table.dataSource = self
         table.isScrollEnabled = true
-        table.separatorInset = .init(top: 0, left: 16, bottom: 0, right: 16)
         table.separatorColor = .ypGray
-        table.layer.cornerRadius = 16
-        //table.contentInset = .init(top: 0, left: 16, bottom: 0, right: 16)
+        table.backgroundColor = .ypWhite
+        table.tableHeaderView = UIView(frame: CGRect(x: 0, y: 0, width: 0, height: CGFloat.leastNonzeroMagnitude))
+        table.tableFooterView = UIView(frame: CGRect(x: 0, y: 0, width: 0, height: CGFloat.leastNonzeroMagnitude))
         return table
     }()
     
@@ -155,17 +155,6 @@ extension CategorySelectViewController: TrackerCategoryDataProviderDelegate {
                 categoriesTableView.reloadRows(at: [updatedIndexPath], with: .fade)
             }
         }
-        categoriesTableView.snp.updateConstraints { make in
-            let height = categoriesTableView.numberOfRows(inSection: 0) * 75 - 1
-            if height > 450 {
-                make.height.equalTo(450)
-                categoriesTableView.isScrollEnabled = true
-            } else {
-                make.height.equalTo(categoriesTableView.numberOfRows(inSection: 0) * 75 - 1)
-                categoriesTableView.isScrollEnabled = false
-            }
-        }
-        view.layoutIfNeeded()
     }
 }
 
@@ -208,25 +197,16 @@ private extension CategorySelectViewController {
     }
     
     func applyLayout() {
-        categoriesTableView.snp.makeConstraints { make in
+        categoriesTableView.snp.makeConstraints { make in           
             make.top.equalToSuperview()
-            make.leading.equalToSuperview().offset(16)
-            make.trailing.equalToSuperview().offset(-16)
-            let height = categoriesTableView.numberOfRows(inSection: 0) * 75 - 1
-            if height > 450 {
-                make.height.equalTo(450)
-                categoriesTableView.isScrollEnabled = true
-            } else {
-                make.height.equalTo(categoriesTableView.numberOfRows(inSection: 0) * 75 - 1)
-                categoriesTableView.isScrollEnabled = false
-            }
+            make.leading.trailing.equalToSuperview()
+            make.bottom.equalTo(addButton.snp.top).offset(-50)
         }
         
         addButton.snp.makeConstraints { make in
-            make.leading.equalToSuperview().offset(20)
-            make.trailing.equalToSuperview().offset(-20)
             make.height.equalTo(60)
-            make.bottom.equalToSuperview().offset(-50)
+            make.leading.trailing.equalToSuperview().inset(16)
+            make.bottom.equalToSuperview().inset(50)
         }
     }
 }

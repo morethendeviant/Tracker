@@ -124,8 +124,7 @@ private extension CategoryCreateViewController {
     func applyLayout() {
         categoryNameTextField.snp.makeConstraints { make in
             make.top.equalToSuperview()
-            make.leading.equalToSuperview().offset(16)
-            make.trailing.equalToSuperview().offset(-16)
+            make.leading.trailing.equalToSuperview().inset(16)
             make.height.equalTo(75)
         }
         
@@ -136,8 +135,7 @@ private extension CategoryCreateViewController {
         }
         
         doneButton.snp.makeConstraints { make in
-            make.leading.equalToSuperview().offset(20)
-            make.trailing.equalToSuperview().offset(-20)
+            make.leading.trailing.equalToSuperview().inset(20)
             make.height.equalTo(60)
             make.bottom.equalToSuperview().offset(-50)
         }
