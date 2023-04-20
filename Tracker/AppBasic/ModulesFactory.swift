@@ -16,6 +16,7 @@ protocol ModulesFactoryProtocol {
     func makeEventCreationView() -> Presentable
     func makeCategorySelectView(selectedCategory: String?) -> Presentable
     func makeCategoryCreateView() -> Presentable
+    func makeOnboardingPageView() -> Presentable
 }
 
 final class ModulesFactory: ModulesFactoryProtocol {
@@ -53,5 +54,9 @@ final class ModulesFactory: ModulesFactoryProtocol {
     
     func makeCategoryCreateView() -> Presentable {
         return CategoryCreateViewController(pageTitle: "Новая категория")
+    }
+    
+    func makeOnboardingPageView() -> Presentable {
+        return OnboardingPageViewController(transitionStyle: .scroll, navigationOrientation: .horizontal)
     }
 }

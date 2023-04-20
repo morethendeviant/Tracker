@@ -20,7 +20,7 @@ final class CoordinatorFactory {
 
 extension CoordinatorFactory: CoordinatorsFactoryProtocol {
     func makeAppCoordinator(router: Routable) -> Coordinatable & AppCoordinatorOutput {
-        AppCoordinator(coordinatorsFactory: self, router: router)
+        AppCoordinator(coordinatorsFactory: self, modulesFactory: modulesFactory, router: router)
     }
     
     func makeTrackerCoordinator(router: Routable) -> Coordinatable {
