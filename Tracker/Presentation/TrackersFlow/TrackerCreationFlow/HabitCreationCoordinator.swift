@@ -67,11 +67,11 @@ private extension HabitCreationCoordinator {
         
         habitCoordinator?.onHeadForSchedule = { [weak self, weak habitCoordinator] weekdays in
             guard let self else { return }
+            let scheduleModule = self.modulesFactory.makeScheduleView(weekdays: weekdays)
+            let scheduleView = scheduleModule.view
+            var scheduleCoordination = scheduleModule.coordination
 
-            let scheduleView = self.modulesFactory.makeScheduleView(weekdays: weekdays)
-            var scheduleCoordinator = scheduleView as? ScheduleViewCoordinatorProtocol
-
-            scheduleCoordinator?.onFinish = { [weak scheduleView] selectedWeekdays in
+            scheduleCoordination.onFinish = { [weak scheduleView] selectedWeekdays in
                 habitCoordinator?.returnWithWeekdays(selectedWeekdays)
                 self.router.dismissModule(scheduleView)
             }

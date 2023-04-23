@@ -11,7 +11,7 @@ protocol ModulesFactoryProtocol {
     func makeTrackersView() -> Presentable
     func makeStatisticsView() -> Presentable
     func makeTrackerSelectView() -> Presentable
-    func makeScheduleView(weekdays: [DayOfWeek]) -> Presentable
+    func makeScheduleView(weekdays: [DayOfWeek]) -> (view: Presentable, coordination: ScheduleCoordination)
     func makeHabitCreationView() -> Presentable
     func makeEventCreationView() -> Presentable
     func makeCategorySelectView(selectedCategory: String?) -> (view: Presentable, coordination: CategorySelectCoordination)
@@ -34,8 +34,10 @@ final class ModulesFactory: ModulesFactoryProtocol {
         TrackerSelectViewController(pageTitle: "Создание трекера")
     }
     
-    func makeScheduleView(weekdays: [DayOfWeek]) -> Presentable {
-        ScheduleViewController(pageTitle: "Расписание", weekdays: weekdays)
+    func makeScheduleView(weekdays: [DayOfWeek]) -> (view: Presentable, coordination: ScheduleCoordination) {
+        let viewModel = ScheduleViewModel(weekdays: weekdays)
+        let view = ScheduleViewController(viewModel: viewModel, pageTitle: "Расписание")
+        return (view, viewModel)
     }
     
     func makeHabitCreationView() -> Presentable {
