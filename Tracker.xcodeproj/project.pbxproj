@@ -291,8 +291,8 @@
 			isa = PBXGroup;
 			children = (
 				78AA53DA29D8A6D40063EB84 /* TrackerCoordinator.swift */,
-				78AA53A029D60F060063EB84 /* TrackerCreationFlow */,
 				78AA53C129D891230063EB84 /* TrackersListModule */,
+				78AA53A029D60F060063EB84 /* TrackerCreationFlow */,
 				78AA53D729D8A6820063EB84 /* TrackerSelectModule */,
 			);
 			path = TrackersFlow;
