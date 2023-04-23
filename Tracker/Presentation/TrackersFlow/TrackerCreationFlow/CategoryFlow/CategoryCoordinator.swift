@@ -33,23 +33,24 @@ final class CategoryCoordinator: BaseCoordinator, Coordinatable, CategoryCoordin
 
 extension CategoryCoordinator {
     func performFlow(selectedCategory: String?) {
-        let categorySelectView = modulesFactory.makeCategorySelectView(selectedCategory: selectedCategory)
-        let categorySelectCoordinator = categorySelectView as? CategorySelectCoordinatorProtocol
+        let categorySelectModule = modulesFactory.makeCategorySelectView(selectedCategory: selectedCategory)
+        let categorySelectView = categorySelectModule.view
+        let categorySelectCoordination = categorySelectModule.coordination
         
-        categorySelectCoordinator?.onFinish = { [weak self, weak categorySelectView] category in
+        categorySelectCoordination.onFinish = { [weak self, weak categorySelectView] category in
             guard let self else { return }
             self.router.dismissModule(categorySelectView)
             self.finishFlow?(category)
         }
         
-        categorySelectCoordinator?.onHeadForCategoryCreation = { [weak self, weak categorySelectCoordinator] in
-            guard let self else { return }
+        categorySelectCoordination.onHeadForCategoryCreation = { [weak self, weak categorySelectCoordination] in
+            guard let self, let categorySelectCoordination else { return }
             let categoryCreateModule = modulesFactory.makeCategoryCreateView()
             let categoryCreateView = categoryCreateModule.view
             let categoryCreateCoordination = categoryCreateModule.coordination
             
             categoryCreateCoordination.onReturnWithDone = { [weak categoryCreateView] categoryName in
-                categorySelectCoordinator?.setNewCategory(categoryName)
+                categorySelectCoordination.setNewCategory(categoryName)
                 self.router.dismissModule(categoryCreateView)
             }
 

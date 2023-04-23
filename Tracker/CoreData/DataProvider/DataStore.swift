@@ -10,8 +10,10 @@ import CoreData
 
 protocol TrackerCategoryDataStoreProtocol {
     func addCategory(categoryName: String) throws -> TrackerCategoryManagedObject
-    func getCategoryFor(name: String) throws -> TrackerCategoryManagedObject?
+    func fetchCategoryFor(name: String) throws -> TrackerCategoryManagedObject?
     func deleteCategory(_ category: TrackerCategoryManagedObject) throws
+    func deleteCategoryWith(name: String) throws
+    func fetchAllCategories() -> [String]
 }
 
 protocol TrackerDataStoreProtocol {
@@ -43,6 +45,13 @@ extension DataStore: TrackerDataStoreProtocol {
         return categoryObject
     }
     
+    func fetchAllCategories() -> [String] {
+        let request = NSFetchRequest<TrackerCategoryManagedObject>(entityName: "TrackerCategoryCoreData")
+        request.returnsObjectsAsFaults = false
+        guard let trackerCategories = try? context.fetch(request) else { return [] }
+        return trackerCategories.map { $0.name }
+    }
+    
     private func getOrCreateCategoryFor(name: String) throws -> TrackerCategoryManagedObject {
         let request = NSFetchRequest<TrackerCategoryManagedObject>(entityName: "TrackerCategoryCoreData")
         request.returnsObjectsAsFaults = false
@@ -55,11 +64,16 @@ extension DataStore: TrackerDataStoreProtocol {
         }
     }
     
-    func getCategoryFor(name: String) throws -> TrackerCategoryManagedObject? {
+    func fetchCategoryFor(name: String) throws -> TrackerCategoryManagedObject? {
         let request = NSFetchRequest<TrackerCategoryManagedObject>(entityName: "TrackerCategoryCoreData")
         request.returnsObjectsAsFaults = false
         request.predicate = NSPredicate(format: " %K == %@", #keyPath(TrackerCategoryManagedObject.name), name)
         return try context.fetch(request).first
+    }
+    
+    func deleteCategoryWith(name: String) throws {
+        guard let category = try? fetchCategoryFor(name: name) else { return }
+        try deleteCategory(category)
     }
     
     func deleteCategory(_ category: TrackerCategoryManagedObject) throws {
@@ -86,7 +100,7 @@ extension DataStore: TrackerCategoryDataStoreProtocol {
         
         context.delete(tracker)
         try context.save()
-        if let categoryObject = try getCategoryFor(name: category.name), categoryObject.trackers.isEmpty {
+        if let categoryObject = try fetchCategoryFor(name: category.name), categoryObject.trackers.isEmpty {
             try deleteCategory(categoryObject)
         }
     }

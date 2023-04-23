@@ -8,31 +8,20 @@
 import Foundation
 import CoreData
 
-struct TrackersCategoryStoreUpdate {
-    var insertedIndex: IndexPath?
-    var updatedIndex: IndexPath?
-    var deletedIndex: IndexPath?
-}
-
 protocol TrackerCategoriesDataProviderProtocol {
-    var numberOfSections: Int { get }
+    var categoriesAmount: Int { get }
     
-    func numberOfItemsInSection(_ section: Int) -> Int
-    func categoryName(at indexPath: IndexPath) -> String
-    func addCategory(_ name: String)
-    func deleteCategory(at indexPath: IndexPath)
+    func addCategoryWith(name: String) throws
+    func fetchCategory(_ index: Int) -> String
+    func deleteCategoryAt(index: Int) throws
 }
 
 final class TrackerCategoriesDataProvider: NSObject {
     weak var delegate: TrackerCategoryDataProviderDelegate?
-    weak var errorHandlerDelegate: ErrorHandlerDelegate?
 
     private var insertedIndex: IndexPath?
     private var updatedIndex: IndexPath?
     private var deletedIndex: IndexPath?
-    private var insertedSection: IndexSet?
-    private var updatedSection: IndexSet?
-    private var deletedSection: IndexSet?
     
     private let context: NSManagedObjectContext
     private let categoryDataStore: TrackerCategoryDataStoreProtocol = DataStore()
@@ -50,42 +39,30 @@ final class TrackerCategoriesDataProvider: NSObject {
         return fetchedResultsController
     }()
     
-    init(delegate: TrackerCategoryDataProviderDelegate, errorHandlerDelegate: ErrorHandlerDelegate? ) throws {
+    init(delegate: TrackerCategoryDataProviderDelegate) {
         self.delegate = delegate
-        self.errorHandlerDelegate = errorHandlerDelegate
         self.context = Context.shared
     }
 }
 
 extension TrackerCategoriesDataProvider: TrackerCategoriesDataProviderProtocol {
-    var numberOfSections: Int {
-        1
+    func fetchCategory(_ index: Int) -> String {
+        let indexPath = IndexPath(row: index, section: 0)
+        return fetchedResultsController.object(at: indexPath).name
     }
     
-    func numberOfItemsInSection(_ section: Int) -> Int {
-        return fetchedResultsController.sections?[section].numberOfObjects ?? 0
+    var categoriesAmount: Int {
+        fetchedResultsController.sections?[0].numberOfObjects ?? 0
     }
     
-    func categoryName(at indexPath: IndexPath) -> String {
+    func addCategoryWith(name: String) throws {
+        try categoryDataStore.addCategory(categoryName: name)
+    }
+    
+    func deleteCategoryAt(index: Int) throws {
+        let indexPath = IndexPath(row: index, section: 0)
         let categoryManagedItem = fetchedResultsController.object(at: indexPath)
-        return categoryManagedItem.name
-    }
-    
-    func addCategory(_ name: String) {
-        do {
-            try categoryDataStore.addCategory(categoryName: name)
-        } catch {
-            errorHandlerDelegate?.handleError(message: error.localizedDescription)
-        }
-    }
-    
-    func deleteCategory(at indexPath: IndexPath) {
-        let categoryManagedItem = fetchedResultsController.object(at: indexPath)
-        do {
-            try categoryDataStore.deleteCategory(categoryManagedItem)
-        } catch {
-            errorHandlerDelegate?.handleError(message: error.localizedDescription)
-        }
+        try categoryDataStore.deleteCategory(categoryManagedItem)
     }
 }
 
@@ -101,15 +78,6 @@ extension TrackerCategoriesDataProvider: NSFetchedResultsControllerDelegate {
         insertedIndex = nil
         updatedIndex = nil
         deletedIndex = nil
-    }
-    
-    func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange sectionInfo: NSFetchedResultsSectionInfo, atSectionIndex sectionIndex: Int, for type: NSFetchedResultsChangeType) {
-        switch type {
-        case .insert: insertedSection = IndexSet(integer: sectionIndex)
-        case .update: updatedSection = IndexSet(integer: sectionIndex)
-        case .delete: deletedSection = IndexSet(integer: sectionIndex)
-        default: break
-        }
     }
     
     func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {

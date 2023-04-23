@@ -14,6 +14,7 @@
 		780BF39529D0EA7100A3CFA0 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 780BF39329D0EA7100A3CFA0 /* LaunchScreen.storyboard */; };
 		780BF39E29D0EADB00A3CFA0 /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 780BF39D29D0EADB00A3CFA0 /* SnapKit */; };
 		784BCA7629E85BDD00D1A14E /* TrackerCoreDataModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 784BCA7429E85BDD00D1A14E /* TrackerCoreDataModel.xcdatamodeld */; };
+		7854D8E329F5A0C300CE6AE7 /* HabitCreationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7854D8E229F5A0C300CE6AE7 /* HabitCreationViewModel.swift */; };
 		786BF14029EC38EA009317E5 /* DataStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 786BF13F29EC38EA009317E5 /* DataStore.swift */; };
 		786BF14229EC41F4009317E5 /* Context.swift in Sources */ = {isa = PBXBuildFile; fileRef = 786BF14129EC41F4009317E5 /* Context.swift */; };
 		786BF14C29EF01B8009317E5 /* CategoryCreateViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 786BF14B29EF01B8009317E5 /* CategoryCreateViewController.swift */; };
@@ -74,6 +75,7 @@
 		780BF39429D0EA7100A3CFA0 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		780BF39629D0EA7100A3CFA0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		784BCA7529E85BDD00D1A14E /* TrackerCoreDataModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = TrackerCoreDataModel.xcdatamodel; sourceTree = "<group>"; };
+		7854D8E229F5A0C300CE6AE7 /* HabitCreationViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HabitCreationViewModel.swift; sourceTree = "<group>"; };
 		786BF13F29EC38EA009317E5 /* DataStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataStore.swift; sourceTree = "<group>"; };
 		786BF14129EC41F4009317E5 /* Context.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Context.swift; sourceTree = "<group>"; };
 		786BF14B29EF01B8009317E5 /* CategoryCreateViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryCreateViewController.swift; sourceTree = "<group>"; };
@@ -443,6 +445,7 @@
 			isa = PBXGroup;
 			children = (
 				78AA53A129D6100A0063EB84 /* HabitCreationViewController.swift */,
+				7854D8E229F5A0C300CE6AE7 /* HabitCreationViewModel.swift */,
 				78AA53A329D611600063EB84 /* HabitCreation */,
 			);
 			path = HabitModule;
@@ -571,6 +574,7 @@
 				78AA53AF29D768E60063EB84 /* ColorCollectionViewCell.swift in Sources */,
 				78AA539729D353990063EB84 /* BaseButton.swift in Sources */,
 				78A706DC29DB2AC100932908 /* TrackerCreationTableModel.swift in Sources */,
+				7854D8E329F5A0C300CE6AE7 /* HabitCreationViewModel.swift in Sources */,
 				78AA53A229D6100A0063EB84 /* HabitCreationViewController.swift in Sources */,
 				78AA53BA29D814740063EB84 /* TrackersCollectionHeaderView.swift in Sources */,
 				78AA53A629D611C50063EB84 /* EmojiCollectionViewCell.swift in Sources */,

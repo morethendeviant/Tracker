@@ -7,24 +7,14 @@
 
 import UIKit
 
-protocol CategorySelectCoordinatorProtocol: AnyObject {
-    var onHeadForCategoryCreation: (() -> Void)? { get set }
-    var onFinish: ((String?) -> Void)? { get set }
-    var headForError: ((String) -> Void)? { get set }
-    
-    func setNewCategory(_: String)
-}
-
 protocol TrackerCategoryDataProviderDelegate: AnyObject {
     func didUpdate(_ update: TrackersCategoryStoreUpdate)
 }
 
 final class CategorySelectViewController: BaseViewController {
-    var onHeadForCategoryCreation: (() -> Void)?
-    var onFinish: ((String?) -> Void)?
-    var headForError: ((String) -> Void)?
-    
-    private var dataProvider: TrackerCategoriesDataProviderProtocol?
+
+    private var viewModel: CategorySelectViewModelProtocol
+
     private var selectedCategory: String?
     
     private lazy var categoriesTableView: UITableView = {
@@ -50,22 +40,14 @@ final class CategorySelectViewController: BaseViewController {
         addSubviews()
         configure()
         applyLayout()
+        setUpBindings()
         hideKeyboardWhenTappedAround()
     }
     
-    init(pageTitle: String, selectedCategory: String?) {
+    init(viewModel: CategorySelectViewModelProtocol, pageTitle: String, selectedCategory: String?) {
+        self.viewModel = viewModel
         self.selectedCategory = selectedCategory
         super.init(pageTitle: pageTitle)
-        
-        self.dataProvider = {
-            do {
-                try dataProvider = TrackerCategoriesDataProvider(delegate: self, errorHandlerDelegate: self)
-                return dataProvider
-            } catch {
-                handleError(message: "Данные недоступны")
-                return nil
-            }
-        }()
     }
     
     required init?(coder: NSCoder) {
@@ -73,17 +55,30 @@ final class CategorySelectViewController: BaseViewController {
     }
 }
 
-extension CategorySelectViewController: CategorySelectCoordinatorProtocol {
-    func setNewCategory(_ category: String) {
-        dataProvider?.addCategory(category)
-    }
-}
-
 // MARK: - @objs
 
 @objc private extension CategorySelectViewController {
     func addButtonTapped() {
-        onHeadForCategoryCreation?()
+        viewModel.addButtonTapped()
+    }
+    
+    func setUpBindings() {
+        viewModel.categoriesUpdateObserver.bind { [weak self] update in
+            guard let self, let update else { return }
+            self.categoriesTableView.performBatchUpdates {
+                if let insertedIndexPath = update.insertedIndex {
+                    self.categoriesTableView.insertRows(at: [insertedIndexPath], with: .fade)
+                }
+                
+                if let deletedIndexPath = update.deletedIndex {
+                    self.categoriesTableView.deleteRows(at: [deletedIndexPath], with: .fade)
+                }
+                
+                if let updatedIndexPath = update.updatedIndex {
+                    self.categoriesTableView.reloadRows(at: [updatedIndexPath], with: .fade)
+                }
+            }
+        }
     }
 }
 
@@ -116,7 +111,8 @@ extension CategorySelectViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         categoriesTableView.cellForRow(at: indexPath)?.accessoryType = .checkmark
         selectedCategory = categoriesTableView.cellForRow(at: indexPath)?.textLabel?.text
-        onFinish?(selectedCategory)
+        guard let selectedCategory else { return }
+        viewModel.selectCategory(selectedCategory)
     }
     
     func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
@@ -128,33 +124,15 @@ extension CategorySelectViewController: UITableViewDelegate {
 
 extension CategorySelectViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        dataProvider?.numberOfItemsInSection(section) ?? 0
+        viewModel.categoriesAmount
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = UITableViewCell(style: .default, reuseIdentifier: "Cell")
         cell.contentView.addInteraction(UIContextMenuInteraction(delegate: self))
-        cell.textLabel?.text = dataProvider?.categoryName(at: indexPath)
+        cell.textLabel?.text = viewModel.categoryAt(index: indexPath.row)
         configureCell(cell, for: indexPath)
         return cell
-    }
-}
-
-extension CategorySelectViewController: TrackerCategoryDataProviderDelegate {
-    func didUpdate(_ update: TrackersCategoryStoreUpdate) {
-        categoriesTableView.performBatchUpdates {
-            if let insertedIndexPath = update.insertedIndex {
-                categoriesTableView.insertRows(at: [insertedIndexPath], with: .fade)
-            }
-            
-            if let deletedIndexPath = update.deletedIndex {
-                categoriesTableView.deleteRows(at: [deletedIndexPath], with: .fade)
-            }
-            
-            if let updatedIndexPath = update.updatedIndex {
-                categoriesTableView.reloadRows(at: [updatedIndexPath], with: .fade)
-            }
-        }
     }
 }
 
@@ -174,7 +152,7 @@ extension CategorySelectViewController: UIContextMenuInteractionDelegate {
             }
             
             let delete = UIAction(title: "Удалить", image: UIImage(systemName: "trash.fill"), attributes: .destructive) { _ in
-                self?.dataProvider?.deleteCategory(at: indexPath)
+                self?.viewModel.deleteCategoryAt(index: indexPath.row)
             }
             
             return UIMenu(children: [edit, delete])
@@ -208,11 +186,5 @@ private extension CategorySelectViewController {
             make.leading.trailing.equalToSuperview().inset(16)
             make.bottom.equalToSuperview().inset(50)
         }
-    }
-}
-
-extension CategorySelectViewController: ErrorHandlerDelegate {
-    func handleError(message: String) {
-        headForError?(message)
     }
 }
