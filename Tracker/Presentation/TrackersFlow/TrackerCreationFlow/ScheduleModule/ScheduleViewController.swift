@@ -34,12 +34,10 @@ final class ScheduleViewController: BaseViewController, ScheduleViewCoordinatorP
         table.delegate = self
         table.dataSource = self
         table.isScrollEnabled = true
-        //table.separatorInset = .init(top: 0, left: 16, bottom: 0, right: 16)
         table.backgroundColor = .ypWhite
         table.tableHeaderView = UIView(frame: CGRect(x: 0, y: 0, width: 0, height: CGFloat.leastNonzeroMagnitude))
         table.tableFooterView = UIView(frame: CGRect(x: 0, y: 0, width: 0, height: CGFloat.leastNonzeroMagnitude))
         table.separatorColor = .ypGray
-        //table.layer.cornerRadius = 16
         return table
     }()
     

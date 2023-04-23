@@ -46,7 +46,6 @@ final class OnboardingPageViewController: UIPageViewController, OnboardingPageVi
     }
 }
 
-
 // MARK: - Private Methods
 
 @objc

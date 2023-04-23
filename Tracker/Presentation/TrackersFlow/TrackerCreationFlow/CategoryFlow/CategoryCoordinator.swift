@@ -44,10 +44,11 @@ extension CategoryCoordinator {
         
         categorySelectCoordinator?.onHeadForCategoryCreation = { [weak self, weak categorySelectCoordinator] in
             guard let self else { return }
-            let categoryCreateView = modulesFactory.makeCategoryCreateView()
-            let categoryCreateCoordinator = categoryCreateView as? CategoryCreateCoordinatorProtocol
+            let categoryCreateModule = modulesFactory.makeCategoryCreateView()
+            let categoryCreateView = categoryCreateModule.view
+            let categoryCreateCoordination = categoryCreateModule.coordination
             
-            categoryCreateCoordinator?.onReturnWithDone = { [weak categoryCreateView] categoryName in
+            categoryCreateCoordination.onReturnWithDone = { [weak categoryCreateView] categoryName in
                 categorySelectCoordinator?.setNewCategory(categoryName)
                 self.router.dismissModule(categoryCreateView)
             }

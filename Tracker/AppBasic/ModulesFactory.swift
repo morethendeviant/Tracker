@@ -15,7 +15,7 @@ protocol ModulesFactoryProtocol {
     func makeHabitCreationView() -> Presentable
     func makeEventCreationView() -> Presentable
     func makeCategorySelectView(selectedCategory: String?) -> Presentable
-    func makeCategoryCreateView() -> Presentable
+    func makeCategoryCreateView() -> (view: Presentable, coordination: CategoryCreateCoordination)
     func makeOnboardingPageView() -> Presentable
 }
 
@@ -52,8 +52,10 @@ final class ModulesFactory: ModulesFactoryProtocol {
         return CategorySelectViewController(pageTitle: "Категория", selectedCategory: selectedCategory)
     }
     
-    func makeCategoryCreateView() -> Presentable {
-        return CategoryCreateViewController(pageTitle: "Новая категория")
+    func makeCategoryCreateView() -> (view: Presentable, coordination: CategoryCreateCoordination) {
+        let viewModel = CategoryCreateViewModel()
+        let view = CategoryCreateViewController(viewModel: viewModel, pageTitle: "Новая категория")
+        return (view,viewModel)
     }
     
     func makeOnboardingPageView() -> Presentable {

@@ -7,26 +7,13 @@
 
 import UIKit
 
-protocol CategoryCreateCoordinatorProtocol: AnyObject {
-    var onReturnWithDone: ((String) -> Void)? { get set }
-}
-
-final class CategoryCreateViewController: BaseViewController, CategoryCreateCoordinatorProtocol {
-    var onReturnWithDone: ((String) -> Void)?
-    
-    private var categoryName: String = "" {
-        didSet {
-            if categoryName.isEmpty {
-                doneButton.setUpAppearance(for: .disabled)
-            } else {
-                doneButton.setUpAppearance(for: .confirm)
-            }
-        }
-    }
+final class CategoryCreateViewController: BaseViewController {
+   
+    private(set) var viewModel: CategoryCreateViewModelProtocol
     
     private lazy var maxCharactersLabel: UILabel = {
         let label = UILabel()
-        label.text = "Ограничение 38 символов"
+        label.text = "Ограничение \(viewModel.textLimit) символов"
         label.font = .systemFont(ofSize: 17)
         label.textColor = .ypRed
         label.textAlignment = .center
@@ -34,12 +21,13 @@ final class CategoryCreateViewController: BaseViewController, CategoryCreateCoor
     }()
 
     private lazy var categoryNameTextField: UITextField = {
-        let text = BaseTextField()
-        text.placeholder = "Введите название категории"
-        text.backgroundColor = .ypBackground
-        text.layer.cornerRadius = 16
-        text.delegate = self
-        return text
+        let textField = BaseTextField()
+        textField.placeholder = "Введите название категории"
+        textField.text = viewModel.categoryName
+        textField.backgroundColor = .ypBackground
+        textField.layer.cornerRadius = 16
+        textField.delegate = self
+        return textField
     }()
     
     private lazy var doneButton: BaseButton = {
@@ -54,9 +42,12 @@ final class CategoryCreateViewController: BaseViewController, CategoryCreateCoor
         addSubviews()
         configure()
         applyLayout()
+        setUpBindings()
+        categoryNameTextField.becomeFirstResponder()
     }
     
-    init(pageTitle: String) {
+    init(viewModel: CategoryCreateViewModelProtocol, pageTitle: String) {
+        self.viewModel = viewModel
         super.init(pageTitle: pageTitle)
     }
     
@@ -65,9 +56,28 @@ final class CategoryCreateViewController: BaseViewController, CategoryCreateCoor
     }
 }
 
+// MARK: - Private Methods
+
 private extension CategoryCreateViewController {
     @objc func doneButtonTapped() {
-        onReturnWithDone?(categoryName)
+        viewModel.returnDidTapped()
+    }
+    
+    func setUpBindings() {
+        viewModel.categoryNameObserver.bind { [weak self] name in
+            let appearance: BaseButton.Style = name.isEmpty ? .disabled : .confirm
+            self?.doneButton.setUpAppearance(for: appearance)
+        }
+    }
+    
+    func showLimitMessage(_ state: Bool) {
+        UIView.animate(withDuration: 0.2) { [weak self] in
+            self?.maxCharactersLabel.snp.updateConstraints { make in
+                make.height.equalTo(state ? 0: 22)
+            }
+            
+            self?.view.layoutIfNeeded()
+        }
     }
 }
 
@@ -76,7 +86,7 @@ private extension CategoryCreateViewController {
 extension CategoryCreateViewController: UITextFieldDelegate {
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         if let text = textField.text {
-            categoryName = text
+            viewModel.setName(text)
         }
         
         textField.resignFirstResponder()
@@ -84,26 +94,8 @@ extension CategoryCreateViewController: UITextFieldDelegate {
     }
     
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-        self.textLimit(existingText: textField.text, newText: string, limit: 10)
-    }
-    
-    private func textLimit(existingText: String?, newText: String, limit: Int) -> Bool {
-        
-        let isAtLimit = (existingText ?? "").count + newText.count <= limit
-        UIView.animate(withDuration: 0.2) { [weak self] in
-            self?.maxCharactersLabel.snp.updateConstraints { make in
-                make.height.equalTo(isAtLimit ? 0: 22)
-            }
-            
-            self?.view.layoutIfNeeded()
-        }
-        
-        if newText.isEmpty {
-            categoryName.removeLast()
-        } else {
-            categoryName.append(newText)
-        }
-        
+        let isAtLimit = viewModel.isAtTextLimit(existingText: textField.text, newText: string)
+        showLimitMessage(isAtLimit)
         return isAtLimit
     }
 }
