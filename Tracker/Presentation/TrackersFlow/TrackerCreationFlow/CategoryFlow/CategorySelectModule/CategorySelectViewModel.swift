@@ -7,12 +7,6 @@
 
 import Foundation
 
-struct TrackersCategoryStoreUpdate {
-    var insertedIndex: IndexPath?
-    var updatedIndex: IndexPath?
-    var deletedIndex: IndexPath?
-}
-
 protocol CategorySelectCoordination: AnyObject {
     var onHeadForCategoryCreation: (() -> Void)? { get set }
     var onFinish: ((String?) -> Void)? { get set }
@@ -22,11 +16,10 @@ protocol CategorySelectCoordination: AnyObject {
 }
 
 protocol CategorySelectViewModelProtocol {
-    var categoriesAmount: Int { get }
-    var categoriesUpdate: TrackersCategoryStoreUpdate? { get }
-    var categoriesUpdateObserver: Observable<TrackersCategoryStoreUpdate?> { get }
-    
-    func categoryAt(index: Int) -> String
+    var categories: [String] { get }
+    var categoriesObserver: Observable<[String]> { get }
+
+    func viewDidLoad()
     func addButtonTapped()
     func selectCategory(_ category: String)
     func deleteCategoryAt(index: Int)
@@ -37,24 +30,33 @@ final class CategorySelectViewModel {
     var onFinish: ((String?) -> Void)?
     var headForError: ((String) -> Void)?
     
-    private lazy var dataProvider: TrackerCategoriesDataProviderProtocol = TrackerCategoriesDataProvider(delegate: self)
+    private var dataProvider: TrackerCategoryDataStoreProtocol = DataStore()
     
-    @Observable var categoriesUpdate: TrackersCategoryStoreUpdate?
+    @Observable var categories: [String]
+    
+    init() {
+        self.dataProvider = DataStore()
+        self.categories = dataProvider.fetchAllCategories()
+    }
+}
+
+// MARK: - Private Methods
+
+private extension CategorySelectViewModel {
+    func reloadCategories() {
+        categories = dataProvider.fetchAllCategories()
+    }
 }
 
 // MARK: - View Model Protocol
 
 extension CategorySelectViewModel: CategorySelectViewModelProtocol {
-    var categoriesUpdateObserver: Observable<TrackersCategoryStoreUpdate?> {
-        $categoriesUpdate
+    var categoriesObserver: Observable<[String]> {
+        $categories
     }
     
-    var categoriesAmount: Int {
-        dataProvider.categoriesAmount
-    }
-    
-    func categoryAt(index: Int) -> String {
-        dataProvider.fetchCategory(index)
+    func viewDidLoad() {
+        reloadCategories()
     }
     
     func addButtonTapped() {
@@ -67,7 +69,8 @@ extension CategorySelectViewModel: CategorySelectViewModelProtocol {
     
     func deleteCategoryAt(index: Int) {
         do {
-            try dataProvider.deleteCategoryAt(index: index)
+            try dataProvider.deleteCategoryWith(name: categories[index])
+            reloadCategories()
         } catch {
             handleError(message: error.localizedDescription)
         }
@@ -79,7 +82,8 @@ extension CategorySelectViewModel: CategorySelectViewModelProtocol {
 extension CategorySelectViewModel: CategorySelectCoordination {
     func setNewCategory(_ name: String) {
         do {
-            try dataProvider.addCategoryWith(name: name)
+            try dataProvider.addCategory(categoryName: name)
+            reloadCategories()
         } catch {
             handleError(message: error.localizedDescription)
         }
@@ -91,13 +95,5 @@ extension CategorySelectViewModel: CategorySelectCoordination {
 extension CategorySelectViewModel: ErrorHandlerDelegate {
     func handleError(message: String) {
         headForError?(message)
-    }
-}
-
-// MARK: - Data Provider Delegate
-
-extension CategorySelectViewModel: TrackerCategoryDataProviderDelegate {
-    func didUpdate(_ update: TrackersCategoryStoreUpdate) {
-        categoriesUpdate = update
     }
 }

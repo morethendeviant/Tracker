@@ -28,7 +28,7 @@ final class OnboardingViewController: UIViewController {
             descriptionLabel.text = "Отслеживайте только то, что хотите"
         case .red:
             backgroundImage.image = UIImage(named: "onboarding-red")
-            descriptionLabel.text = "Даже если это не литры води или йога"
+            descriptionLabel.text = "Даже если это не литры воды или йога"
         }
     }
     
