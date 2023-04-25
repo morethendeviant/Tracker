@@ -12,8 +12,8 @@ protocol ModulesFactoryProtocol {
     func makeStatisticsView() -> Presentable
     func makeTrackerSelectView() -> Presentable
     func makeScheduleView(weekdays: [DayOfWeek]) -> (view: Presentable, coordination: ScheduleCoordination)
-    func makeHabitCreationView() -> Presentable
-    func makeEventCreationView() -> Presentable
+    func makeHabitCreationView() -> (view: Presentable, coordination: HabitCreationCoordination)
+    func makeEventCreationView() -> (view: Presentable, coordination: EventCreationCoordination)
     func makeCategorySelectView(selectedCategory: String?) -> (view: Presentable, coordination: CategorySelectCoordination)
     func makeCategoryCreateView() -> (view: Presentable, coordination: CategoryCreateCoordination)
     func makeOnboardingPageView() -> Presentable
@@ -40,14 +40,21 @@ final class ModulesFactory: ModulesFactoryProtocol {
         return (view, viewModel)
     }
     
-    func makeHabitCreationView() -> Presentable {
+    func makeHabitCreationView() -> (view: Presentable, coordination: HabitCreationCoordination) {
         let tableModel = TrackerCreationTableModel.habit
-        return HabitCreationViewController(pageTitle: "Новая привычка", tableDataModel: tableModel, dataStore: dataStore)
+        let dataStore: TrackerDataStoreProtocol = DataStore()
+        let viewModel = HabitCreationViewModel(dataStore: dataStore, tableDataModel: tableModel)
+        let view = HabitCreationViewController(viewModel: viewModel, pageTitle: "Новая привычка")
+        return (view, viewModel)
     }
     
-    func makeEventCreationView() -> Presentable {
+    func makeEventCreationView() -> (view: Presentable, coordination: EventCreationCoordination) {
         let tableModel = TrackerCreationTableModel.event
-        return HabitCreationViewController(pageTitle: "Новая привычка", tableDataModel: tableModel, dataStore: dataStore)
+        let dataStore: TrackerDataStoreProtocol = DataStore()
+        let viewModel = HabitCreationViewModel(dataStore: dataStore, tableDataModel: tableModel)
+        let view = HabitCreationViewController(viewModel: viewModel, pageTitle: "Новая привычка")
+        return (view, viewModel)
+
     }
     
     func makeCategorySelectView(selectedCategory: String?) -> (view: Presentable, coordination: CategorySelectCoordination) {

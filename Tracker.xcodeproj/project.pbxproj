@@ -16,7 +16,7 @@
 		784BCA7629E85BDD00D1A14E /* TrackerCoreDataModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 784BCA7429E85BDD00D1A14E /* TrackerCoreDataModel.xcdatamodeld */; };
 		7854D8E329F5A0C300CE6AE7 /* HabitCreationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7854D8E229F5A0C300CE6AE7 /* HabitCreationViewModel.swift */; };
 		7854D8E529F5A22D00CE6AE7 /* ScheduleViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7854D8E429F5A22D00CE6AE7 /* ScheduleViewModel.swift */; };
-		7854D8E729F6EC3800CE6AE7 /* DiffavleDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7854D8E629F6EC3800CE6AE7 /* DiffavleDataSource.swift */; };
+		7854D8E729F6EC3800CE6AE7 /* DiffableDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7854D8E629F6EC3800CE6AE7 /* DiffableDataSource.swift */; };
 		786BF14029EC38EA009317E5 /* DataStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 786BF13F29EC38EA009317E5 /* DataStore.swift */; };
 		786BF14229EC41F4009317E5 /* Context.swift in Sources */ = {isa = PBXBuildFile; fileRef = 786BF14129EC41F4009317E5 /* Context.swift */; };
 		786BF14C29EF01B8009317E5 /* CategoryCreateViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 786BF14B29EF01B8009317E5 /* CategoryCreateViewController.swift */; };
@@ -79,7 +79,7 @@
 		784BCA7529E85BDD00D1A14E /* TrackerCoreDataModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = TrackerCoreDataModel.xcdatamodel; sourceTree = "<group>"; };
 		7854D8E229F5A0C300CE6AE7 /* HabitCreationViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HabitCreationViewModel.swift; sourceTree = "<group>"; };
 		7854D8E429F5A22D00CE6AE7 /* ScheduleViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScheduleViewModel.swift; sourceTree = "<group>"; };
-		7854D8E629F6EC3800CE6AE7 /* DiffavleDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiffavleDataSource.swift; sourceTree = "<group>"; };
+		7854D8E629F6EC3800CE6AE7 /* DiffableDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiffableDataSource.swift; sourceTree = "<group>"; };
 		786BF13F29EC38EA009317E5 /* DataStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataStore.swift; sourceTree = "<group>"; };
 		786BF14129EC41F4009317E5 /* Context.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Context.swift; sourceTree = "<group>"; };
 		786BF14B29EF01B8009317E5 /* CategoryCreateViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryCreateViewController.swift; sourceTree = "<group>"; };
@@ -238,7 +238,7 @@
 			children = (
 				78A706D329D9D9EE00932908 /* CategorySelectViewController.swift */,
 				786BF15529F42189009317E5 /* CategorySelectViewModel.swift */,
-				7854D8E629F6EC3800CE6AE7 /* DiffavleDataSource.swift */,
+				7854D8E629F6EC3800CE6AE7 /* DiffableDataSource.swift */,
 			);
 			path = CategorySelectModule;
 			sourceTree = "<group>";
@@ -577,7 +577,7 @@
 				78AA53C729D894980063EB84 /* UIViewController + Ext.swift in Sources */,
 				78AA538E29D2028D0063EB84 /* StatisticsViewController.swift in Sources */,
 				786BF14029EC38EA009317E5 /* DataStore.swift in Sources */,
-				7854D8E729F6EC3800CE6AE7 /* DiffavleDataSource.swift in Sources */,
+				7854D8E729F6EC3800CE6AE7 /* DiffableDataSource.swift in Sources */,
 				78AA53AF29D768E60063EB84 /* ColorCollectionViewCell.swift in Sources */,
 				78AA539729D353990063EB84 /* BaseButton.swift in Sources */,
 				78A706DC29DB2AC100932908 /* TrackerCreationTableModel.swift in Sources */,
