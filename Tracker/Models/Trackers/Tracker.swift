@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct Tracker {
+struct Tracker: Hashable {
     let id: String
     let name: String
     let color: Int

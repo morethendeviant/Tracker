@@ -8,23 +8,17 @@
 import Foundation
 import CoreData
 
-protocol TrackerCategoryDataStoreProtocol {
-    func addCategory(categoryName: String) throws -> TrackerCategoryManagedObject
-    func fetchCategoryFor(name: String) throws -> TrackerCategoryManagedObject?
-    func deleteCategory(_ category: TrackerCategoryManagedObject) throws
-    func deleteCategoryWith(name: String) throws
-    func fetchAllCategories() -> [String]
-}
-
-protocol TrackerDataStoreProtocol {
-    func add(_ tracker: Tracker, for categoryName: String) throws
-    func delete(_ tracker: TrackerManagedObject) throws
-}
-
-protocol TrackerRecordDataStoreProtocol {
-    func addRecord(trackerObject: TrackerManagedObject, date: Date) throws
-    func deleteRecord(_ id: String, date: Date) throws
-    func getRecord(_ id: String, date: Date) throws -> TrackerRecordManagedObject?
+protocol DataStoreProtocol {
+    func createCategory(_ categoryName: String) throws -> TrackerCategoryManagedObject
+    func fetchAllCategories(date: String?) throws -> [TrackerCategory]
+    func deleteCategory(_ category: TrackerCategory) throws
+    func createTracker(_ tracker: Tracker, categoryName: String) throws
+    func deleteTracker(_ tracker: Tracker) throws
+    func createRecord(_ record: TrackerRecord) throws
+    func getRecord(_ record: TrackerRecord) throws -> TrackerRecordManagedObject?
+    func deleteRecord(_ record: TrackerRecord) throws
+    func readRecordAmountWith(id: String) throws -> Int
+    func checkForExistence(_ record: TrackerRecord) throws -> Bool
 }
 
 // MARK: - Data Store
@@ -33,11 +27,9 @@ final class DataStore {
     let context = Context.shared
 }
 
-// MARK: - Category Data Store
-
-extension DataStore: TrackerDataStoreProtocol {
+extension DataStore: DataStoreProtocol {
     @discardableResult
-    func addCategory(categoryName: String) throws -> TrackerCategoryManagedObject {
+    func createCategory(_ categoryName: String) throws -> TrackerCategoryManagedObject {
         let categoryObject = TrackerCategoryManagedObject(context: context)
         categoryObject.name = categoryName
         categoryObject.trackers = []
@@ -45,93 +37,111 @@ extension DataStore: TrackerDataStoreProtocol {
         return categoryObject
     }
     
-    func fetchAllCategories() -> [String] {
+    // --------
+    func fetchAllCategories(date: String?) throws -> [TrackerCategory] {
         let request = NSFetchRequest<TrackerCategoryManagedObject>(entityName: "TrackerCategoryCoreData")
         request.returnsObjectsAsFaults = false
-        guard let trackerCategories = try? context.fetch(request) else { return [] }
-        return trackerCategories.map { $0.name }
-    }
-    
-    private func getOrCreateCategoryFor(name: String) throws -> TrackerCategoryManagedObject {
-        let request = NSFetchRequest<TrackerCategoryManagedObject>(entityName: "TrackerCategoryCoreData")
-        request.returnsObjectsAsFaults = false
-        request.predicate = NSPredicate(format: " %K == %@", #keyPath(TrackerCategoryManagedObject.name), name)
-        let trackerCategories = try? context.fetch(request)
-        if let category = trackerCategories?.first {
-            return category
-        } else {
-            return try addCategory(categoryName: name)
+        if let date {
+            request.predicate = NSPredicate(format: "ANY %K CONTAINS[n] %@", #keyPath(TrackerCategoryManagedObject.trackers.schedule), date as CVarArg)
         }
-    }
-    
-    func fetchCategoryFor(name: String) throws -> TrackerCategoryManagedObject? {
-        let request = NSFetchRequest<TrackerCategoryManagedObject>(entityName: "TrackerCategoryCoreData")
-        request.returnsObjectsAsFaults = false
-        request.predicate = NSPredicate(format: " %K == %@", #keyPath(TrackerCategoryManagedObject.name), name)
-        return try context.fetch(request).first
-    }
-    
-    func deleteCategoryWith(name: String) throws {
-        guard let category = try? fetchCategoryFor(name: name) else { return }
-        try deleteCategory(category)
-    }
-    
-    func deleteCategory(_ category: TrackerCategoryManagedObject) throws {
-        context.delete(category)
-        try context.save()
-    }
-}
-
-// MARK: - Tracker Data Store
-
-extension DataStore: TrackerCategoryDataStoreProtocol {
-    func add(_ tracker: Tracker, for categoryName: String) throws {
-        let trackerObject = TrackerManagedObject(context: context)
-        trackerObject.setFrom(tracker: tracker)
-        let category = try getOrCreateCategoryFor(name: categoryName)
-        trackerObject.category = category
-        category.addToTrackers(trackerObject)
-        try context.save()
-    }
-    
-    func delete(_ tracker: TrackerManagedObject) throws {
-        let category = tracker.category
-        tracker.records.forEach { context.delete($0) }
         
-        context.delete(tracker)
-        try context.save()
-        if let categoryObject = try fetchCategoryFor(name: category.name), categoryObject.trackers.isEmpty {
-            try deleteCategory(categoryObject)
-        }
+        let trackerCategoryObjects = try context.fetch(request)
+        
+        let trackerCategories = trackerCategoryObjects.map {
+            let trackers = $0.trackers.map { Tracker(managedItem: $0) }
+            return TrackerCategory(name: $0.name, trackers: trackers)}
+        return trackerCategories
     }
-}
+    
+    func deleteCategory(_ category: TrackerCategory) throws {
+        let request = NSFetchRequest<TrackerCategoryManagedObject>(entityName: "TrackerCategoryCoreData")
+        request.returnsObjectsAsFaults = false
+        request.predicate = NSPredicate(format: "%K == %@", #keyPath(TrackerCategoryManagedObject.name), category.name)
+        guard let trackerCategoryObjects = try? context.fetch(request),
+              let trackerCategoryObject = trackerCategoryObjects.first
+        else {
+            return
+        }
+        context.delete(trackerCategoryObject)
+        try context.save()
+    }
 
-// MARK: - Record Data Store
+    // --------
+    
+    func createTracker(_ tracker: Tracker, categoryName: String) throws {
+        let request = NSFetchRequest<TrackerCategoryManagedObject>(entityName: "TrackerCategoryCoreData")
+        request.returnsObjectsAsFaults = false
+        request.predicate = NSPredicate(format: "%K == %@", #keyPath(TrackerCategoryManagedObject.name), categoryName)
+        
+        let trackerCategoryObjects = try? context.fetch(request)
+        if let trackerCategoryObject = trackerCategoryObjects?.first { // TODO: refactor!
+            let trackerObject = TrackerManagedObject(context: context)
+            trackerObject.setFrom(tracker: tracker)
+            trackerObject.category = trackerCategoryObject
+            trackerCategoryObject.addToTrackers(trackerObject)
+        }
+        else {
+            let trackerObject = TrackerManagedObject(context: context)
+            let trackerCategoryObject = try createCategory(categoryName)
+            trackerObject.setFrom(tracker: tracker)
+            trackerObject.category = trackerCategoryObject
+            trackerCategoryObject.addToTrackers(trackerObject)
+        }
+        try context.save()
+    }
+    
+    //--------
+    private func getTracker(_ id: String) throws -> TrackerManagedObject? {
+        let request = NSFetchRequest<TrackerManagedObject>(entityName: "TrackerCoreData")
+        request.predicate = NSPredicate(format: "%K == %@", #keyPath(TrackerManagedObject.id), id)
+        let trackerObjects = try context.fetch(request)
+        return trackerObjects.first
+    }
+    
+    func deleteTracker(_ tracker: Tracker) throws {
+        guard let trackerCategoryObject = try getTracker(tracker.id) else { return }
+        context.delete(trackerCategoryObject)
+        try context.save()
+    }
+    
+    func createRecord(_ record: TrackerRecord) throws {
+        guard let trackerObject = try getTracker(record.id) else { return }
 
-extension DataStore: TrackerRecordDataStoreProtocol {
-    func addRecord(trackerObject: TrackerManagedObject, date: Date) throws {
         let recordObject = TrackerRecordManagedObject(context: context)
-        recordObject.id = trackerObject.id
-        recordObject.date = date
+        recordObject.id = record.id
+        recordObject.date = record.date
         recordObject.tracker = trackerObject
         trackerObject.addToRecords(recordObject)
         try context.save()
     }
     
-    func deleteRecord(_ id: String, date: Date) throws {
-        guard let record = try getRecord(id, date: date) else { return }
-        context.delete(record)
-        try context.save()
-    }
-    
-    func getRecord(_ id: String, date: Date) throws -> TrackerRecordManagedObject? {
+    func getRecord(_ record: TrackerRecord) throws -> TrackerRecordManagedObject? {
         let request = NSFetchRequest<TrackerRecordManagedObject>(entityName: "TrackerRecordCoreData")
         request.returnsObjectsAsFaults = false
         var compoundPredicate: [NSPredicate] = []
-        compoundPredicate.append(NSPredicate(format: "%K == %@", #keyPath(TrackerRecordManagedObject.id), id))
-        compoundPredicate.append(NSPredicate(format: "%K == %@", #keyPath(TrackerRecordManagedObject.date), date as CVarArg))
+        compoundPredicate.append(NSPredicate(format: "%K == %@", #keyPath(TrackerRecordManagedObject.id), record.id))
+        compoundPredicate.append(NSPredicate(format: "%K == %@", #keyPath(TrackerRecordManagedObject.date), record.date as CVarArg))
         request.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: compoundPredicate)
         let record = try context.fetch(request).first
+        print("record", record)
         return record
+    }
+        
+    func deleteRecord(_ record: TrackerRecord) throws {
+        guard let record = try getRecord(record) else { return }
+        
+        record.tracker.removeFromRecords(record)
+        context.delete(record)
+
+        try context.save()
+    }
+    
+    func readRecordAmountWith(id: String) throws -> Int {
+        try getTracker(id)?.records.count ?? 0
+    }
+    
+    func checkForExistence(_ record: TrackerRecord) throws -> Bool {
+        try getRecord(record) != nil
+        
     }
 }

@@ -23,8 +23,8 @@ extension Date {
     
     func onlyDate() -> Date {
         let calendar = Calendar(identifier: .gregorian)
-        let components = calendar.dateComponents([.year, .month, .day], from: self.toCurrentTimezone())
-        let date = Calendar.current.date(from: components)
+        let components = calendar.dateComponents([.year, .month, .day], from: self)
+        let date = calendar.date(from: components)
         return date!
     }
     

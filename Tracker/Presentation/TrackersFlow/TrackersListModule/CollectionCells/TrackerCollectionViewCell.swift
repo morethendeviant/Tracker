@@ -61,15 +61,15 @@ final class TrackerCollectionViewCell: UICollectionViewCell {
         }
     }
     
-    var interaction: UIInteraction? {
+    var interactionDelegate: UIContextMenuInteractionDelegate? {
         didSet {
-            if let interaction {
-                colorBackgroundView.addInteraction(interaction)
+            if let interactionDelegate {
+                colorBackgroundView.addInteraction(UIContextMenuInteraction(delegate: interactionDelegate))
             }
         }
     }
     
-    var callback: ((IndexPath) -> Void)?
+    var callback: (() -> Void)?
     
     private let colorBackgroundView: UIView = {
         let view = UIView()
@@ -129,13 +129,7 @@ final class TrackerCollectionViewCell: UICollectionViewCell {
 
 private extension TrackerCollectionViewCell {
     @objc func plusButtonTapped() {
-        guard let indexPath = getIndexPath() else { return }
-        callback?(indexPath)
-    }
-    
-    func getIndexPath() -> IndexPath? {
-        guard let superView = self.superview as? UICollectionView else { return nil }
-        return superView.indexPath(for: self)
+        callback?()
     }
 }
 

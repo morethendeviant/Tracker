@@ -8,7 +8,7 @@
 import Foundation
 
 protocol ModulesFactoryProtocol {
-    func makeTrackersView() -> Presentable
+    func makeTrackersView() -> (view: Presentable, coordination: TrackersViewCoordination)
     func makeStatisticsView() -> Presentable
     func makeTrackerSelectView() -> Presentable
     func makeScheduleView(weekdays: [DayOfWeek]) -> (view: Presentable, coordination: ScheduleCoordination)
@@ -20,10 +20,12 @@ protocol ModulesFactoryProtocol {
 }
 
 final class ModulesFactory: ModulesFactoryProtocol {
-    let dataStore: TrackerDataStoreProtocol = DataStore()
     
-    func makeTrackersView() -> Presentable {
-        return TrackersViewController()
+    func makeTrackersView() -> (view: Presentable, coordination: TrackersViewCoordination) {
+        let dataProvider: DataStoreProtocol = DataStore()
+        let viewModel = TrackersListViewModel(dataProvider: dataProvider)
+        let view = TrackersViewController(viewModel: viewModel, diffableDataSourceProvider: viewModel)
+        return (view, viewModel)
     }
     
     func makeStatisticsView() -> Presentable {
@@ -42,7 +44,7 @@ final class ModulesFactory: ModulesFactoryProtocol {
     
     func makeHabitCreationView() -> (view: Presentable, coordination: HabitCreationCoordination) {
         let tableModel = TrackerCreationTableModel.habit
-        let dataStore: TrackerDataStoreProtocol = DataStore()
+        let dataStore: DataStoreProtocol = DataStore()
         let viewModel = HabitCreationViewModel(dataStore: dataStore, tableDataModel: tableModel)
         let view = HabitCreationViewController(viewModel: viewModel, pageTitle: "Новая привычка")
         return (view, viewModel)
@@ -50,7 +52,7 @@ final class ModulesFactory: ModulesFactoryProtocol {
     
     func makeEventCreationView() -> (view: Presentable, coordination: EventCreationCoordination) {
         let tableModel = TrackerCreationTableModel.event
-        let dataStore: TrackerDataStoreProtocol = DataStore()
+        let dataStore: DataStoreProtocol = DataStore()
         let viewModel = HabitCreationViewModel(dataStore: dataStore, tableDataModel: tableModel)
         let view = HabitCreationViewController(viewModel: viewModel, pageTitle: "Новая привычка")
         return (view, viewModel)

@@ -16,7 +16,7 @@ final class CategoriesDiffableDataSource: UITableViewDiffableDataSource<Int, Str
          interactionDelegate: UIContextMenuInteractionDelegate? = nil,
          selectedCategory: String? = nil) {
 
-        super.init(tableView: tableView) { ableView, indexPath, itemIdentifier in
+        super.init(tableView: tableView) { _, _, itemIdentifier in
             let cell = UITableViewCell(style: .default, reuseIdentifier: "Cell")
             cell.backgroundColor = .ypBackground
             cell.selectionStyle = .none
@@ -43,7 +43,7 @@ final class CategoriesDiffableDataSource: UITableViewDiffableDataSource<Int, Str
         var snapshot = Snapshot()
         snapshot.deleteAllItems()
         snapshot.appendSections([0])
-        snapshot.appendItems(data, toSection: 0)
+        snapshot.appendItems(data)
         apply(snapshot, animatingDifferences: animated)
     }
 }

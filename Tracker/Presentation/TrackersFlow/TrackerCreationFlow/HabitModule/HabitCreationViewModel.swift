@@ -59,7 +59,7 @@ final class HabitCreationViewModel {
     var onHeadForSchedule: (([DayOfWeek]) -> Void)?
     var headForError: ((String) -> Void)?
     
-    private let dataStore: TrackerDataStoreProtocol
+    private let dataStore: DataStoreProtocol
     private(set) var tableContent: [CellContent]
 
     @Observable var confirmEnabled: Bool = false
@@ -92,10 +92,9 @@ final class HabitCreationViewModel {
         }
     }
 
-    
     private var tracker: Tracker?
     
-    init(dataStore: TrackerDataStoreProtocol, tableDataModel: TrackerCreationTableModel) {
+    init(dataStore: DataStoreProtocol, tableDataModel: TrackerCreationTableModel) {
         self.dataStore = dataStore
         self.tableContent = tableDataModel.defaultTableContent()
 
@@ -104,23 +103,22 @@ final class HabitCreationViewModel {
     func checkForConfirm() {
         if let text = trackerTitle, !text.isEmpty, let colorSelectedItem, let emojiSelectedItem, selectedCategory != nil {
             if tableContent.count == 1 {
-                
+                let weekdays = DayOfWeek.allCases
                 tracker = Tracker(name: text, color: colorSelectedItem, emoji: emojiSelectedItem, schedule: weekdays)
             }
+            
             if tableContent.count == 2, !weekdays.isEmpty {
                 tracker = Tracker(name: text, color: colorSelectedItem, emoji: emojiSelectedItem, schedule: weekdays)
             }
+            
             confirmEnabled = true
 
         } else {
             tracker = nil
             confirmEnabled = false
-
         }
     }
-    
 }
-
 
 extension HabitCreationViewModel: HabitCreationViewModelProtocol {
     var weekdaysObserver: Observable<[DayOfWeek]> {
@@ -156,7 +154,7 @@ extension HabitCreationViewModel: HabitCreationViewModelProtocol {
     func createButtonTapped() {
         guard let tracker, let selectedCategory else { return }
         do {
-            try dataStore.add(tracker, for: selectedCategory)
+            try dataStore.createTracker(tracker, categoryName: selectedCategory)
             onCreate?()
         } catch {
             headForError?(error.localizedDescription)
@@ -167,7 +165,6 @@ extension HabitCreationViewModel: HabitCreationViewModelProtocol {
         onCancel?()
     }
 }
-
 
 extension HabitCreationViewModel: HabitCreationCoordination {
     func selectCategory(_ category: String?) {
@@ -185,12 +182,7 @@ extension HabitCreationViewModel: HabitCreationCoordination {
 }
 
 extension HabitCreationViewModel: EventCreationCoordination {
-//    func selectCategory(_ category: String?) {
-//        
-//    }
-    
 }
-
 
 // MARK: - Error Handling
 

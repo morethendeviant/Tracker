@@ -27,10 +27,11 @@ final class TrackerCoordinator: BaseCoordinator, Coordinatable {
 
 private extension TrackerCoordinator {
     func performFlow() {
-        let trackersView = modulesFactory.makeTrackersView()
-        let coordinatorOutput = trackersView as? TrackersViewCoordinatorProtocol
+        let trackersModule = modulesFactory.makeTrackersView()
+        let trackersView = trackersModule.view
+        let trackersCoordination = trackersModule.coordination
         
-        coordinatorOutput?.headForTrackerSelect = { [weak self] in
+        trackersCoordination.headForTrackerSelect = { [weak self, weak trackersCoordination] in
             guard let self else { return }
             
             let trackerSelectModule = self.modulesFactory.makeTrackerSelectView()
@@ -40,6 +41,7 @@ private extension TrackerCoordinator {
                 let habitCreationCoordinator = self.coordinatorsFactory.makeHabitCreationCoordinator(router: self.router)
                 
                 habitCreationCoordinator.finishFlowOnCreate = { [weak habitCreationCoordinator] in
+                    trackersCoordination?.returnOnCreate()
                     self.removeDependency(habitCreationCoordinator)
                     self.router.dismissModule(trackerSelectModule)
                 }
@@ -56,6 +58,7 @@ private extension TrackerCoordinator {
                 let eventCreationCoordinator = self.coordinatorsFactory.makeEventCreationCoordinator(router: self.router)
                 
                 eventCreationCoordinator.finishFlowOnCreate = { [weak eventCreationCoordinator] in
+                    trackersCoordination?.returnOnCreate()
                     self.removeDependency(eventCreationCoordinator)
                     self.router.dismissModule(trackerSelectModule)
                 }
@@ -71,7 +74,7 @@ private extension TrackerCoordinator {
             self.router.present(trackerSelectModule)
         }
         
-        coordinatorOutput?.headForError = { [weak self] message in
+        trackersCoordination.headForError = { [weak self] message in
             self?.router.presentAlert(message: message)
         }
         

@@ -7,8 +7,6 @@
 
 import UIKit
 
-
-
 final class HabitCreationViewController: BaseViewController {
     
     private var viewModel: HabitCreationViewModelProtocol
@@ -137,19 +135,15 @@ private extension HabitCreationViewController {
             }
         }
         
-        viewModel.selectedCategoryObserver.bind { [weak self] category in
+        viewModel.selectedCategoryObserver.bind { [weak self] _ in
             guard let self else { return }
-            
-            self.parametersTableView.reloadData()
-
-        }
-        
-        viewModel.weekdaysObserver.bind { [weak self] weekDays in
-            guard let self else { return }
-            
             self.parametersTableView.reloadData()
         }
         
+        viewModel.weekdaysObserver.bind { [weak self] _ in
+            guard let self else { return }
+            self.parametersTableView.reloadData()
+        }
     }
     
     func configureCell(_ cell: UITableViewCell, for indexPath: IndexPath) {
@@ -167,7 +161,10 @@ private extension HabitCreationViewController {
 
 extension HabitCreationViewController: UITextFieldDelegate {
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        viewModel.setTitle(textField.text!) // TODO: Refac
+        if let text = textField.text {
+            viewModel.setTitle(text)
+        }
+        
         textField.resignFirstResponder()
         return true
     }

@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct TrackerCategory {
+struct TrackerCategory: Hashable {
     let name: String
     let trackers: [Tracker]
     
@@ -16,3 +16,4 @@ struct TrackerCategory {
         self.trackers = trackers
     }
 }
+

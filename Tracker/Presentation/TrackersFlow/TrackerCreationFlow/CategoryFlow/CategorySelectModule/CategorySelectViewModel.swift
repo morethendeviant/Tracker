@@ -30,13 +30,13 @@ final class CategorySelectViewModel {
     var onFinish: ((String?) -> Void)?
     var headForError: ((String) -> Void)?
     
-    private var dataProvider: TrackerCategoryDataStoreProtocol = DataStore()
+    private var dataProvider: DataStoreProtocol = DataStore()
     
-    @Observable var categories: [String]
+    @Observable var categories: [String] = []
     
     init() {
         self.dataProvider = DataStore()
-        self.categories = dataProvider.fetchAllCategories()
+        reloadCategories()
     }
 }
 
@@ -44,7 +44,11 @@ final class CategorySelectViewModel {
 
 private extension CategorySelectViewModel {
     func reloadCategories() {
-        categories = dataProvider.fetchAllCategories()
+        do {
+            categories = try dataProvider.fetchAllCategories(date: nil).map { $0.name }
+        } catch {
+            handleError(message: error.localizedDescription)
+        }
     }
 }
 
@@ -68,8 +72,9 @@ extension CategorySelectViewModel: CategorySelectViewModelProtocol {
     }
     
     func deleteCategoryAt(index: Int) {
+        let category = TrackerCategory(name: categories[index])
         do {
-            try dataProvider.deleteCategoryWith(name: categories[index])
+            try dataProvider.deleteCategory(category)
             reloadCategories()
         } catch {
             handleError(message: error.localizedDescription)
@@ -82,7 +87,7 @@ extension CategorySelectViewModel: CategorySelectViewModelProtocol {
 extension CategorySelectViewModel: CategorySelectCoordination {
     func setNewCategory(_ name: String) {
         do {
-            try dataProvider.addCategory(categoryName: name)
+            try dataProvider.createCategory(name)
             reloadCategories()
         } catch {
             handleError(message: error.localizedDescription)
