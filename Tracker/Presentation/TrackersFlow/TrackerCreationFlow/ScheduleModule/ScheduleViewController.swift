@@ -9,7 +9,7 @@ import UIKit
 
 final class ScheduleViewController: BaseViewController {
         
-    var viewModel: ScheduleViewModelProtocol
+    private let viewModel: ScheduleViewModelProtocol
     
     private var mainScrollView: UIScrollView = {
         let scroll = UIScrollView()

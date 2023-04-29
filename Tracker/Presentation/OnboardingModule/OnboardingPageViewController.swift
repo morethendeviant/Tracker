@@ -49,8 +49,7 @@ final class OnboardingPageViewController: UIPageViewController, OnboardingPageVi
 
 // MARK: - Private Methods
 
-@objc
-private extension OnboardingPageViewController {
+@objc private extension OnboardingPageViewController {
      func proceedButtonTapped() {
         onProceed?()
     }

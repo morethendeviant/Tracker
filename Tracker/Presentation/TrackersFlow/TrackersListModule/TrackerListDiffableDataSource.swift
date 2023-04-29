@@ -9,7 +9,7 @@ import UIKit
 
 final class TrackerListDiffableDataSource: UICollectionViewDiffableDataSource<TrackerCategory, Tracker> {
     typealias Snapshot = NSDiffableDataSourceSnapshot<TrackerCategory, Tracker>
-    var snapshot = Snapshot()
+    private var snapshot = Snapshot()
     
     init(_ collectionView: UICollectionView,
          dataSourceProvider: TrackersDataSourceProvider,
@@ -42,9 +42,14 @@ final class TrackerListDiffableDataSource: UICollectionViewDiffableDataSource<Tr
             snapshot.appendItems(category.trackers, toSection: category)
         }
         
-        apply(snapshot, animatingDifferences: animated)
-    }
+        var regularSnapshot = snapshot
+        data.forEach { category in
+            regularSnapshot.reloadItems(category.trackers)
+        }
         
+        apply(regularSnapshot, animatingDifferences: animated)
+    }
+    
     func reloadTracker(_ tracker: Tracker, animated: Bool = true) {
         var singleSnapshot = snapshot
         singleSnapshot.reloadItems([tracker])

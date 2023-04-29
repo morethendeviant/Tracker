@@ -26,11 +26,11 @@ protocol TrackersListViewModelProtocol {
     
     var tracker: Tracker? { get }
     var trackerObserver: Observable<Tracker?> { get }
-
+    
     var date: Date { get }
     var searchText: String? { get }
     var lastSectionIndex: Int { get }
-
+    
     func sectionNameAt(_ index: Int) -> String
     func plusButtonTapped()
     func dateChangedTo(_ date: Date)
@@ -57,7 +57,7 @@ final class TrackersListViewModel: TrackersViewCoordination {
     var headForError: ((String) -> Void)?
     
     private var dataProvider: TrackerDataStoreProtocol
-
+    
     private(set) var date: Date = Date()
     private(set) var searchText: String?
     
@@ -130,8 +130,15 @@ extension TrackersListViewModel: TrackersListViewModelProtocol {
     func dateChangedTo(_ date: Date) {
         self.date = date.onlyDate()
         let dayOfWeek = date.getDayOfWeek()
+        
         do {
-            categories = try dataProvider.fetchAllCategories(date: DayOfWeek.dayToNumber(dayOfWeek))
+            categories = try dataProvider.fetchAllCategories().compactMap { category in
+                let trackers = category.trackers.compactMap { tracker in
+                    tracker.schedule.contains(dayOfWeek) ? tracker : nil
+                }
+                
+                return trackers.isEmpty ? nil : TrackerCategory(name: category.name, trackers: trackers)
+            }
         } catch {
             handleError(message: error.localizedDescription)
         }
@@ -159,7 +166,7 @@ extension TrackersListViewModel: TrackersDataSourceProvider {
     
     func removeRecordWithId(_ id: String) {
         let record = TrackerRecord(id: id, date: date)
-
+        
         do {
             try dataProvider.deleteRecord(record)
         } catch {
@@ -171,7 +178,7 @@ extension TrackersListViewModel: TrackersDataSourceProvider {
     
     func cellIsMarkedWithId(_ id: String) -> Bool {
         let record = TrackerRecord(id: id, date: date)
-
+        
         do {
             return try dataProvider.checkForExistence(record)
         } catch {

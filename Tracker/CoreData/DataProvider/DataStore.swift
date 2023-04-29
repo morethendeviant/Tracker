@@ -13,7 +13,7 @@ protocol CategoryCreationDataStoreProtocol {
 }
 protocol CategorySelectDataStoreProtocol {
     func createCategory(_ categoryName: String) throws -> TrackerCategoryManagedObject
-    func fetchAllCategories(date: String?) throws -> [TrackerCategory]
+    func fetchAllCategories() throws -> [TrackerCategory]
     func deleteCategory(_ category: TrackerCategory) throws
 }
 
@@ -22,7 +22,7 @@ protocol TrackerCreationDataStoreProtocol {
 }
 
 protocol TrackerDataStoreProtocol {
-    func fetchAllCategories(date: String?) throws -> [TrackerCategory]
+    func fetchAllCategories() throws -> [TrackerCategory]
     func deleteTracker(_ tracker: Tracker) throws
     func createRecord(_ record: TrackerRecord) throws
     func getRecord(_ record: TrackerRecord) throws -> TrackerRecordManagedObject?
@@ -34,7 +34,7 @@ protocol TrackerDataStoreProtocol {
 // MARK: - Data Store
 
 final class DataStore {
-    let context = Context.shared
+    private let context = Context.shared
 }
 
 extension DataStore: CategoryCreationDataStoreProtocol {
@@ -49,17 +49,16 @@ extension DataStore: CategoryCreationDataStoreProtocol {
 }
 
 extension DataStore: CategorySelectDataStoreProtocol {
-    func fetchAllCategories(date: String?) throws -> [TrackerCategory] {
+    func fetchAllCategories() throws -> [TrackerCategory] {
         let request = NSFetchRequest<TrackerCategoryManagedObject>(entityName: "TrackerCategoryCoreData")
         request.returnsObjectsAsFaults = false
-        if let date {
-            request.predicate = NSPredicate(format: "ANY %K CONTAINS[n] %@", #keyPath(TrackerCategoryManagedObject.trackers.schedule), date as CVarArg)
-        }
         
         let trackerCategoryObjects = try context.fetch(request)
-        
         let trackerCategories = trackerCategoryObjects.map {
-            let trackers = $0.trackers.map { Tracker(managedItem: $0) }
+            let trackers = $0.trackers.map {
+                return Tracker(managedItem: $0)
+            }
+            
             return TrackerCategory(name: $0.name, trackers: trackers)}
         return trackerCategories
     }

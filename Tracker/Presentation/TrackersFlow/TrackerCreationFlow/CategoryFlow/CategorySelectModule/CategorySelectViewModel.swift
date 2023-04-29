@@ -54,7 +54,7 @@ final class CategorySelectViewModel: CategoriesDataSourceProvider {
 private extension CategorySelectViewModel {
     func reloadCategories() {
         do {
-            categories = try dataProvider.fetchAllCategories(date: nil).map { $0.name }
+            categories = try dataProvider.fetchAllCategories().map { $0.name }
         } catch {
             handleError(message: error.localizedDescription)
         }

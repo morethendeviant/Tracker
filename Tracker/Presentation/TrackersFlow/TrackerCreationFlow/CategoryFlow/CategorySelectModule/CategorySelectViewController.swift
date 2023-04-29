@@ -9,8 +9,8 @@ import UIKit
 
 final class CategorySelectViewController: BaseViewController {
     
-    private var viewModel: CategorySelectViewModelProtocol
-    private var dataSourceProvider: CategoriesDataSourceProvider
+    private let viewModel: CategorySelectViewModelProtocol
+    private let dataSourceProvider: CategoriesDataSourceProvider
     
     private lazy var dataSource: CategoriesDiffableDataSource = {
         let dataSource = CategoriesDiffableDataSource(categoriesTableView,

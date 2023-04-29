@@ -9,7 +9,7 @@ import UIKit
 
 final class CategoryCreateViewController: BaseViewController {
    
-    private(set) var viewModel: CategoryCreateViewModelProtocol
+    private let viewModel: CategoryCreateViewModelProtocol
     
     private lazy var maxCharactersLabel: UILabel = {
         let label = UILabel()

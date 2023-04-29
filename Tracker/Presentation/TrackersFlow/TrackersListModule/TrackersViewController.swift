@@ -10,8 +10,8 @@ import SnapKit
 
 final class TrackersViewController: UIViewController {
     
-    private var viewModel: TrackersListViewModelProtocol
-    private var diffableDataSourceProvider: TrackersDataSourceProvider
+    private let viewModel: TrackersListViewModelProtocol
+    private let diffableDataSourceProvider: TrackersDataSourceProvider
     
     private lazy var diffableDataSource: TrackerListDiffableDataSource = {
         let dataSource = TrackerListDiffableDataSource(trackersCollectionView,
@@ -221,6 +221,7 @@ private extension TrackersViewController {
             guard let self else { return }
             
             self.diffableDataSource.reloadAll(categories)
+            
             if let text = self.searchBar.text, !text.isEmpty {
                 self.contentPlaceholder.setUpContent(with: .search)
             } else {
