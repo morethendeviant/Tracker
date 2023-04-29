@@ -6,7 +6,7 @@
 //
 
 @propertyWrapper
-class Observable<Value> {
+final class Observable<Value> {
     typealias Listener = ((Value) -> Void)
     
     private var onChange: Listener?

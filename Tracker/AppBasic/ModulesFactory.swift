@@ -22,7 +22,7 @@ protocol ModulesFactoryProtocol {
 final class ModulesFactory: ModulesFactoryProtocol {
     
     func makeTrackersView() -> (view: Presentable, coordination: TrackersViewCoordination) {
-        let dataProvider: DataStoreProtocol = DataStore()
+        let dataProvider: TrackerDataStoreProtocol = DataStore()
         let viewModel = TrackersListViewModel(dataProvider: dataProvider)
         let view = TrackersViewController(viewModel: viewModel, diffableDataSourceProvider: viewModel)
         return (view, viewModel)
@@ -44,7 +44,7 @@ final class ModulesFactory: ModulesFactoryProtocol {
     
     func makeHabitCreationView() -> (view: Presentable, coordination: HabitCreationCoordination) {
         let tableModel = TrackerCreationTableModel.habit
-        let dataStore: DataStoreProtocol = DataStore()
+        let dataStore: TrackerCreationDataStoreProtocol = DataStore()
         let viewModel = HabitCreationViewModel(dataStore: dataStore, tableDataModel: tableModel)
         let view = HabitCreationViewController(viewModel: viewModel, pageTitle: "Новая привычка")
         return (view, viewModel)
@@ -52,7 +52,7 @@ final class ModulesFactory: ModulesFactoryProtocol {
     
     func makeEventCreationView() -> (view: Presentable, coordination: EventCreationCoordination) {
         let tableModel = TrackerCreationTableModel.event
-        let dataStore: DataStoreProtocol = DataStore()
+        let dataStore: TrackerCreationDataStoreProtocol = DataStore()
         let viewModel = HabitCreationViewModel(dataStore: dataStore, tableDataModel: tableModel)
         let view = HabitCreationViewController(viewModel: viewModel, pageTitle: "Новая привычка")
         return (view, viewModel)
@@ -60,10 +60,11 @@ final class ModulesFactory: ModulesFactoryProtocol {
     }
     
     func makeCategorySelectView(selectedCategory: String?) -> (view: Presentable, coordination: CategorySelectCoordination) {
-        let viewModel = CategorySelectViewModel()
-        let view = CategorySelectViewController(viewModel: viewModel,
-                                                pageTitle: "Категория",
-                                                selectedCategory: selectedCategory)
+        let dataStore: CategorySelectDataStoreProtocol = DataStore()
+        let viewModel = CategorySelectViewModel(dataProvider: dataStore, selectedCategory: selectedCategory)
+        let view = CategorySelectViewController(dataSourceProvider: viewModel,
+                                                viewModel: viewModel,
+                                                pageTitle: "Категория")
         return (view, viewModel)
     }
     

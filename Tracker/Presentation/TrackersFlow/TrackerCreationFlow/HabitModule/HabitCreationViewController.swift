@@ -55,8 +55,9 @@ final class HabitCreationViewController: BaseViewController {
         let collection = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
         collection.register(EmojiCollectionViewCell.self, forCellWithReuseIdentifier: EmojiCollectionViewCell.identifier)
         collection.register(ColorCollectionViewCell.self, forCellWithReuseIdentifier: ColorCollectionViewCell.identifier)
-        
-        collection.register(HabitCollectionHeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: HabitCollectionHeaderView.identifier)
+        collection.register(HabitCollectionHeaderView.self,
+                            forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
+                            withReuseIdentifier: HabitCollectionHeaderView.identifier)
         collection.delegate = self
         collection.dataSource = self
         collection.allowsMultipleSelection = false

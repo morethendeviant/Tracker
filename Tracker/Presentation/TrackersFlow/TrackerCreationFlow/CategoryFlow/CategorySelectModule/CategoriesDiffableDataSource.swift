@@ -9,12 +9,10 @@ import UIKit
 
 final class CategoriesDiffableDataSource: UITableViewDiffableDataSource<Int, String> {
     typealias Snapshot = NSDiffableDataSourceSnapshot<Int, String>
-    
-    private var selectedCategory: String?
-    
+        
     init(_ tableView: UITableView,
-         interactionDelegate: UIContextMenuInteractionDelegate? = nil,
-         selectedCategory: String? = nil) {
+         dataSourceProvider: CategoriesDataSourceProvider,
+         interactionDelegate: UIContextMenuInteractionDelegate? = nil) {
 
         super.init(tableView: tableView) { _, _, itemIdentifier in
             let cell = UITableViewCell(style: .default, reuseIdentifier: "Cell")
@@ -23,7 +21,7 @@ final class CategoriesDiffableDataSource: UITableViewDiffableDataSource<Int, Str
             cell.textLabel?.font = .systemFont(ofSize: 17)
             cell.textLabel?.text = itemIdentifier
             
-            if let selectedCategory,
+            if let selectedCategory = dataSourceProvider.selectedCategory,
                let text = cell.textLabel?.text,
                selectedCategory == text {
                 cell.accessoryType = .checkmark

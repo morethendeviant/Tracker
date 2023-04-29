@@ -10,12 +10,12 @@ import UIKit
 final class CategorySelectViewController: BaseViewController {
     
     private var viewModel: CategorySelectViewModelProtocol
-    private var selectedCategory: String?
+    private var dataSourceProvider: CategoriesDataSourceProvider
     
     private lazy var dataSource: CategoriesDiffableDataSource = {
         let dataSource = CategoriesDiffableDataSource(categoriesTableView,
-                                                      interactionDelegate: self,
-                                                      selectedCategory: selectedCategory)
+                                                      dataSourceProvider: dataSourceProvider,
+                                                      interactionDelegate: self)
         return dataSource
     }()
     
@@ -36,9 +36,9 @@ final class CategorySelectViewController: BaseViewController {
         return button
     }()
  
-    init(viewModel: CategorySelectViewModelProtocol, pageTitle: String, selectedCategory: String?) {
+    init(dataSourceProvider: CategoriesDataSourceProvider, viewModel: CategorySelectViewModelProtocol, pageTitle: String) {
+        self.dataSourceProvider = dataSourceProvider
         self.viewModel = viewModel
-        self.selectedCategory = selectedCategory
         super.init(pageTitle: pageTitle)
     }
     
@@ -69,6 +69,7 @@ final class CategorySelectViewController: BaseViewController {
         viewModel.categoriesObserver.bind { [weak self] categories in
             self?.dataSource.reload(categories)
         }
+        
     }
 }
 
@@ -81,8 +82,7 @@ extension CategorySelectViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         categoriesTableView.cellForRow(at: indexPath)?.accessoryType = .checkmark
-        selectedCategory = categoriesTableView.cellForRow(at: indexPath)?.textLabel?.text
-        guard let selectedCategory else { return }
+        let selectedCategory = categoriesTableView.cellForRow(at: indexPath)?.textLabel?.text
         viewModel.selectCategory(selectedCategory)
     }
     

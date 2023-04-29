@@ -340,13 +340,13 @@
 			path = TrackerCreationFlow;
 			sourceTree = "<group>";
 		};
-		78AA53A329D611600063EB84 /* HabitCreation */ = {
+		78AA53A329D611600063EB84 /* SupplyViews */ = {
 			isa = PBXGroup;
 			children = (
 				78AA53AB29D75F9D0063EB84 /* SupplementaryViews */,
 				78AA53A429D611700063EB84 /* CollectionCells */,
 			);
-			path = HabitCreation;
+			path = SupplyViews;
 			sourceTree = "<group>";
 		};
 		78AA53A429D611700063EB84 /* CollectionCells */ = {
@@ -452,7 +452,7 @@
 			children = (
 				78AA53A129D6100A0063EB84 /* HabitCreationViewController.swift */,
 				7854D8E229F5A0C300CE6AE7 /* HabitCreationViewModel.swift */,
-				78AA53A329D611600063EB84 /* HabitCreation */,
+				78AA53A329D611600063EB84 /* SupplyViews */,
 			);
 			path = HabitModule;
 			sourceTree = "<group>";

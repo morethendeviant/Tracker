@@ -59,8 +59,10 @@ final class HabitCreationViewModel {
     var onHeadForSchedule: (([DayOfWeek]) -> Void)?
     var headForError: ((String) -> Void)?
     
-    private let dataStore: DataStoreProtocol
+    private let dataStore: TrackerCreationDataStoreProtocol
+    
     private(set) var tableContent: [CellContent]
+    private var tableDataModel: TrackerCreationTableModel
 
     @Observable var confirmEnabled: Bool = false
     @Observable var selectedCategory: String? {
@@ -94,25 +96,30 @@ final class HabitCreationViewModel {
 
     private var tracker: Tracker?
     
-    init(dataStore: DataStoreProtocol, tableDataModel: TrackerCreationTableModel) {
+    init(dataStore: TrackerCreationDataStoreProtocol, tableDataModel: TrackerCreationTableModel) {
         self.dataStore = dataStore
-        self.tableContent = tableDataModel.defaultTableContent()
-
+        self.tableDataModel = tableDataModel
+        self.tableContent = tableDataModel.tableContent()
+        if case .event = tableDataModel {
+            weekdays = DayOfWeek.allCases
+        }
     }
     
     func checkForConfirm() {
-        if let text = trackerTitle, !text.isEmpty, let colorSelectedItem, let emojiSelectedItem, selectedCategory != nil {
-            if tableContent.count == 1 {
-                let weekdays = DayOfWeek.allCases
-                tracker = Tracker(name: text, color: colorSelectedItem, emoji: emojiSelectedItem, schedule: weekdays)
-            }
+        if let text = trackerTitle, !text.isEmpty,
+           let colorSelectedItem,
+           let emojiSelectedItem,
+           selectedCategory != nil,
+           !weekdays.isEmpty {
             
-            if tableContent.count == 2, !weekdays.isEmpty {
+            switch tableDataModel {
+            case .event:
+                tracker = Tracker(name: text, color: colorSelectedItem, emoji: emojiSelectedItem, schedule: weekdays)
+            case .habit:
                 tracker = Tracker(name: text, color: colorSelectedItem, emoji: emojiSelectedItem, schedule: weekdays)
             }
             
             confirmEnabled = true
-
         } else {
             tracker = nil
             confirmEnabled = false
@@ -129,6 +136,10 @@ extension HabitCreationViewModel: HabitCreationViewModelProtocol {
         $selectedCategory
     }
     
+    var confirmEnabledObserver: Observable<Bool> {
+        $confirmEnabled
+    }
+    
     func setTitle(_ title: String) {
         trackerTitle = title
     }
@@ -140,8 +151,6 @@ extension HabitCreationViewModel: HabitCreationViewModelProtocol {
     func setEmoji(_ index: Int) {
         emojiSelectedItem = index
     }
-    
-    var confirmEnabledObserver: Observable<Bool> { $confirmEnabled }
     
     func scheduleCallTapped() {
         onHeadForSchedule?(weekdays)
@@ -168,16 +177,16 @@ extension HabitCreationViewModel: HabitCreationViewModelProtocol {
 
 extension HabitCreationViewModel: HabitCreationCoordination {
     func selectCategory(_ category: String?) {
-        if let category {
-            self.tableContent[0] = CellContent(text: self.tableContent[0].text, detailText: category)
-        }
+        self.tableContent[0] = CellContent(text: self.tableContent[0].text, detailText: category)
         selectedCategory = category
     }
     
     func returnWithWeekdays(_ weekDays: [DayOfWeek]) {
         let weekdaysText = DayOfWeek.shortNamesFor(weekDays)
-        self.tableContent[1] = CellContent(text: self.tableContent[1].text, detailText: weekdaysText)
-        weekdays = weekDays
+        if !weekDays.isEmpty, case .habit = tableDataModel {
+            self.tableContent[1] = CellContent(text: self.tableContent[1].text, detailText: weekdaysText)
+            weekdays = weekDays
+        }
     }
 }
 

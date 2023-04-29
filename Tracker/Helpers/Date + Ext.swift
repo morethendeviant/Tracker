@@ -15,16 +15,16 @@ extension Date {
        }
     
     func getDayOfWeek() -> DayOfWeek {
-        var customCalendar = Calendar(identifier: .gregorian)
-        customCalendar.firstWeekday = 2
-        let dayIndex = customCalendar.ordinality(of: .weekday, in: .weekOfYear, for: self)!
+        var calendar = Calendar(identifier: .gregorian)
+        calendar.firstWeekday = 2
+        let dayIndex = calendar.ordinality(of: .weekday, in: .weekOfYear, for: self)!
         return DayOfWeek.allCases[dayIndex - 1]
     }
     
     func onlyDate() -> Date {
         let calendar = Calendar(identifier: .gregorian)
         let components = calendar.dateComponents([.year, .month, .day], from: self)
-        let date = calendar.date(from: components)
+        let date = Calendar.current.date(from: components)
         return date!
     }
     

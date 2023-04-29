@@ -57,9 +57,9 @@ extension CategoryCoordinator {
             self.router.present(categoryCreateView)
         }
         
-        router.present(categorySelectView) { [weak self] in
-            
-            self?.finishFlow?(selectedCategory)
+        router.present(categorySelectView) { [weak self, weak categorySelectCoordination] in
+            guard let categorySelectCoordination else { return }
+            self?.finishFlow?(categorySelectCoordination.selectedCategory)
         }
     }
 }

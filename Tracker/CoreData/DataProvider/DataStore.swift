@@ -8,11 +8,21 @@
 import Foundation
 import CoreData
 
-protocol DataStoreProtocol {
+protocol CategoryCreationDataStoreProtocol {
+    func createCategory(_ categoryName: String) throws -> TrackerCategoryManagedObject
+}
+protocol CategorySelectDataStoreProtocol {
     func createCategory(_ categoryName: String) throws -> TrackerCategoryManagedObject
     func fetchAllCategories(date: String?) throws -> [TrackerCategory]
     func deleteCategory(_ category: TrackerCategory) throws
+}
+
+protocol TrackerCreationDataStoreProtocol {
     func createTracker(_ tracker: Tracker, categoryName: String) throws
+}
+
+protocol TrackerDataStoreProtocol {
+    func fetchAllCategories(date: String?) throws -> [TrackerCategory]
     func deleteTracker(_ tracker: Tracker) throws
     func createRecord(_ record: TrackerRecord) throws
     func getRecord(_ record: TrackerRecord) throws -> TrackerRecordManagedObject?
@@ -27,7 +37,7 @@ final class DataStore {
     let context = Context.shared
 }
 
-extension DataStore: DataStoreProtocol {
+extension DataStore: CategoryCreationDataStoreProtocol {
     @discardableResult
     func createCategory(_ categoryName: String) throws -> TrackerCategoryManagedObject {
         let categoryObject = TrackerCategoryManagedObject(context: context)
@@ -36,8 +46,9 @@ extension DataStore: DataStoreProtocol {
         try context.save()
         return categoryObject
     }
-    
-    // --------
+}
+
+extension DataStore: CategorySelectDataStoreProtocol {
     func fetchAllCategories(date: String?) throws -> [TrackerCategory] {
         let request = NSFetchRequest<TrackerCategoryManagedObject>(entityName: "TrackerCategoryCoreData")
         request.returnsObjectsAsFaults = false
@@ -65,32 +76,29 @@ extension DataStore: DataStoreProtocol {
         context.delete(trackerCategoryObject)
         try context.save()
     }
-
-    // --------
-    
+}
+ 
+extension DataStore: TrackerCreationDataStoreProtocol {
     func createTracker(_ tracker: Tracker, categoryName: String) throws {
         let request = NSFetchRequest<TrackerCategoryManagedObject>(entityName: "TrackerCategoryCoreData")
         request.returnsObjectsAsFaults = false
         request.predicate = NSPredicate(format: "%K == %@", #keyPath(TrackerCategoryManagedObject.name), categoryName)
         
         let trackerCategoryObjects = try? context.fetch(request)
-        if let trackerCategoryObject = trackerCategoryObjects?.first { // TODO: refactor!
-            let trackerObject = TrackerManagedObject(context: context)
-            trackerObject.setFrom(tracker: tracker)
-            trackerObject.category = trackerCategoryObject
-            trackerCategoryObject.addToTrackers(trackerObject)
-        }
-        else {
-            let trackerObject = TrackerManagedObject(context: context)
-            let trackerCategoryObject = try createCategory(categoryName)
-            trackerObject.setFrom(tracker: tracker)
-            trackerObject.category = trackerCategoryObject
-            trackerCategoryObject.addToTrackers(trackerObject)
-        }
+        
+        let trackerCategoryObject = trackerCategoryObjects?.first != nil ?
+        trackerCategoryObjects!.first! : try createCategory(categoryName)
+
+        let trackerObject = TrackerManagedObject(context: context)
+        trackerObject.setFrom(tracker: tracker)
+        trackerObject.category = trackerCategoryObject
+        trackerCategoryObject.addToTrackers(trackerObject)
+        
         try context.save()
     }
-    
-    //--------
+}
+
+extension DataStore: TrackerDataStoreProtocol {
     private func getTracker(_ id: String) throws -> TrackerManagedObject? {
         let request = NSFetchRequest<TrackerManagedObject>(entityName: "TrackerCoreData")
         request.predicate = NSPredicate(format: "%K == %@", #keyPath(TrackerManagedObject.id), id)
@@ -123,7 +131,6 @@ extension DataStore: DataStoreProtocol {
         compoundPredicate.append(NSPredicate(format: "%K == %@", #keyPath(TrackerRecordManagedObject.date), record.date as CVarArg))
         request.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: compoundPredicate)
         let record = try context.fetch(request).first
-        print("record", record)
         return record
     }
         

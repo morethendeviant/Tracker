@@ -11,31 +11,40 @@ protocol CategorySelectCoordination: AnyObject {
     var onHeadForCategoryCreation: (() -> Void)? { get set }
     var onFinish: ((String?) -> Void)? { get set }
     var headForError: ((String) -> Void)? { get set }
+    var selectedCategory: String? { get }
     
     func setNewCategory(_: String)
+}
+
+protocol CategoriesDataSourceProvider {
+    var selectedCategory: String? { get }
 }
 
 protocol CategorySelectViewModelProtocol {
     var categories: [String] { get }
     var categoriesObserver: Observable<[String]> { get }
+    
+    var selectedCategory: String? { get }
 
     func viewDidLoad()
     func addButtonTapped()
-    func selectCategory(_ category: String)
+    func selectCategory(_ category: String?)
     func deleteCategoryAt(index: Int)
 }
 
-final class CategorySelectViewModel {
+final class CategorySelectViewModel: CategoriesDataSourceProvider {
     var onHeadForCategoryCreation: (() -> Void)?
     var onFinish: ((String?) -> Void)?
     var headForError: ((String) -> Void)?
     
-    private var dataProvider: DataStoreProtocol = DataStore()
-    
+    private var dataProvider: CategorySelectDataStoreProtocol
+    private(set) var selectedCategory: String?
+
     @Observable var categories: [String] = []
     
-    init() {
-        self.dataProvider = DataStore()
+    init(dataProvider: CategorySelectDataStoreProtocol, selectedCategory: String?) {
+        self.dataProvider = dataProvider
+        self.selectedCategory = selectedCategory
         reloadCategories()
     }
 }
@@ -67,8 +76,9 @@ extension CategorySelectViewModel: CategorySelectViewModelProtocol {
         onHeadForCategoryCreation?()
     }
     
-    func selectCategory(_ category: String) {
-        onFinish?(category)
+    func selectCategory(_ category: String?) {
+        selectedCategory = category
+        onFinish?(selectedCategory)
     }
     
     func deleteCategoryAt(index: Int) {
@@ -76,6 +86,7 @@ extension CategorySelectViewModel: CategorySelectViewModelProtocol {
         do {
             try dataProvider.deleteCategory(category)
             reloadCategories()
+            selectedCategory = nil
         } catch {
             handleError(message: error.localizedDescription)
         }
@@ -88,6 +99,7 @@ extension CategorySelectViewModel: CategorySelectCoordination {
     func setNewCategory(_ name: String) {
         do {
             try dataProvider.createCategory(name)
+            selectedCategory = name
             reloadCategories()
         } catch {
             handleError(message: error.localizedDescription)

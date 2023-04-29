@@ -38,7 +38,8 @@ final class OnboardingPageViewController: UIPageViewController, OnboardingPageVi
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        setViewControllers([pages.first!], direction: .forward, animated: true)
+        guard let firstPage = pages.first else { return }
+        setViewControllers([firstPage], direction: .forward, animated: true)
         dataSource = self
         delegate = self
         addSubviews()

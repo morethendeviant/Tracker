@@ -16,4 +16,3 @@ struct TrackerCategory: Hashable {
         self.trackers = trackers
     }
 }
-

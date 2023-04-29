@@ -56,7 +56,7 @@ final class TrackersListViewModel: TrackersViewCoordination {
     var headForTrackerSelect: (() -> Void)?
     var headForError: ((String) -> Void)?
     
-    private var dataProvider: DataStoreProtocol = DataStore()
+    private var dataProvider: TrackerDataStoreProtocol
 
     private(set) var date: Date = Date()
     private(set) var searchText: String?
@@ -81,7 +81,7 @@ final class TrackersListViewModel: TrackersViewCoordination {
         $tracker
     }
     
-    init(dataProvider: DataStoreProtocol) {
+    init(dataProvider: TrackerDataStoreProtocol) {
         self.dataProvider = dataProvider
     }
 }
@@ -143,7 +143,7 @@ extension TrackersListViewModel: TrackersListViewModelProtocol {
     }
 }
 
-// TODO: Trackers Data Source Provider
+// MARK: - Trackers Data Source Provider
 
 extension TrackersListViewModel: TrackersDataSourceProvider {
     func addRecordWithId(_ id: String) {
