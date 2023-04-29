@@ -35,22 +35,23 @@ final class HabitCreationCoordinator: BaseCoordinator, Coordinatable, HabitCreat
 
 private extension HabitCreationCoordinator {
     func performFlow() {
-        let habitView = self.modulesFactory.makeHabitCreationView()
-        let habitCoordinator = habitView as? HabitCreationCoordinatorProtocol
+        let habitModule = self.modulesFactory.makeHabitCreationView()
+        let habitView = habitModule.view
+        let habitCoordination = habitModule.coordination
         
-        habitCoordinator?.onCreate = { [weak self, weak habitView] in
+        habitCoordination.onCreate = { [weak self, weak habitView] in
             guard let self else { return }
             self.router.dismissModule(habitView)
             self.finishFlowOnCreate?()
         }
         
-        habitCoordinator?.onCancel = { [weak self, weak habitView] in
+        habitCoordination.onCancel = { [weak self, weak habitView] in
             guard let self else { return }
             self.router.dismissModule(habitView)
             self.finishFlowOnCancel?()
         }
         
-        habitCoordinator?.onHeadForCategory = { [weak self, weak habitCoordinator] category in
+        habitCoordination.onHeadForCategory = { [weak self, weak habitCoordination] category in
             guard let self else { return }
             
             var categoryCoordinator = self.coordinatorsFactory.makeCategoryCoordinator(router: router, selectedCategory: category)
@@ -58,21 +59,21 @@ private extension HabitCreationCoordinator {
             self.addDependency(categoryCoordinator)
             
             categoryCoordinator.finishFlow = { [weak categoryCoordinator] category in
-                habitCoordinator?.selectCategory(category)
+                habitCoordination?.selectCategory(category)
                 self.removeDependency(categoryCoordinator)
             }
 
             categoryCoordinator.startFlow()
         }
         
-        habitCoordinator?.onHeadForSchedule = { [weak self, weak habitCoordinator] weekdays in
+        habitCoordination.onHeadForSchedule = { [weak self, weak habitCoordination] weekdays in
             guard let self else { return }
+            let scheduleModule = self.modulesFactory.makeScheduleView(weekdays: weekdays)
+            let scheduleView = scheduleModule.view
+            var scheduleCoordination = scheduleModule.coordination
 
-            let scheduleView = self.modulesFactory.makeScheduleView(weekdays: weekdays)
-            var scheduleCoordinator = scheduleView as? ScheduleViewCoordinatorProtocol
-
-            scheduleCoordinator?.onFinish = { [weak scheduleView] selectedWeekdays in
-                habitCoordinator?.returnWithWeekdays(selectedWeekdays)
+            scheduleCoordination.onFinish = { [weak scheduleView] selectedWeekdays in
+                habitCoordination?.returnWithWeekdays(selectedWeekdays)
                 self.router.dismissModule(scheduleView)
             }
 

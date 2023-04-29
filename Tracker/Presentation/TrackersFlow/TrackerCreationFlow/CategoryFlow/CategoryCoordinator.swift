@@ -33,31 +33,33 @@ final class CategoryCoordinator: BaseCoordinator, Coordinatable, CategoryCoordin
 
 extension CategoryCoordinator {
     func performFlow(selectedCategory: String?) {
-        let categorySelectView = modulesFactory.makeCategorySelectView(selectedCategory: selectedCategory)
-        let categorySelectCoordinator = categorySelectView as? CategorySelectCoordinatorProtocol
+        let categorySelectModule = modulesFactory.makeCategorySelectView(selectedCategory: selectedCategory)
+        let categorySelectView = categorySelectModule.view
+        let categorySelectCoordination = categorySelectModule.coordination
         
-        categorySelectCoordinator?.onFinish = { [weak self, weak categorySelectView] category in
+        categorySelectCoordination.onFinish = { [weak self, weak categorySelectView] category in
             guard let self else { return }
             self.router.dismissModule(categorySelectView)
             self.finishFlow?(category)
         }
         
-        categorySelectCoordinator?.onHeadForCategoryCreation = { [weak self, weak categorySelectCoordinator] in
-            guard let self else { return }
-            let categoryCreateView = modulesFactory.makeCategoryCreateView()
-            let categoryCreateCoordinator = categoryCreateView as? CategoryCreateCoordinatorProtocol
+        categorySelectCoordination.onHeadForCategoryCreation = { [weak self, weak categorySelectCoordination] in
+            guard let self, let categorySelectCoordination else { return }
+            let categoryCreateModule = modulesFactory.makeCategoryCreateView()
+            let categoryCreateView = categoryCreateModule.view
+            let categoryCreateCoordination = categoryCreateModule.coordination
             
-            categoryCreateCoordinator?.onReturnWithDone = { [weak categoryCreateView] categoryName in
-                categorySelectCoordinator?.setNewCategory(categoryName)
+            categoryCreateCoordination.onReturnWithDone = { [weak categoryCreateView] categoryName in
+                categorySelectCoordination.setNewCategory(categoryName)
                 self.router.dismissModule(categoryCreateView)
             }
 
             self.router.present(categoryCreateView)
         }
         
-        router.present(categorySelectView) { [weak self] in
-            
-            self?.finishFlow?(selectedCategory)
+        router.present(categorySelectView) { [weak self, weak categorySelectCoordination] in
+            guard let categorySelectCoordination else { return }
+            self?.finishFlow?(categorySelectCoordination.selectedCategory)
         }
     }
 }

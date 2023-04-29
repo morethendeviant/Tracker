@@ -35,28 +35,29 @@ final class EventCreationCoordinator: BaseCoordinator, Coordinatable, EventCreat
 
 private extension EventCreationCoordinator {
     func performFlow() {
-        let eventView = self.modulesFactory.makeEventCreationView()
-        let eventCoordinator = eventView as? EventCreationCoordinatorProtocol
+        let eventModule = self.modulesFactory.makeEventCreationView()
+        let eventView = eventModule.view
+        let eventCoordination = eventModule.coordination
         
-        eventCoordinator?.onCreate = { [weak self, weak eventView] in
+        eventCoordination.onCreate = { [weak self, weak eventView] in
             guard let self else { return }
             self.router.dismissModule(eventView)
             self.finishFlowOnCreate?()
         }
 
-        eventCoordinator?.onCancel = { [weak self, weak eventView] in
+        eventCoordination.onCancel = { [weak self, weak eventView] in
             guard let self else { return }
             self.router.dismissModule(eventView)
             self.finishFlowOnCancel?()
         }
         
-        eventCoordinator?.onHeadForCategory = { [weak self, weak eventCoordinator] category in
+        eventCoordination.onHeadForCategory = { [weak self, weak eventCoordination] category in
             guard let self else { return }
 
             var categoryCoordinator = self.coordinatorsFactory.makeCategoryCoordinator(router: router, selectedCategory: category)
             self.addDependency(categoryCoordinator)
             categoryCoordinator.finishFlow = { [weak categoryCoordinator] category in
-                eventCoordinator?.selectCategory(category)
+                eventCoordination?.selectCategory(category)
                 self.removeDependency(categoryCoordinator)
             }
 

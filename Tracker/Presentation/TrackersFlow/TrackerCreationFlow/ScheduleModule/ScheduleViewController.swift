@@ -7,14 +7,9 @@
 
 import UIKit
 
-protocol ScheduleViewCoordinatorProtocol {
-    var onFinish: (([DayOfWeek]) -> Void)? { get set }
-}
-
-final class ScheduleViewController: BaseViewController, ScheduleViewCoordinatorProtocol {
-    var onFinish: (([DayOfWeek]) -> Void)?
-    
-    private var selectedDays: [DayOfWeek] = []
+final class ScheduleViewController: BaseViewController {
+        
+    private let viewModel: ScheduleViewModelProtocol
     
     private var mainScrollView: UIScrollView = {
         let scroll = UIScrollView()
@@ -34,12 +29,10 @@ final class ScheduleViewController: BaseViewController, ScheduleViewCoordinatorP
         table.delegate = self
         table.dataSource = self
         table.isScrollEnabled = true
-        //table.separatorInset = .init(top: 0, left: 16, bottom: 0, right: 16)
         table.backgroundColor = .ypWhite
         table.tableHeaderView = UIView(frame: CGRect(x: 0, y: 0, width: 0, height: CGFloat.leastNonzeroMagnitude))
         table.tableFooterView = UIView(frame: CGRect(x: 0, y: 0, width: 0, height: CGFloat.leastNonzeroMagnitude))
         table.separatorColor = .ypGray
-        //table.layer.cornerRadius = 16
         return table
     }()
     
@@ -49,8 +42,8 @@ final class ScheduleViewController: BaseViewController, ScheduleViewCoordinatorP
         return button
     }()
      
-    init(pageTitle: String?, weekdays: [DayOfWeek]) {
-        selectedDays = weekdays
+    init(viewModel: ScheduleViewModelProtocol, pageTitle: String?) {
+        self.viewModel = viewModel
         super.init(pageTitle: pageTitle)
     }
     
@@ -70,16 +63,11 @@ final class ScheduleViewController: BaseViewController, ScheduleViewCoordinatorP
 
 @objc private extension ScheduleViewController {
     func doneButtonTapped() {
-        onFinish?(selectedDays)
+        viewModel.doneButtonTapped()
     }
     
     func toggleSwitch(sender: UISwitch) {
-        let day = DayOfWeek.dayFromNumber(sender.tag)
-        if sender.isOn {
-            selectedDays.append(day)
-        } else {
-            selectedDays.removeAll(where: { $0 == day })
-        }
+        viewModel.setDayAt(index: sender.tag, to: sender.isOn)
     }
 }
 
@@ -92,12 +80,12 @@ private extension ScheduleViewController {
         cell.selectionStyle = .none
     }
     
-    func createDaySwitchFor(indexPath: IndexPath) -> UISwitch {
+    func createDaySwitchFor(index: Int) -> UISwitch {
         let daySwitch = UISwitch()
-        daySwitch.tag = indexPath.row
+        daySwitch.tag = index
         daySwitch.addTarget(nil, action: #selector(toggleSwitch), for: .valueChanged)
         daySwitch.onTintColor = .ypBlue
-        daySwitch.isOn = selectedDays.map { $0.rawValue }.contains(indexPath.row)
+        daySwitch.isOn = viewModel.isDaySelectedAt(index: index)
         return daySwitch
     }
 }
@@ -114,14 +102,14 @@ extension ScheduleViewController: UITableViewDelegate {
 
 extension ScheduleViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        DayOfWeek.count
+        viewModel.daysAmount
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = UITableViewCell(style: .default, reuseIdentifier: "Cell")
         configureCell(cell, indexPath: indexPath)
-        cell.accessoryView = createDaySwitchFor(indexPath: indexPath)
-        cell.textLabel?.text = DayOfWeek.fullNameFor(indexPath.row)
+        cell.accessoryView = createDaySwitchFor(index: indexPath.row)
+        cell.textLabel?.text = viewModel.dayNameAt(index: indexPath.row)
         return cell
     }
 }

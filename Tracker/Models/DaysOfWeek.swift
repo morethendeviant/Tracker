@@ -50,7 +50,7 @@ extension DayOfWeek {
         return days
     }
     
-    static func dayToBinary(_ day: Self) -> String {
+    static func dayToNumber(_ day: Self) -> String {
         String(day.rawValue + 1)
     }
     

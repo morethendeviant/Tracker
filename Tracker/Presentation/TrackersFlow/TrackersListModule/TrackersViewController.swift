@@ -8,24 +8,18 @@
 import UIKit
 import SnapKit
 
-protocol TrackersViewCoordinatorProtocol: AnyObject {
-    var headForTrackerSelect: (() -> Void)? { get set }
-    var headForError: ((String) -> Void)? { get set }
-}
-
-protocol TrackerDataProviderDelegate: AnyObject {
-    func didUpdate(_ update: TrackersStoreUpdate)
-}
-
-protocol ErrorHandlerDelegate: AnyObject {
-    func handleError(message: String)
-}
-
-final class TrackersViewController: UIViewController, TrackersViewCoordinatorProtocol {
-    var headForTrackerSelect: (() -> Void)?
-    var headForError: ((String) -> Void)?
+final class TrackersViewController: UIViewController {
     
-    private var dataProvider: TrackersDataProviderProtocol?
+    private let viewModel: TrackersListViewModelProtocol
+    private let diffableDataSourceProvider: TrackersDataSourceProvider
+    
+    private lazy var diffableDataSource: TrackerListDiffableDataSource = {
+        let dataSource = TrackerListDiffableDataSource(trackersCollectionView,
+                                                       dataSourceProvider: diffableDataSourceProvider,
+                                                       interactionDelegate: self)
+        return dataSource
+    }()
+    
     private var date: Date {
         datePicker.date.onlyDate()
     }
@@ -78,12 +72,18 @@ final class TrackersViewController: UIViewController, TrackersViewCoordinatorPro
     private lazy var contentPlaceholder = ContentPlaceholder(style: .trackers)
     
     private lazy var trackersCollectionView: UICollectionView = {
-        let collection = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
-        collection.register(TrackerCollectionViewCell.self, forCellWithReuseIdentifier: TrackerCollectionViewCell.identifier)
-        collection.register(TrackersCollectionHeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: TrackersCollectionHeaderView.identifier)
-        collection.register(TrackersCollectionFooterView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionFooter, withReuseIdentifier: TrackersCollectionFooterView.identifier)
-        collection.delegate = self
-        collection.dataSource = self
+        let collection = UICollectionView(frame: .zero, collectionViewLayout: createLayout())
+        collection.register(TrackerCollectionViewCell.self,
+                            forCellWithReuseIdentifier: TrackerCollectionViewCell.identifier)
+        
+        collection.register(TrackersCollectionHeaderView.self,
+                            forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
+                            withReuseIdentifier: TrackersCollectionHeaderView.identifier)
+        
+        collection.register(TrackersCollectionFooterView.self,
+                            forSupplementaryViewOfKind: UICollectionView.elementKindSectionFooter,
+                            withReuseIdentifier: TrackersCollectionFooterView.identifier)
+        
         return collection
     }()
     
@@ -97,19 +97,11 @@ final class TrackersViewController: UIViewController, TrackersViewCoordinatorPro
         return button
     }()
     
-    init() {
+    init(viewModel: TrackersListViewModelProtocol, diffableDataSourceProvider: TrackersDataSourceProvider) {
+        self.viewModel = viewModel
+        self.diffableDataSourceProvider = diffableDataSourceProvider
         super.init(nibName: nil, bundle: nil)
         self.tabBarItem = UITabBarItem(title: "Трекеры", image: UIImage(named: "record.circle.fill"), tag: 0)
-        
-        self.dataProvider = {
-            do {
-                try dataProvider = TrackersDataProvider(weekday: dayOfWeek, delegate: self, errorHandlerDelegate: self)
-                return dataProvider
-            } catch {
-                handleError(message: "Данные недоступны")
-                return nil
-            }
-        }()
     }
     
     required init?(coder: NSCoder) {
@@ -121,7 +113,128 @@ final class TrackersViewController: UIViewController, TrackersViewCoordinatorPro
         addSubviews()
         configure()
         applyLayout()
+        trackersCollectionView.dataSource = diffableDataSource
+        setSupplementaryDataViewProvider()
         hideKeyboardWhenTappedAround()
+        setUpBindings()
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        viewModel.dateChangedTo(datePicker.date)
+    }
+}
+
+// MARK: - @objc
+
+@objc private extension TrackersViewController {
+    func plusButtonTapped() {
+        searchBar.resignFirstResponder()
+        viewModel.plusButtonTapped()
+    }
+    
+    func dateChanged() {
+        dismiss(animated: false)
+        viewModel.dateChangedTo(datePicker.date)
+    }
+}
+
+// MARK: - Private Methods
+
+private extension TrackersViewController {
+    func setSupplementaryDataViewProvider() {
+        diffableDataSource.supplementaryViewProvider = { [weak self] collectionView, kind, indexPath in
+            var id: String
+            switch kind {
+            case UICollectionView.elementKindSectionHeader: id = TrackersCollectionHeaderView.identifier
+            case UICollectionView.elementKindSectionFooter: id = TrackersCollectionFooterView.identifier
+            default: id = ""
+            }
+            
+            if let view = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: id, for: indexPath) as? TrackersCollectionHeaderView {
+                view.titleLabel.text = self?.viewModel.sectionNameAt(indexPath.section)
+                return view
+            }
+            
+            if let view = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: id, for: indexPath) as? TrackersCollectionFooterView {
+                return view
+            }
+            
+            return UICollectionReusableView()
+        }
+    }
+    
+    func createLayout() -> UICollectionViewLayout {
+        let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(0.48),
+                                              heightDimension: .fractionalHeight(1))
+        
+        let item = NSCollectionLayoutItem(layoutSize: itemSize)
+        
+        let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
+                                               heightDimension: .absolute(148))
+        
+        let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
+        group.interItemSpacing = .flexible(10)
+        group.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 0, bottom: 16, trailing: 0)
+        
+        let regularSection = NSCollectionLayoutSection(group: group)
+        regularSection.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 16, bottom: 0, trailing: 16)
+        
+        let headerSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
+                                                heightDimension: .absolute(32))
+        
+        let header = NSCollectionLayoutBoundarySupplementaryItem(layoutSize: headerSize,
+                                                                 elementKind: UICollectionView.elementKindSectionHeader,
+                                                                 alignment: .topLeading)
+        
+        regularSection.boundarySupplementaryItems = [header]
+        
+        let lastSection = NSCollectionLayoutSection(group: group)
+        lastSection.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 16, bottom: 0, trailing: 16)
+        
+        let footerSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
+                                                heightDimension: .absolute(80))
+        
+        let footer = NSCollectionLayoutBoundarySupplementaryItem(layoutSize: footerSize,
+                                                                 elementKind: UICollectionView.elementKindSectionFooter,
+                                                                 alignment: .bottomLeading)
+        
+        lastSection.boundarySupplementaryItems = [header, footer]
+        
+        let layout = UICollectionViewCompositionalLayout { [weak self] sectionIndex, _ in
+            if sectionIndex == self?.viewModel.lastSectionIndex {
+                return lastSection
+            } else {
+                return regularSection
+            }
+        }
+
+        let config = UICollectionViewCompositionalLayoutConfiguration()
+        config.interSectionSpacing = 16
+        
+        layout.configuration = config
+        return layout
+    }
+    
+    func setUpBindings() {
+        viewModel.visibleCategoriesObserver.bind { [weak self] categories in
+            guard let self else { return }
+            
+            self.diffableDataSource.reloadAll(categories)
+            
+            if let text = self.searchBar.text, !text.isEmpty {
+                self.contentPlaceholder.setUpContent(with: .search)
+            } else {
+                self.contentPlaceholder.setUpContent(with: .trackers)
+            }
+            
+            self.contentPlaceholder.isHidden = !categories.isEmpty
+        }
+        
+        viewModel.trackerObserver.bind { [weak self] tracker in
+            guard let tracker else { return }
+            self?.diffableDataSource.reloadTracker(tracker)
+        }
     }
 }
 
@@ -133,7 +246,7 @@ extension TrackersViewController: UISearchBarDelegate {
     }
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        getVisibleCategories()
+        viewModel.searchTextChangedTo(searchText)
     }
     
     func searchBarShouldBeginEditing(_ searchBar: UISearchBar) -> Bool {
@@ -145,183 +258,7 @@ extension TrackersViewController: UISearchBarDelegate {
         searchBar.text = ""
         searchBar.endEditing(true)
         searchBar.setShowsCancelButton(false, animated: true)
-        getVisibleCategories()
-    }
-}
-
-// MARK: - Collection DataSource
-
-extension TrackersViewController: UICollectionViewDataSource {
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        dataProvider?.numberOfItemsInSection(section) ?? 0
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        guard let cell = trackersCollectionView.dequeueReusableCell(withReuseIdentifier: TrackerCollectionViewCell.identifier, for: indexPath) as? TrackerCollectionViewCell else {
-            fatalError("cell not found")
-        }
-        
-        guard let tracker = dataProvider?.tracker(at: indexPath) else { return UICollectionViewCell() }
-        
-        cell.color = Colors[tracker.color]
-        cell.emoji = Emojis[tracker.emoji]
-        cell.trackerText = tracker.name
-        cell.callback = { [weak self] indexPath in
-            guard let self, self.date <= Date().onlyDate() else { return }
-            
-            if self.cellIsMarked(at: indexPath) {
-                self.removeRecord(at: indexPath)
-            } else {
-                self.addRecord(at: indexPath)
-            }
-        }
-        
-        cell.isMarked = cellIsMarked(at: indexPath)
-        cell.daysAmount = daysAmount(at: indexPath)
-        cell.interaction = UIContextMenuInteraction(delegate: self)
-        
-        return cell
-    } 
-}
-
-// MARK: - Collection Flow Layout Delegate
-
-extension TrackersViewController: UICollectionViewDelegateFlowLayout {
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        CGSize(width: 167, height: 132)
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
-        9
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
-        var id: String
-        switch kind {
-        case UICollectionView.elementKindSectionHeader: id = TrackersCollectionHeaderView.identifier
-        case UICollectionView.elementKindSectionFooter: id = TrackersCollectionFooterView.identifier
-        default: id = ""
-        }
-        
-        if let view = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: id, for: indexPath) as? TrackersCollectionHeaderView {
-            view.titleLabel.text = dataProvider?.sectionName(indexPath.section)
-            return view
-        }
-        
-        if let view = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: id, for: indexPath) as? TrackersCollectionFooterView {
-            return view
-        }
-        
-        return UICollectionReusableView()
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
-        let indexPath = IndexPath(row: 0, section: section)
-        let headerView = self.collectionView(collectionView, viewForSupplementaryElementOfKind: UICollectionView.elementKindSectionHeader, at: indexPath)
-        return headerView.systemLayoutSizeFitting(CGSize(width: collectionView.frame.width,
-                                                         height: 62),
-                                                  withHorizontalFittingPriority: .required,
-                                                  verticalFittingPriority: .required)
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForFooterInSection section: Int) -> CGSize {
-        section == (dataProvider?.numberOfSections ?? 1) - 1 ? CGSize(width: 0, height: 80) : CGSize(width: 0, height: 0)
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
-        UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
-    }
-}
-
-// MARK: - Collection View Delegate
-
-extension TrackersViewController: UICollectionViewDelegate {
-    func numberOfSections(in collectionView: UICollectionView) -> Int {
-        let numberOfSections = dataProvider?.numberOfSections ?? 0
-        if numberOfSections == 0 {
-            if let text = searchBar.text, text.isEmpty {
-                contentPlaceholder.setUpContent(with: .trackers)
-            } else {
-                contentPlaceholder.setUpContent(with: .search)
-            }
-            
-            contentPlaceholder.isHidden = false
-        } else {
-            contentPlaceholder.isHidden = true
-        }
-        
-        return numberOfSections
-    }
-}
-
-// MARK: - @objc
-
-@objc private extension TrackersViewController {
-    func plusButtonTapped() {
-        searchBar.resignFirstResponder()
-        headForTrackerSelect?()
-    }
-    
-    func dateChanged() {
-        dismiss(animated: false)
-        getVisibleCategories()
-    }
-}
-
-// MARK: - Private Methods
-
-private extension TrackersViewController {
-    func addRecord(at indexPath: IndexPath) {
-        dataProvider?.addRecord(at: indexPath, for: date)
-    }
-    
-    func removeRecord(at indexPath: IndexPath) {
-        dataProvider?.deleteRecord(at: indexPath, for: date)
-    }
-    
-    func cellIsMarked(at indexPath: IndexPath) -> Bool {
-        guard let isMarked = dataProvider?.checkRecord(at: indexPath, for: date) else { return false }
-        return isMarked
-    }
-    
-    func daysAmount(at indexPath: IndexPath) -> Int {
-        dataProvider?.recordsAmount(at: indexPath) ?? 0
-    }
-    
-    func getVisibleCategories() {
-        dataProvider?.getTrackers(name: searchBar.text, weekday: dayOfWeek)
-        trackersCollectionView.reloadData()
-    }
-}
-
-// MARK: - Data Provider Delegate
-extension TrackersViewController: TrackerDataProviderDelegate {
-    func didUpdate(_ update: TrackersStoreUpdate) {
-        trackersCollectionView.performBatchUpdates {
-            if let insertedIndexPath = update.insertedIndex {
-                trackersCollectionView.insertItems(at: [insertedIndexPath])
-            }
-            
-            if let insertedSection = update.insertedSection {
-                trackersCollectionView.insertSections(insertedSection)
-            }
-            
-            if let deletedIndexPath = update.deletedIndex {
-                trackersCollectionView.deleteItems(at: [deletedIndexPath])
-            }
-            
-            if let deletedSection = update.deletedSection {
-                trackersCollectionView.deleteSections(deletedSection)
-            }
-            
-            if let updatedIndexPath = update.updatedIndex {
-                trackersCollectionView.reloadItems(at: [updatedIndexPath])
-            }
-            
-            if let updatedSection = update.updatedSection {
-                trackersCollectionView.reloadSections(updatedSection)
-            }
-        }
+        viewModel.searchTextChangedTo(nil)
     }
 }
 
@@ -345,7 +282,7 @@ extension TrackersViewController: UIContextMenuInteractionDelegate {
             }
             
             let delete = UIAction(title: "Удалить", image: UIImage(systemName: "trash.fill"), attributes: .destructive) { _ in
-                self?.dataProvider?.deleteTracker(at: indexPath)
+                self?.viewModel.deleteTrackerAt(indexPath: indexPath)
             }
             
             return UIMenu(children: [pin, edit, delete])
@@ -414,11 +351,5 @@ private extension TrackersViewController {
             make.width.equalToSuperview()
             make.height.equalTo(188)
         }
-    }
-}
-
-extension TrackersViewController: ErrorHandlerDelegate {
-    func handleError(message: String) {
-        headForError?(message)
     }
 }
