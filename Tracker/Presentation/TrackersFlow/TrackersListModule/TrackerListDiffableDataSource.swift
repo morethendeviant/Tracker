@@ -44,16 +44,10 @@ final class TrackerListDiffableDataSource: UICollectionViewDiffableDataSource<Tr
         
         apply(snapshot, animatingDifferences: animated)
     }
-    
-    // TODO: Reload bug
-    
-    func reloadTracker(_ tracker: Tracker, animated: Bool = true) {
-        //       print("tracker ==", tracker.name)
-        snapshot.reloadItems([tracker])
-        //        if #available(iOS 15.0, *) {
-        //            print("snapshot ==", snapshot.reloadedItemIdentifiers.map {$0.name})
-        //        }
         
-        apply(snapshot)
+    func reloadTracker(_ tracker: Tracker, animated: Bool = true) {
+        var singleSnapshot = snapshot
+        singleSnapshot.reloadItems([tracker])
+        apply(singleSnapshot)
     }
 }
