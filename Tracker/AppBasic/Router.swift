@@ -15,16 +15,19 @@ protocol Routable {
     func present(_ module: Presentable?, animated: Bool)
     func present(_ module: Presentable?, presentationStyle: UIModalPresentationStyle)
     func present(_ module: Presentable?, animated: Bool, presentationStyle: UIModalPresentationStyle, dismissCompletion: (() -> Void)?)
+    
     func dismissModule(_ module: Presentable?)
     func dismissModule(_ module: Presentable?, completion: (() -> Void)?)
     func dismissModule(_ module: Presentable?, animated: Bool, completion: (() -> Void)?)
+    
+    func presentAlert(message: String)
     
     func addToTabBar(_ module: Presentable?)
 }
 
 final class Router: NSObject {
     weak var delegate: RouterDelegate?
-    private var completions: [UIViewController : (() -> Void)?]
+    private var completions: [UIViewController: (() -> Void)?]
     private var presentingViewController: Presentable?
     
     init(routerDelegate: RouterDelegate) {
@@ -68,7 +71,7 @@ extension Router: Routable {
         dismissModule(module, animated: true, completion: nil)
     }
     
-    func dismissModule(_ module: Presentable?, completion: (() -> Void)?)  {
+    func dismissModule(_ module: Presentable?, completion: (() -> Void)?) {
         dismissModule(module, animated: true, completion: completion)
     }
     
@@ -88,6 +91,11 @@ extension Router: Routable {
         var viewControllers = rootViewController.viewControllers ?? []
         viewControllers.append(controller)
         rootViewController.setViewControllers(viewControllers, animated: false)
+    }
+    
+    func presentAlert(message: String) {
+        let alert = UIAlertController(title: "Ошибка", message: message, preferredStyle: .alert)
+        present(alert, animated: true)
     }
 }
 

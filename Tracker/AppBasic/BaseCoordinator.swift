@@ -11,8 +11,8 @@ protocol Coordinatable: AnyObject {
 
 class BaseCoordinator {
     
-    var childCoordinators: [Coordinatable] = []
-  
+    private var childCoordinators: [Coordinatable] = []
+    
     func addDependency(_ coordinator: Coordinatable) {
         childCoordinators.forEach { childCoordinator in
             if childCoordinator === coordinator { return }

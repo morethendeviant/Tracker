@@ -27,10 +27,11 @@ final class TrackerCoordinator: BaseCoordinator, Coordinatable {
 
 private extension TrackerCoordinator {
     func performFlow() {
-        let trackersView = modulesFactory.makeTrackersView()
-        let coordinatorOutput = trackersView as? TrackersViewCoordinatorProtocol
+        let trackersModule = modulesFactory.makeTrackersView()
+        let trackersView = trackersModule.view
+        let trackersCoordination = trackersModule.coordination
         
-        coordinatorOutput?.headForTrackerSelect = { [weak self, weak coordinatorOutput] in
+        trackersCoordination.headForTrackerSelect = { [weak self, weak trackersCoordination] in
             guard let self else { return }
             
             let trackerSelectModule = self.modulesFactory.makeTrackerSelectView()
@@ -40,39 +41,43 @@ private extension TrackerCoordinator {
                 let habitCreationCoordinator = self.coordinatorsFactory.makeHabitCreationCoordinator(router: self.router)
                 
                 habitCreationCoordinator.finishFlowOnCreate = { [weak habitCreationCoordinator] in
-                    coordinatorOutput?.updateCategories()
+                    trackersCoordination?.returnOnCreate()
                     self.removeDependency(habitCreationCoordinator)
                     self.router.dismissModule(trackerSelectModule)
                 }
-
+                
                 habitCreationCoordinator.finishFlowOnCancel = { [weak habitCreationCoordinator ] in
                     self.removeDependency(habitCreationCoordinator)
                 }
-
+                
                 self.addDependency(habitCreationCoordinator)
                 habitCreationCoordinator.startFlow()
             }
             
             trackerSelectCoordinatorOutput?.onHeadForEvent = { [weak trackerSelectModule] in
                 let eventCreationCoordinator = self.coordinatorsFactory.makeEventCreationCoordinator(router: self.router)
-
+                
                 eventCreationCoordinator.finishFlowOnCreate = { [weak eventCreationCoordinator] in
-                    coordinatorOutput?.updateCategories()
+                    trackersCoordination?.returnOnCreate()
                     self.removeDependency(eventCreationCoordinator)
                     self.router.dismissModule(trackerSelectModule)
                 }
-
+                
                 eventCreationCoordinator.finishFlowOnCancel = { [weak eventCreationCoordinator ] in
                     self.removeDependency(eventCreationCoordinator)
                 }
-
+                
                 self.addDependency(eventCreationCoordinator)
                 eventCreationCoordinator.startFlow()
             }
             
             self.router.present(trackerSelectModule)
         }
-
+        
+        trackersCoordination.headForError = { [weak self] message in
+            self?.router.presentAlert(message: message)
+        }
+        
         router.addToTabBar(trackersView)
     }
 }

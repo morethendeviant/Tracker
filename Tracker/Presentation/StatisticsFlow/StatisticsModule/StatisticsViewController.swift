@@ -11,7 +11,7 @@ final class StatisticsViewController: UIViewController {
     
     init() {
         super.init(nibName: nil, bundle: nil)
-        tabBarItem = UITabBarItem(title: "Статистика", image: UIImage(named: "hare.fill"), tag: 1)
+        self.tabBarItem = UITabBarItem(title: "Статистика", image: UIImage(named: "hare.fill"), tag: 1)
     }
     
     required init?(coder: NSCoder) {
@@ -26,7 +26,7 @@ final class StatisticsViewController: UIViewController {
     }
 }
 
-//MARK: - Subviews configure + layout
+// MARK: - Subviews configure + layout
 private extension StatisticsViewController {
     func addSubviews() {
         

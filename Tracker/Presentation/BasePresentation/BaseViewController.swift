@@ -9,7 +9,6 @@ import UIKit
 import SnapKit
 
 class BaseViewController: UIViewController {
-    
     private let titleLabel: UILabel = {
         let label = UILabel()
         label.font = .systemFont(ofSize: 16)
@@ -36,7 +35,7 @@ class BaseViewController: UIViewController {
     }
 }
 
-//MARK: - Subviews configure + layout
+// MARK: - Subviews configure + layout
 
 private extension BaseViewController {
     func addSubviews() {

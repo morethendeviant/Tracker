@@ -14,16 +14,22 @@ extension Date {
            return formatter.string(from: self)
        }
     
-    func getDayOfWeek() -> DayOfWeek? {
-        var customCalendar = Calendar(identifier: .gregorian)
-        customCalendar.firstWeekday = 2
-        guard let dayIndex = customCalendar.ordinality(of: .weekday, in: .weekOfYear, for: self) else { return nil }
-        return DayOfWeek.allCases[ dayIndex - 1]
+    func getDayOfWeek() -> DayOfWeek {
+        var calendar = Calendar(identifier: .gregorian)
+        calendar.firstWeekday = 2
+        let dayIndex = calendar.ordinality(of: .weekday, in: .weekOfYear, for: self)!
+        return DayOfWeek.allCases[dayIndex - 1]
     }
     
     func onlyDate() -> Date {
-        let components = Calendar.current.dateComponents([.year, .month, .day], from: self)
+        let calendar = Calendar(identifier: .gregorian)
+        let components = calendar.dateComponents([.year, .month, .day], from: self)
         let date = Calendar.current.date(from: components)
         return date!
+    }
+    
+    func toCurrentTimezone() -> Date {
+        let timeZoneDifference = TimeInterval(TimeZone.current.secondsFromGMT())
+        return self.addingTimeInterval(timeZoneDifference)
     }
 }

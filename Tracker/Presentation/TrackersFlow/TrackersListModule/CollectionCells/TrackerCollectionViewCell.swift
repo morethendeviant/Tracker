@@ -39,7 +39,7 @@ final class TrackerCollectionViewCell: UICollectionViewCell {
                 switch lastDigit {
                 case 1: suffix = "день"
                 case 2, 3, 4: suffix = "дня"
-                case 5, 6, 7, 8, 9 , 0: suffix = "дней"
+                case 5, 6, 7, 8, 9, 0: suffix = "дней"
                 default: suffix = ""
                 }
                 daysCounter.text = "\(daysAmount) " + suffix
@@ -61,6 +61,14 @@ final class TrackerCollectionViewCell: UICollectionViewCell {
         }
     }
     
+    var interactionDelegate: UIContextMenuInteractionDelegate? {
+        didSet {
+            if let interactionDelegate {
+                colorBackgroundView.addInteraction(UIContextMenuInteraction(delegate: interactionDelegate))
+            }
+        }
+    }
+    
     var callback: (() -> Void)?
     
     private let colorBackgroundView: UIView = {
@@ -69,7 +77,7 @@ final class TrackerCollectionViewCell: UICollectionViewCell {
         view.clipsToBounds = true
         return view
     }()
- 
+    
     private let emojiLabel: UILabel = {
         let label = UILabel()
         label.font = .systemFont(ofSize: 13)
@@ -110,26 +118,32 @@ final class TrackerCollectionViewCell: UICollectionViewCell {
         addSubviews()
         applyLayout()
     }
-
+    
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
-    @objc private func plusButtonTapped() {
+}
+
+// MARK: - Private Methods
+
+private extension TrackerCollectionViewCell {
+    @objc func plusButtonTapped() {
         callback?()
     }
 }
 
-//MARK: - Subviews configure + layout
+// MARK: - Subviews configure + layout
+
 private extension TrackerCollectionViewCell {
     func addSubviews() {
         contentView.addSubview(colorBackgroundView)
-        contentView.addSubview(emojiLabel)
-        contentView.addSubview(trackerLabel)
+        colorBackgroundView.addSubview(emojiLabel)
+        colorBackgroundView.addSubview(trackerLabel)
         contentView.addSubview(daysCounter)
         contentView.addSubview(plusButton)
     }
-
+    
     func applyLayout() {
         colorBackgroundView.snp.makeConstraints { make in
             make.height.equalTo(90)
@@ -138,13 +152,12 @@ private extension TrackerCollectionViewCell {
         
         emojiLabel.snp.makeConstraints { make in
             make.width.height.equalTo(24)
-            make.top.equalTo(self.snp.top).offset(12)
-            make.leading.equalTo(self.snp.leading).offset(12)
+            make.top.equalTo(colorBackgroundView.snp.top).offset(12)
+            make.leading.equalTo(colorBackgroundView.snp.leading).offset(12)
         }
         
         trackerLabel.snp.makeConstraints { make in
-            make.leading.equalTo(colorBackgroundView).offset(12)
-            make.trailing.bottom.equalTo(colorBackgroundView).offset(-12)
+            make.leading.bottom.equalTo(colorBackgroundView).inset(12)
         }
         
         plusButton.snp.makeConstraints { make in

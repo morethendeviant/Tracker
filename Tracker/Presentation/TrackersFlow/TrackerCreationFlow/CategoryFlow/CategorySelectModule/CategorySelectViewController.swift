@@ -7,26 +7,26 @@
 
 import UIKit
 
-protocol CategorySelectCoordinatorProtocol {
-    var onHeadForCategoryCreation: (() -> Void)? { get set }
-    var onFinish: ((Int?) -> Void)? { get set }
-}
-
-final class CategorySelectViewController: BaseViewController, CategorySelectCoordinatorProtocol {
-    var onHeadForCategoryCreation: (() -> Void)?
-    var onFinish: ((Int?) -> Void)?
+final class CategorySelectViewController: BaseViewController {
     
-    private var categories = CategoryContainer.shared.items
-    private var selectedCategory: Int?
+    private let viewModel: CategorySelectViewModelProtocol
+    private let dataSourceProvider: CategoriesDataSourceProvider
+    
+    private lazy var dataSource: CategoriesDiffableDataSource = {
+        let dataSource = CategoriesDiffableDataSource(categoriesTableView,
+                                                      dataSourceProvider: dataSourceProvider,
+                                                      interactionDelegate: self)
+        return dataSource
+    }()
     
     private lazy var categoriesTableView: UITableView = {
-        let table = UITableView()
+        let table = UITableView(frame: .zero, style: .insetGrouped)
         table.delegate = self
-        table.dataSource = self
-        table.isScrollEnabled = false
-        table.separatorInset = .init(top: 0, left: 16, bottom: 0, right: 16)
+        table.isScrollEnabled = true
         table.separatorColor = .ypGray
-        table.layer.cornerRadius = 16
+        table.backgroundColor = .ypWhite
+        table.tableHeaderView = UIView(frame: CGRect(x: 0, y: 0, width: 0, height: CGFloat.leastNonzeroMagnitude))
+        table.tableFooterView = UIView(frame: CGRect(x: 0, y: 0, width: 0, height: CGFloat.leastNonzeroMagnitude))
         return table
     }()
     
@@ -36,43 +36,44 @@ final class CategorySelectViewController: BaseViewController, CategorySelectCoor
         return button
     }()
  
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        addSubviews()
-        configure()
-        applyLayout()
-    }
-    
-    init(pageTitle: String, selectedCategory: Int?) {
-        self.selectedCategory = selectedCategory
+    init(dataSourceProvider: CategoriesDataSourceProvider, viewModel: CategorySelectViewModelProtocol, pageTitle: String) {
+        self.dataSourceProvider = dataSourceProvider
+        self.viewModel = viewModel
         super.init(pageTitle: pageTitle)
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        addSubviews()
+        configure()
+        applyLayout()
+        setUpBindings()
+        hideKeyboardWhenTappedAround()
+        categoriesTableView.dataSource = dataSource
+        viewModel.viewDidLoad()
+    }
 }
 
-//MARK: - @objs
+// MARK: - @objs
 
 @objc private extension CategorySelectViewController {
     func addButtonTapped() {
-        onHeadForCategoryCreation?()
+        viewModel.addButtonTapped()
+    }
+    
+    func setUpBindings() {
+        viewModel.categoriesObserver.bind { [weak self] categories in
+            self?.dataSource.reload(categories)
+        }
+        
     }
 }
 
-//MARK: - Private Methods
-
-private extension CategorySelectViewController {
-    func configureCell(_ cell: UITableViewCell, for indexPath: IndexPath) {
-        cell.backgroundColor = .ypBackground
-        cell.accessoryType = selectedCategory == indexPath.row ? .checkmark : .none
-        cell.textLabel?.font = .systemFont(ofSize: 17)
-        cell.selectionStyle = .none
-    }
-}
-
-//MARK: - Table View Delegate
+// MARK: - Table View Delegate
 
 extension CategorySelectViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -81,8 +82,8 @@ extension CategorySelectViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         categoriesTableView.cellForRow(at: indexPath)?.accessoryType = .checkmark
-        selectedCategory = indexPath.row
-        onFinish?(selectedCategory)
+        let selectedCategory = categoriesTableView.cellForRow(at: indexPath)?.textLabel?.text
+        viewModel.selectCategory(selectedCategory)
     }
     
     func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
@@ -90,23 +91,34 @@ extension CategorySelectViewController: UITableViewDelegate {
     }
 }
 
-//MARK: - Table View Data Source
+// MARK: - Menu Interaction Delegate
 
-extension CategorySelectViewController: UITableViewDataSource {
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        categories.count
-    }
-    
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = UITableViewCell(style: .default, reuseIdentifier: "Cell")
-        configureCell(cell, for: indexPath)
+extension CategorySelectViewController: UIContextMenuInteractionDelegate {
+    func contextMenuInteraction(_ interaction: UIContextMenuInteraction, configurationForMenuAtLocation location: CGPoint) -> UIContextMenuConfiguration? {
+        guard let location = interaction.view?.convert(location, to: categoriesTableView),
+              let indexPath = categoriesTableView.indexPathForRow(at: location)
+        else {
+            return UIContextMenuConfiguration()
+        }
         
-        cell.textLabel?.text = categories[indexPath.row]
-        return cell
+        let configuration = UIContextMenuConfiguration(identifier: nil, previewProvider: nil) { [weak self] _ -> UIMenu in
+            let edit = UIAction(title: "Редактировать", image: UIImage(systemName: "pencil")) { _ in
+                // TODO: - Implement edit ability
+            }
+            
+            let delete = UIAction(title: "Удалить", image: UIImage(systemName: "trash.fill"), attributes: .destructive) { _ in
+                self?.viewModel.deleteCategoryAt(index: indexPath.row)
+            }
+            
+            return UIMenu(children: [edit, delete])
+        }
+        
+        return configuration
     }
 }
 
-//MARK: - Subviews configure + layout
+// MARK: - Subviews configure + layout
+
 private extension CategorySelectViewController {
     func addSubviews() {
         content.addSubview(categoriesTableView)
@@ -118,18 +130,16 @@ private extension CategorySelectViewController {
     }
     
     func applyLayout() {
-        categoriesTableView.snp.makeConstraints { make in
+        categoriesTableView.snp.makeConstraints { make in           
             make.top.equalToSuperview()
-            make.leading.equalToSuperview().offset(16)
-            make.trailing.equalToSuperview().offset(-16)
-            make.height.equalTo(categoriesTableView.numberOfRows(inSection: 0) * 75 - 1)
+            make.leading.trailing.equalToSuperview()
+            make.bottom.equalTo(addButton.snp.top).offset(-50)
         }
         
         addButton.snp.makeConstraints { make in
-            make.leading.equalToSuperview().offset(20)
-            make.trailing.equalToSuperview().offset(-20)
             make.height.equalTo(60)
-            make.bottom.equalToSuperview().offset(-50)
+            make.leading.trailing.equalToSuperview().inset(16)
+            make.bottom.equalToSuperview().inset(50)
         }
     }
 }

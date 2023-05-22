@@ -7,8 +7,6 @@
 
 import Foundation
 
-import Foundation
-
 final class StatisticsCoordinator: BaseCoordinator, Coordinatable {
     var finishFlow: (() -> Void)?
     

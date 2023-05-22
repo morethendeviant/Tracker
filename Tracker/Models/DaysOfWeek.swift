@@ -8,7 +8,7 @@
 import Foundation
 
 enum DayOfWeek: Int, CaseIterable {
-    case mon, tue, wed, thu, fri, sat ,sun
+    case mon, tue, wed, thu, fri, sat, sun
 }
 
 extension DayOfWeek {
@@ -38,6 +38,20 @@ extension DayOfWeek {
     
     static func shortNamesFor(_ days: [Self]) -> String? {
         days.count == 7 ? "Каждый день" : days.compactMap { shortNameFor($0) }.joined(separator: ", ")
+    }
+    
+    static func daysToNumbers(_ days: [Self]) -> String {
+        Self.allCases.map { days.contains($0) ? "\($0.rawValue + 1)" : "0" }.joined()
+    }
+    
+    static func numbersToDays(_ binaryString: String) -> [Self] {
+        var days: [Self] = []
+        binaryString.enumerated().forEach { if Int(String($1)) != 0 { days.append(Self.allCases[$0]) }  }
+        return days
+    }
+    
+    static func dayToNumber(_ day: Self) -> String {
+        String(day.rawValue + 1)
     }
     
     static var count: Int {

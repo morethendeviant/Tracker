@@ -7,7 +7,12 @@
 
 import Foundation
 
-struct TrackerCategory {
+struct TrackerCategory: Hashable {
     let name: String
     let trackers: [Tracker]
+    
+    init(name: String, trackers: [Tracker] = []) {
+        self.name = name
+        self.trackers = trackers
+    }
 }

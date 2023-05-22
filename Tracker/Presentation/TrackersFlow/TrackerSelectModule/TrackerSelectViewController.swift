@@ -35,7 +35,7 @@ final class TrackerSelectViewController: BaseViewController, TrackerSelectCoordi
     }
 }
 
-//MARK: - @objc
+// MARK: - @objc
 
 @objc private extension TrackerSelectViewController {
     func headForHabit() {
@@ -47,7 +47,7 @@ final class TrackerSelectViewController: BaseViewController, TrackerSelectCoordi
     }
 }
 
-//MARK: - Subviews configure + layout
+// MARK: - Subviews configure + layout
 
 private extension TrackerSelectViewController {
     func addSubviews() {
@@ -58,17 +58,15 @@ private extension TrackerSelectViewController {
     func applyLayout() {
         newHabit.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
-            make.top.equalToSuperview().offset(344)
+            make.centerY.equalToSuperview().offset(-38)
             make.height.equalTo(60)
-            make.leading.equalToSuperview().offset(20)
-            make.trailing.equalToSuperview().offset(-20)
+            make.leading.trailing.equalToSuperview().inset(20)
         }
         newEvent.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
             make.top.equalTo(newHabit.snp.bottom).offset(16)
             make.height.equalTo(60)
-            make.leading.equalToSuperview().offset(20)
-            make.trailing.equalToSuperview().offset(-20)
+            make.leading.trailing.equalToSuperview().inset(20)
         }
     }
 }

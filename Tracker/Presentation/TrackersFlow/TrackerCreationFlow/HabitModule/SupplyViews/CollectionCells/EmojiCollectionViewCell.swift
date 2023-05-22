@@ -42,7 +42,7 @@ final class EmojiCollectionViewCell: UICollectionViewCell {
     }
 }
 
-//MARK: - Subviews configure + layout
+// MARK: - Subviews configure + layout
 
 private extension EmojiCollectionViewCell {
     func addSubviews() {

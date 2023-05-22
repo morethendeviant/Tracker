@@ -31,9 +31,9 @@ final class ContentPlaceholder: UIView {
     }
 }
 
-//MARK: - Private methods
-
-private extension ContentPlaceholder {
+// MARK: - Private methods
+ 
+extension ContentPlaceholder {
     func setUpContent(with style: Style) {
         switch style {
         case .trackers:
@@ -41,13 +41,15 @@ private extension ContentPlaceholder {
             label.text = "Что будем отслеживать?"
             
         case .category: break
-        case .search: break
+        case .search:
+            imageView.image = UIImage(named: "notFound")
+            label.text = "Ничего не найдено"
         case .statistics: break
         }
     }
 }
 
-//MARK: - Subviews configure + layout
+// MARK: - Subviews configure + layout
 private extension ContentPlaceholder {
     func addSubviews() {
         addSubview(imageView)

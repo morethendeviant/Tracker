@@ -13,11 +13,13 @@ struct CellContent {
 }
 
 enum TrackerCreationTableModel {
-    case habit, event
+    case habit
     
-    func defaultTableContent() -> [CellContent] {
+    case event
+    
+    func tableContent() -> [CellContent] {
         switch self {
-        case .habit: return [CellContent(text: "Категория", detailText: nil) , CellContent(text: "Расписание", detailText: nil)]
+        case .habit: return [CellContent(text: "Категория", detailText: nil), CellContent(text: "Расписание", detailText: nil)]
         case .event: return [CellContent(text: "Категория", detailText: nil)]
         }
     }
