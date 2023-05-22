@@ -11,11 +11,7 @@ final class ScheduleViewController: BaseViewController {
         
     private let viewModel: ScheduleViewModelProtocol
     
-    private var mainScrollView: UIScrollView = {
-        let scroll = UIScrollView()
-        
-        return scroll
-    }()
+    private var mainScrollView = UIScrollView()
     
     private lazy var mainStackView: UIStackView = {
         let stack = UIStackView()

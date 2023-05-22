@@ -37,11 +37,11 @@ final class CategorySelectViewModel: CategoriesDataSourceProvider {
     var onFinish: ((String?) -> Void)?
     var headForError: ((String) -> Void)?
     
-    private var dataProvider: CategorySelectDataStoreProtocol
-    private(set) var selectedCategory: String?
-
     @Observable var categories: [String] = []
     
+    private var dataProvider: CategorySelectDataStoreProtocol
+    private(set) var selectedCategory: String?
+  
     init(dataProvider: CategorySelectDataStoreProtocol, selectedCategory: String?) {
         self.dataProvider = dataProvider
         self.selectedCategory = selectedCategory
