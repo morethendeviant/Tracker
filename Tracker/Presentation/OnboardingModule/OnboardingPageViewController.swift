@@ -14,6 +14,16 @@ protocol OnboardingPageViewControllerCoordinator {
 final class OnboardingPageViewController: UIPageViewController, OnboardingPageViewControllerCoordinator {
     var onProceed: (() -> Void)?
     
+    private var onboardingWasShown: Bool {
+        get {
+            UserDefaults.standard.bool(forKey: "onboarding")
+        }
+        
+        set {
+            UserDefaults.standard.set(newValue, forKey: "onboarding")
+        }
+    }
+    
     private let pages: [UIViewController] = [
         OnboardingViewController(style: .blue),
         OnboardingViewController(style: .red)
@@ -38,6 +48,10 @@ final class OnboardingPageViewController: UIPageViewController, OnboardingPageVi
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        if onboardingWasShown {
+            onProceed?()
+        }
+        
         guard let firstPage = pages.first else { return }
         setViewControllers([firstPage], direction: .forward, animated: true)
         dataSource = self
@@ -50,7 +64,8 @@ final class OnboardingPageViewController: UIPageViewController, OnboardingPageVi
 // MARK: - Private Methods
 
 @objc private extension OnboardingPageViewController {
-     func proceedButtonTapped() {
+    func proceedButtonTapped() {
+        onboardingWasShown = true
         onProceed?()
     }
 }
