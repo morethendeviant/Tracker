@@ -33,12 +33,14 @@ final class ModulesFactory: ModulesFactoryProtocol {
     }
     
     func makeTrackerSelectView() -> Presentable {
-        TrackerSelectViewController(pageTitle: "Создание трекера")
+        let pageTitle = NSLocalizedString("trackerCreation", comment: "Tracker creation page name")
+        return TrackerSelectViewController(pageTitle: pageTitle)
     }
     
     func makeScheduleView(weekdays: [DayOfWeek]) -> (view: Presentable, coordination: ScheduleCoordination) {
         let viewModel = ScheduleViewModel(weekdays: weekdays)
-        let view = ScheduleViewController(viewModel: viewModel, pageTitle: "Расписание")
+        let pageTitle = NSLocalizedString("schedule", comment: "Schedule page name")
+        let view = ScheduleViewController(viewModel: viewModel, pageTitle: pageTitle)
         return (view, viewModel)
     }
     
@@ -46,7 +48,8 @@ final class ModulesFactory: ModulesFactoryProtocol {
         let tableModel = TrackerCreationTableModel.habit
         let dataStore: TrackerCreationDataStoreProtocol = DataStore()
         let viewModel = HabitCreationViewModel(dataStore: dataStore, tableDataModel: tableModel)
-        let view = HabitCreationViewController(viewModel: viewModel, pageTitle: "Новая привычка")
+        let pageTitle = NSLocalizedString("newHabit", comment: "New habit page name")
+        let view = HabitCreationViewController(viewModel: viewModel, pageTitle: pageTitle)
         return (view, viewModel)
     }
     
@@ -54,7 +57,8 @@ final class ModulesFactory: ModulesFactoryProtocol {
         let tableModel = TrackerCreationTableModel.event
         let dataStore: TrackerCreationDataStoreProtocol = DataStore()
         let viewModel = HabitCreationViewModel(dataStore: dataStore, tableDataModel: tableModel)
-        let view = HabitCreationViewController(viewModel: viewModel, pageTitle: "Новая привычка")
+        let pageTitle = NSLocalizedString("newEvent", comment: "New event page name")
+        let view = HabitCreationViewController(viewModel: viewModel, pageTitle: pageTitle)
         return (view, viewModel)
 
     }
@@ -62,19 +66,22 @@ final class ModulesFactory: ModulesFactoryProtocol {
     func makeCategorySelectView(selectedCategory: String?) -> (view: Presentable, coordination: CategorySelectCoordination) {
         let dataStore: CategorySelectDataStoreProtocol = DataStore()
         let viewModel = CategorySelectViewModel(dataProvider: dataStore, selectedCategory: selectedCategory)
+        let pageTitle = NSLocalizedString("category", comment: "Categories page name")
         let view = CategorySelectViewController(dataSourceProvider: viewModel,
                                                 viewModel: viewModel,
-                                                pageTitle: "Категория")
+                                                pageTitle: pageTitle)
         return (view, viewModel)
     }
     
     func makeCategoryCreateView() -> (view: Presentable, coordination: CategoryCreateCoordination) {
         let viewModel = CategoryCreateViewModel()
-        let view = CategoryCreateViewController(viewModel: viewModel, pageTitle: "Новая категория")
+        let pageTitle = NSLocalizedString("newCategory", comment: "New category page name")
+        let view = CategoryCreateViewController(viewModel: viewModel, pageTitle: pageTitle)
         return (view, viewModel)
     }
     
     func makeOnboardingPageView() -> Presentable {
-        return OnboardingPageViewController(transitionStyle: .scroll, navigationOrientation: .horizontal)
+        let defaultsStorageService = DefaultsStorageService()
+        return OnboardingPageViewController(transitionStyle: .scroll, navigationOrientation: .horizontal, defaultsStorageService: defaultsStorageService)
     }
 }

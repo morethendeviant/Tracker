@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.2" xsi:schemaLocation="urn:oasis:names:tc:xliff:document:1.2 http://docs.oasis-open.org/xliff/v1.2/os/xliff-core-1.2-strict.xsd">
+  <file original="Tracker/Resource/en.lproj/InfoPlist.strings" source-language="en" target-language="ar" datatype="plaintext">
+    <header>
+      <tool tool-id="com.apple.dt.xcode" tool-name="Xcode" tool-version="14.3" build-num="14E222b"/>
+    </header>
+    <body>
+      <trans-unit id="CFBundleName" xml:space="preserve">
+        <source>Tracker</source>
+        <target>تعقب</target>
+        <note>Bundle name</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="Tracker/Resource/en.lproj/Localizable.strings" source-language="en" target-language="ar" datatype="plaintext">
+    <header>
+      <tool tool-id="com.apple.dt.xcode" tool-name="Xcode" tool-version="14.3" build-num="14E222b"/>
+    </header>
+    <body>
+      <trans-unit id="addCategory" xml:space="preserve">
+        <source>Add category</source>
+        <target>إضافة فئة</target>
+        <note>Add category button text</note>
+      </trans-unit>
+      <trans-unit id="backgroundImage.blue.description" xml:space="preserve">
+        <source>Track only what you want</source>
+        <target>تتبع فقط ما تريد</target>
+        <note>Blue onboarding screen text</note>
+      </trans-unit>
+      <trans-unit id="backgroundImage.red.description" xml:space="preserve">
+        <source>Even if it's not liters of water or yoga</source>
+        <target>حتى لو لم يكن لترًا من الماء أو اليوجا</target>
+        <note>Red onboarding screen text</note>
+      </trans-unit>
+      <trans-unit id="cancel" xml:space="preserve">
+        <source>Cancel</source>
+        <target>يلغي</target>
+        <note>Cancel button title</note>
+      </trans-unit>
+      <trans-unit id="category" xml:space="preserve">
+        <source>Category</source>
+        <target>فئة</target>
+        <note>Categories page name
+   Category</note>
+      </trans-unit>
+      <trans-unit id="colors" xml:space="preserve">
+        <source>Colors</source>
+        <target>الألوان</target>
+        <note>Colors section label text</note>
+      </trans-unit>
+      <trans-unit id="create" xml:space="preserve">
+        <source>Create</source>
+        <target>يخلق</target>
+        <note>Create button title</note>
+      </trans-unit>
+      <trans-unit id="delete" xml:space="preserve">
+        <source>Delete</source>
+        <target>يمسح</target>
+        <note>Delete menu item text</note>
+      </trans-unit>
+      <trans-unit id="edit" xml:space="preserve">
+        <source>Edit</source>
+        <target>يحرر</target>
+        <note>Edit menu item text</note>
+      </trans-unit>
+      <trans-unit id="emoji" xml:space="preserve">
+        <source>Emoji</source>
+        <target>تعبيري</target>
+        <note>Emoji section label text</note>
+      </trans-unit>
+      <trans-unit id="emptyPlaceholder.search" xml:space="preserve">
+        <source>Nothing found</source>
+        <target>لم يتم العثور على شيء</target>
+        <note>Text displayed on empty search</note>
+      </trans-unit>
+      <trans-unit id="emptyPlaceholder.trackers" xml:space="preserve">
+        <source>What will we track?</source>
+        <target>ماذا سنتعقب؟</target>
+        <note>Text displayed on empty schedule</note>
+      </trans-unit>
+      <trans-unit id="enterCategoryName" xml:space="preserve">
+        <source>Enter category name</source>
+        <target>أدخل اسم الفئة</target>
+        <note>Enter category name placeholder text</note>
+      </trans-unit>
+      <trans-unit id="event" xml:space="preserve">
+        <source>Irregular event</source>
+        <target>حدث غير منتظم</target>
+        <note>Event button title</note>
+      </trans-unit>
+      <trans-unit id="everyDay" xml:space="preserve">
+        <source>everyDay</source>
+        <target>كل يوم</target>
+        <note>Every day</note>
+      </trans-unit>
+      <trans-unit id="filters" xml:space="preserve">
+        <source>Filters</source>
+        <target>المرشحات</target>
+        <note>Filters button text</note>
+      </trans-unit>
+      <trans-unit id="habit" xml:space="preserve">
+        <source>Habit</source>
+        <target>عادة</target>
+        <note>Habit button title</note>
+      </trans-unit>
+      <trans-unit id="newCategory" xml:space="preserve">
+        <source>New Category</source>
+        <target>فئة جديدة</target>
+        <note>New category page name</note>
+      </trans-unit>
+      <trans-unit id="newEvent" xml:space="preserve">
+        <source>New Event</source>
+        <target>حدث جديد</target>
+        <note>New event page name</note>
+      </trans-unit>
+      <trans-unit id="newHabit" xml:space="preserve">
+        <source>New habit</source>
+        <target>عادة جديدة</target>
+        <note>New habit page name</note>
+      </trans-unit>
+      <trans-unit id="numberOfDays" translate="no" xml:space="preserve">
+        <source>numberOfDays</source>
+        <note>Number of checked days (Key in .stringsdict)</note>
+      </trans-unit>
+      <trans-unit id="onboardingPageViewController.proceedButton" xml:space="preserve">
+        <source>This is technology!</source>
+        <target>هذه هي التكنولوجيا!</target>
+        <note>Onboarding screen proceed button text</note>
+      </trans-unit>
+      <trans-unit id="pin" xml:space="preserve">
+        <source>Pin</source>
+        <target>دبوس</target>
+        <note>Pin menu item text</note>
+      </trans-unit>
+      <trans-unit id="ready" xml:space="preserve">
+        <source>Ready</source>
+        <target>مستعد</target>
+        <note>Ready button title</note>
+      </trans-unit>
+      <trans-unit id="schedule" xml:space="preserve">
+        <source>Schedule</source>
+        <target>جدول</target>
+        <note>Schedule
+   Schedule page name</note>
+      </trans-unit>
+      <trans-unit id="search" xml:space="preserve">
+        <source>Search</source>
+        <target>يبحث</target>
+        <note>Search bar placeholder text</note>
+      </trans-unit>
+      <trans-unit id="statistics" xml:space="preserve">
+        <source>Statistics</source>
+        <target>إحصائيات</target>
+        <note>Statistics tab bar text</note>
+      </trans-unit>
+      <trans-unit id="stringLengthLimit" xml:space="preserve">
+        <source>38 character limit</source>
+        <target>38 حرفًا كحد أقصى</target>
+        <note>Limit on tracker name length</note>
+      </trans-unit>
+      <trans-unit id="tracker.name" xml:space="preserve">
+        <source>Enter tracker name</source>
+        <target>أدخل اسم تعقب</target>
+        <note>Tracker name text field placeholder</note>
+      </trans-unit>
+      <trans-unit id="trackerCreation" xml:space="preserve">
+        <source>Tracker creation</source>
+        <target>إنشاء المقتفي</target>
+        <note>Tracker creation page name</note>
+      </trans-unit>
+      <trans-unit id="trackers" xml:space="preserve">
+        <source>Trackers</source>
+        <target>المقتفون</target>
+        <note>Trackers screen name
+   Trackers tab bar text</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="Tracker/Resource/en.lproj/Localizable.stringsdict" source-language="en" target-language="ar" datatype="plaintext">
+    <header>
+      <tool tool-id="com.apple.dt.xcode" tool-name="Xcode" tool-version="14.3" build-num="14E222b"/>
+    </header>
+    <body>
+      <trans-unit id="/numberOfDays:dict/NSStringLocalizedFormatKey:dict/:string" xml:space="preserve">
+        <source>%#@days@</source>
+        <target>%#@days@</target>
+        <note>Number of checked days</note>
+      </trans-unit>
+      <trans-unit id="/numberOfDays:dict/days:dict/few:dict/:string" xml:space="preserve">
+        <source>%d days</source>
+        <target>%d ايام</target>
+        <note>Number of checked days</note>
+      </trans-unit>
+      <trans-unit id="/numberOfDays:dict/days:dict/many:dict/:string" xml:space="preserve">
+        <source>%d days</source>
+        <target>%d أيام</target>
+        <note>Number of checked days</note>
+      </trans-unit>
+      <trans-unit id="/numberOfDays:dict/days:dict/one:dict/:string" xml:space="preserve">
+        <source>%d day</source>
+        <target>%d يوم</target>
+        <note>Number of checked days</note>
+      </trans-unit>
+      <trans-unit id="/numberOfDays:dict/days:dict/other:dict/:string" xml:space="preserve">
+        <source>%d days</source>
+        <target>%d أيام</target>
+        <note>Number of checked days</note>
+      </trans-unit>
+      <trans-unit id="/numberOfDays:dict/days:dict/two:dict/:string" xml:space="preserve">
+        <source>%d days</source>
+        <target>%d أيام</target>
+        <note>Number of checked days</note>
+      </trans-unit>
+      <trans-unit id="/numberOfDays:dict/days:dict/zero:dict/:string" xml:space="preserve">
+        <source>%d days</source>
+        <target>%d يوم</target>
+        <note>Number of checked days</note>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

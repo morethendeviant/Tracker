@@ -24,11 +24,11 @@ final class OnboardingViewController: UIViewController {
         super.init(nibName: nil, bundle: nil)
         switch style {
         case .blue:
-            backgroundImage.image = UIImage(named: "onboarding-blue")
-            descriptionLabel.text = "Отслеживайте только то, что хотите"
+            backgroundImage.image = Asset.onboardingBlue.image
+            descriptionLabel.text = NSLocalizedString("backgroundImage.blue.description", comment: "Blue onboarding screen text")
         case .red:
-            backgroundImage.image = UIImage(named: "onboarding-red")
-            descriptionLabel.text = "Даже если это не литры воды или йога"
+            backgroundImage.image = Asset.onboardingRed.image
+            descriptionLabel.text = NSLocalizedString("backgroundImage.red.description", comment: "Red onboarding screen text")
         }
     }
     

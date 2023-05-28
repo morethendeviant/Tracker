@@ -14,15 +14,7 @@ protocol OnboardingPageViewControllerCoordinator {
 final class OnboardingPageViewController: UIPageViewController, OnboardingPageViewControllerCoordinator {
     var onProceed: (() -> Void)?
     
-    private var onboardingWasShown: Bool {
-        get {
-            UserDefaults.standard.bool(forKey: "onboarding")
-        }
-        
-        set {
-            UserDefaults.standard.set(newValue, forKey: "onboarding")
-        }
-    }
+    private var defaultsStorageService: DefaultsStorageService
     
     private let pages: [UIViewController] = [
         OnboardingViewController(style: .blue),
@@ -34,21 +26,31 @@ final class OnboardingPageViewController: UIPageViewController, OnboardingPageVi
         pageControl.numberOfPages = pages.count
         pageControl.currentPage = 0
         
-        pageControl.currentPageIndicatorTintColor = .ypBlack
-        pageControl.pageIndicatorTintColor = .ypGray
+        pageControl.currentPageIndicatorTintColor = Asset.ypBlack.color
+        pageControl.pageIndicatorTintColor = Asset.ypGray.color
         
         return pageControl
     }()
     
     private lazy var proceedButton: BaseButton = {
-        let button = BaseButton(style: .confirm, text: "Вот это технологии!")
+        let buttonText = NSLocalizedString("onboardingPageViewController.proceedButton", comment: "Onboarding screen proceed button text")
+        let button = BaseButton(style: .confirm, text: buttonText)
         button.addTarget(nil, action: #selector(proceedButtonTapped), for: .touchUpInside)
         return button
     }()
     
+    init(transitionStyle: UIPageViewController.TransitionStyle, navigationOrientation: UIPageViewController.NavigationOrientation, defaultsStorageService: DefaultsStorageService) {
+        self.defaultsStorageService = defaultsStorageService
+        super.init(transitionStyle: transitionStyle, navigationOrientation: navigationOrientation)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        if onboardingWasShown {
+        if defaultsStorageService.onboardingWasShown {
             onProceed?()
         }
         
@@ -65,7 +67,7 @@ final class OnboardingPageViewController: UIPageViewController, OnboardingPageVi
 
 @objc private extension OnboardingPageViewController {
     func proceedButtonTapped() {
-        onboardingWasShown = true
+        defaultsStorageService.onboardingWasShown = true
         onProceed?()
     }
 }

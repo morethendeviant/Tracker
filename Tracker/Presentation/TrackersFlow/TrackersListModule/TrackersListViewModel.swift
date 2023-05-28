@@ -112,6 +112,7 @@ extension TrackersListViewModel: TrackersListViewModelProtocol {
         } catch {
             handleError(message: error.localizedDescription)
         }
+        
         dateChangedTo(date)
     }
     
@@ -130,7 +131,6 @@ extension TrackersListViewModel: TrackersListViewModelProtocol {
     func dateChangedTo(_ date: Date) {
         self.date = date.onlyDate()
         let dayOfWeek = date.getDayOfWeek()
-        
         do {
             categories = try dataProvider.fetchAllCategories().compactMap { category in
                 let trackers = category.trackers.compactMap { tracker in

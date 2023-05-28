@@ -16,7 +16,7 @@ final class CategoriesDiffableDataSource: UITableViewDiffableDataSource<Int, Str
 
         super.init(tableView: tableView) { _, _, itemIdentifier in
             let cell = UITableViewCell(style: .default, reuseIdentifier: "Cell")
-            cell.backgroundColor = .ypBackground
+            cell.backgroundColor = Asset.ypBackground.color
             cell.selectionStyle = .none
             cell.textLabel?.font = .systemFont(ofSize: 17)
             cell.textLabel?.text = itemIdentifier

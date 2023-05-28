@@ -25,15 +25,16 @@ final class ScheduleViewController: BaseViewController {
         table.delegate = self
         table.dataSource = self
         table.isScrollEnabled = true
-        table.backgroundColor = .ypWhite
+        table.backgroundColor = Asset.ypWhite.color
         table.tableHeaderView = UIView(frame: CGRect(x: 0, y: 0, width: 0, height: CGFloat.leastNonzeroMagnitude))
         table.tableFooterView = UIView(frame: CGRect(x: 0, y: 0, width: 0, height: CGFloat.leastNonzeroMagnitude))
-        table.separatorColor = .ypGray
+        table.separatorColor = Asset.ypGray.color
         return table
     }()
     
     private lazy var doneButton: BaseButton = {
-        let button = BaseButton(style: .confirm, text: "Готово")
+        let buttonText = NSLocalizedString("ready", comment: "Ready button title")
+        let button = BaseButton(style: .confirm, text: buttonText)
         button.addTarget(nil, action: #selector(doneButtonTapped), for: .touchUpInside)
         return button
     }()
@@ -71,7 +72,7 @@ final class ScheduleViewController: BaseViewController {
 
 private extension ScheduleViewController {
     func configureCell(_ cell: UITableViewCell, indexPath: IndexPath) {
-        cell.backgroundColor = .ypBackground
+        cell.backgroundColor = Asset.ypBackground.color
         cell.textLabel?.font = .systemFont(ofSize: 17)
         cell.selectionStyle = .none
     }
@@ -80,7 +81,7 @@ private extension ScheduleViewController {
         let daySwitch = UISwitch()
         daySwitch.tag = index
         daySwitch.addTarget(nil, action: #selector(toggleSwitch), for: .valueChanged)
-        daySwitch.onTintColor = .ypBlue
+        daySwitch.onTintColor = Asset.ypBlue.color
         daySwitch.isOn = viewModel.isDaySelectedAt(index: index)
         return daySwitch
     }
@@ -119,7 +120,7 @@ private extension ScheduleViewController {
     }
     
     func configure() {
-        view.backgroundColor = .ypWhite
+        view.backgroundColor = Asset.ypWhite.color
     }
     
     func applyLayout() {

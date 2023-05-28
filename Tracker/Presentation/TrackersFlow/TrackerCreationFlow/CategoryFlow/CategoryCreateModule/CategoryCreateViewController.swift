@@ -13,25 +13,26 @@ final class CategoryCreateViewController: BaseViewController {
     
     private lazy var maxCharactersLabel: UILabel = {
         let label = UILabel()
-        label.text = "Ограничение \(viewModel.textLimit) символов"
+        label.text = NSLocalizedString("stringLengthLimit", comment: "Limit on tracker name length")
         label.font = .systemFont(ofSize: 17)
-        label.textColor = .ypRed
+        label.textColor = Asset.ypRed.color
         label.textAlignment = .center
         return label
     }()
 
     private lazy var categoryNameTextField: UITextField = {
         let textField = BaseTextField()
-        textField.placeholder = "Введите название категории"
+        textField.placeholder = NSLocalizedString("enterCategoryName", comment: "Enter category name placeholder text")
         textField.text = viewModel.categoryName
-        textField.backgroundColor = .ypBackground
+        textField.backgroundColor = Asset.ypBackground.color
         textField.layer.cornerRadius = 16
         textField.delegate = self
         return textField
     }()
     
     private lazy var doneButton: BaseButton = {
-        let button = BaseButton(style: .confirm, text: "Готово")
+        let buttonText = NSLocalizedString("ready", comment: "Ready button title")
+        let button = BaseButton(style: .confirm, text: buttonText)
         button.setUpAppearance(for: .disabled)
         button.addTarget(nil, action: #selector(doneButtonTapped), for: .touchUpInside)
         return button
@@ -110,7 +111,7 @@ private extension CategoryCreateViewController {
     }
     
     func configure() {
-        view.backgroundColor = .ypWhite
+        view.backgroundColor = Asset.ypWhite.color
     }
     
     func applyLayout() {

@@ -54,7 +54,8 @@ extension ScheduleViewModel: ScheduleViewModelProtocol {
     }
     
     func isDaySelectedAt(index: Int) -> Bool {
-        selectedDays.map { $0.rawValue }.contains(index)
+        let day = DayOfWeek.dayFromNumber(index)
+        return selectedDays.contains(day)
     }
     
 }

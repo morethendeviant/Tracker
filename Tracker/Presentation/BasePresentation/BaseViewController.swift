@@ -12,7 +12,7 @@ class BaseViewController: UIViewController {
     private let titleLabel: UILabel = {
         let label = UILabel()
         label.font = .systemFont(ofSize: 16)
-        label.textColor = .ypBlack
+        label.textColor = Asset.ypBlack.color
         return label
     }()
         
@@ -44,7 +44,7 @@ private extension BaseViewController {
     }
     
     func configure() {
-        view.backgroundColor = .ypWhite
+        view.backgroundColor = Asset.ypWhite.color
     }
     
     func applyLayout() {

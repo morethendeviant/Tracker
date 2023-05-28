@@ -19,7 +19,7 @@ final class EmojiCollectionViewCell: UICollectionViewCell {
     
     var cellIsSelected: Bool = false {
         didSet {
-            cellIsSelected ? (backgroundColor = .ypLightGray) : (backgroundColor = .clear)
+            cellIsSelected ? (backgroundColor = Asset.ypLightGray.color) : (backgroundColor = .clear)
         }
     }
 

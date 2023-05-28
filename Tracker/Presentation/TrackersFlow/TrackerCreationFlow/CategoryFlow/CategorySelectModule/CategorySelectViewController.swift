@@ -23,15 +23,16 @@ final class CategorySelectViewController: BaseViewController {
         let table = UITableView(frame: .zero, style: .insetGrouped)
         table.delegate = self
         table.isScrollEnabled = true
-        table.separatorColor = .ypGray
-        table.backgroundColor = .ypWhite
+        table.separatorColor = Asset.ypGray.color
+        table.backgroundColor = Asset.ypWhite.color
         table.tableHeaderView = UIView(frame: CGRect(x: 0, y: 0, width: 0, height: CGFloat.leastNonzeroMagnitude))
         table.tableFooterView = UIView(frame: CGRect(x: 0, y: 0, width: 0, height: CGFloat.leastNonzeroMagnitude))
         return table
     }()
     
     private lazy var addButton: BaseButton = {
-        let button = BaseButton(style: .confirm, text: "Добавить категорию")
+        let buttonText = NSLocalizedString("addCategory", comment: "Add category button text")
+        let button = BaseButton(style: .confirm, text: buttonText)
         button.addTarget(nil, action: #selector(addButtonTapped), for: .touchUpInside)
         return button
     }()
@@ -102,11 +103,13 @@ extension CategorySelectViewController: UIContextMenuInteractionDelegate {
         }
         
         let configuration = UIContextMenuConfiguration(identifier: nil, previewProvider: nil) { [weak self] _ -> UIMenu in
-            let edit = UIAction(title: "Редактировать", image: UIImage(systemName: "pencil")) { _ in
+            let editItemText = NSLocalizedString("edit", comment: "Edit menu item text")
+            let edit = UIAction(title: editItemText, image: UIImage(systemName: "pencil")) { _ in
                 // TODO: - Implement edit ability
             }
             
-            let delete = UIAction(title: "Удалить", image: UIImage(systemName: "trash.fill"), attributes: .destructive) { _ in
+            let deleteItemText = NSLocalizedString("delete", comment: "Delete menu item text")
+            let delete = UIAction(title: deleteItemText, image: UIImage(systemName: "trash.fill"), attributes: .destructive) { _ in
                 self?.viewModel.deleteCategoryAt(index: indexPath.row)
             }
             
@@ -126,7 +129,7 @@ private extension CategorySelectViewController {
     }
     
     func configure() {
-        view.backgroundColor = .ypWhite
+        view.backgroundColor = Asset.ypWhite.color
     }
     
     func applyLayout() {

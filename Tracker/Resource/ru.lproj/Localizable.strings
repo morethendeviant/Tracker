@@ -1,0 +1,93 @@
+/* Add category button text */
+"addCategory" = "Добавить категорию";
+
+/* Blue onboarding screen text */
+"backgroundImage.blue.description" = "Отслеживайте только то, что хотите";
+
+/* Red onboarding screen text */
+"backgroundImage.red.description" = "Даже если это не литры воды и йога";
+
+/* Cancel button title */
+"cancel" = "Отмена";
+
+/* Categories page name
+   Category */
+"category" = "Категория";
+
+/* Colors section label text */
+"colors" = "Цвета";
+
+/* Create button title */
+"create" = "Создать";
+
+/* Delete menu item text */
+"delete" = "Удалить";
+
+/* Edit menu item text */
+"edit" = "Редактировать";
+
+/* Emoji section label text */
+"emoji" = "Эмодзи";
+
+/* Text displayed on empty search */
+"emptyPlaceholder.search" = "Ничего не найдено";
+
+/* Text displayed on empty schedule */
+"emptyPlaceholder.trackers" = "Что будем отслеживать?";
+
+/* Enter category name placeholder text */
+"enterCategoryName" = "Вредите имя категории";
+
+/* Event button title */
+"event" = "Нерегулярное событие";
+
+/* Every day */
+"everyDay" = "Каждый день";
+
+/* Filters button text */
+"filters" = "Фильтры";
+
+/* Habit button title */
+"habit" = "Привычка";
+
+/* New category page name */
+"newCategory" = "Новая категория";
+
+/* New event page name */
+"newEvent" = "Новое нерегулярное событие";
+
+/* New habit page name */
+"newHabit" = "Новая привычка";
+
+/* Onboarding screen proceed button text */
+"onboardingPageViewController.proceedButton" = "Вот это технологии!";
+
+/* Pin menu item text */
+"pin" = "Закрепить";
+
+/* Ready button title */
+"ready" = "Готово";
+
+/* Schedule
+   Schedule page name */
+"schedule" = "Расписание";
+
+/* Search bar placeholder text */
+"search" = "Поиск";
+
+/* Statistics tab bar text */
+"statistics" = "Статистика";
+
+/* Limit on tracker name length */
+"stringLengthLimit" = "Ограничение 38 символов";
+
+/* Tracker name text field placeholder */
+"tracker.name" = "Введите название трекера";
+
+/* Tracker creation page name */
+"trackerCreation" = "Создание трекера";
+
+/* Trackers screen name
+   Trackers tab bar text */
+"trackers" = "Трекеры";
+

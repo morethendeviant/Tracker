@@ -8,18 +8,23 @@
 import Foundation
 
 enum DayOfWeek: Int, CaseIterable {
-    case mon, tue, wed, thu, fri, sat, sun
+    case sun, mon, tue, wed, thu, fri, sat
 }
 
 extension DayOfWeek {
+    private static func dayIndexFor(dayNumber: Int, calendar: Calendar = Calendar.current) -> Int {
+        let day = dayNumber + calendar.firstWeekday - 1
+        return day > 6 ? 7 - day : day
+    }
+    
     static func dayFromNumber(_ dayNumber: Int) -> Self {
-        Self.allCases[dayNumber]
+        Self.allCases[dayIndexFor(dayNumber: dayNumber)]
     }
     
     static func fullNameFor(_ dayNumber: Int) -> String? {
-        let days = ["Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота", "Воскресенье"]
+        let days = Calendar.current.weekdaySymbols
         guard 0..<days.count ~= dayNumber else { return nil }
-        return days[dayNumber]
+        return days[dayIndexFor(dayNumber: dayNumber)]
     }
     
     static func fullNameFor( _ day: Self) -> String? {
@@ -27,7 +32,7 @@ extension DayOfWeek {
     }
     
     static func shortNameFor(_ dayNumber: Int) -> String? {
-        let days = ["Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс"]
+        let days = Calendar.current.shortWeekdaySymbols
         guard 0..<days.count ~= dayNumber else { return nil }
         return days[dayNumber]
     }
@@ -37,7 +42,8 @@ extension DayOfWeek {
     }
     
     static func shortNamesFor(_ days: [Self]) -> String? {
-        days.count == 7 ? "Каждый день" : days.compactMap { shortNameFor($0) }.joined(separator: ", ")
+        let everyDayText = NSLocalizedString("everyDay", comment: "Every day")
+        return days.count == 7 ? everyDayText : days.compactMap { shortNameFor($0) }.joined(separator: ", ")
     }
     
     static func daysToNumbers(_ days: [Self]) -> String {

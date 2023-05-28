@@ -23,8 +23,8 @@ final class HabitCreationViewController: BaseViewController {
     
     private lazy var trackerTitleTextField: UITextField = {
         let text = BaseTextField()
-        text.placeholder = "Ведите название трекера"
-        text.backgroundColor = .ypBackground
+        text.placeholder = NSLocalizedString("tracker.name", comment: "Tracker name text field placeholder")
+        text.backgroundColor = Asset.ypBackground.color
         text.layer.cornerRadius = 16
         text.delegate = self
         return text
@@ -32,20 +32,20 @@ final class HabitCreationViewController: BaseViewController {
     
     private lazy var maxCharactersLabel: UILabel = {
         let label = UILabel()
-        label.text = "Ограничение 38 символов"
+        label.text = NSLocalizedString("stringLengthLimit", comment: "Limit on tracker name length")
         label.font = .systemFont(ofSize: 17)
-        label.textColor = .ypRed
+        label.textColor = Asset.ypRed.color
         label.textAlignment = .center
         return label
     }()
     
     private lazy var parametersTableView: UITableView = {
         let table = UITableView(frame: .zero, style: .insetGrouped)
-        table.backgroundColor = .ypWhite
+        table.backgroundColor = Asset.ypWhite.color
         table.delegate = self
         table.dataSource = self
         table.isScrollEnabled = false
-        table.separatorColor = .ypGray
+        table.separatorColor = Asset.ypGray.color
         table.tableHeaderView = UIView(frame: CGRect(x: 0, y: 0, width: 0, height: CGFloat.leastNonzeroMagnitude))
         table.tableFooterView = UIView(frame: CGRect(x: 0, y: 0, width: 0, height: CGFloat.leastNonzeroMagnitude))
         return table
@@ -74,13 +74,15 @@ final class HabitCreationViewController: BaseViewController {
     }()
     
     private lazy var cancelButton: BaseButton = {
-        let button = BaseButton(style: .cancel, text: "Отменить")
+        let buttonText = NSLocalizedString("cancel", comment: "Cancel button title")
+        let button = BaseButton(style: .cancel, text: buttonText)
         button.addTarget(nil, action: #selector(cancelButtonTapped), for: .touchUpInside)
         return button
     }()
     
     private lazy var createButton: BaseButton = {
-        let button = BaseButton(style: .disabled, text: "Создать")
+        let createText = NSLocalizedString("create", comment: "Create button title")
+        let button = BaseButton(style: .disabled, text: createText)
         button.addTarget(nil, action: #selector(createButtonTapped), for: .touchUpInside)
         return button
     }()
@@ -149,12 +151,12 @@ private extension HabitCreationViewController {
     
     func configureCell(_ cell: UITableViewCell, for indexPath: IndexPath) {
         cell.selectionStyle = .none
-        cell.backgroundColor = .ypBackground
+        cell.backgroundColor = Asset.ypBackground.color
         cell.accessoryType = .disclosureIndicator
         cell.textLabel?.font = .systemFont(ofSize: 17)
         cell.detailTextLabel?.font = .systemFont(ofSize: 17)
-        cell.detailTextLabel?.textColor = .ypGray
-        cell.textLabel?.textColor = .ypBlack
+        cell.detailTextLabel?.textColor = Asset.ypGray.color
+        cell.textLabel?.textColor = Asset.ypBlack.color
     }
 }
 
@@ -253,8 +255,8 @@ extension HabitCreationViewController: UICollectionViewDelegateFlowLayout {
         
         guard let view = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: id, for: indexPath) as? HabitCollectionHeaderView else { return UICollectionReusableView()}
         switch indexPath.section {
-        case 0: view.titleLabel.text = "Emoji"
-        case 1: view.titleLabel.text = "Цвет"
+        case 0: view.titleLabel.text = NSLocalizedString("emoji", comment: "Emoji section label text")
+        case 1: view.titleLabel.text = NSLocalizedString("colors", comment: "Colors section label text")
         default: break
         }
         

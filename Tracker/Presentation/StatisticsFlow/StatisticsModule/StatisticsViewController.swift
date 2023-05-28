@@ -11,7 +11,8 @@ final class StatisticsViewController: UIViewController {
     
     init() {
         super.init(nibName: nil, bundle: nil)
-        self.tabBarItem = UITabBarItem(title: "Статистика", image: UIImage(named: "hare.fill"), tag: 1)
+        let tabBarItemText = NSLocalizedString("statistics", comment: "Statistics tab bar text")
+        self.tabBarItem = UITabBarItem(title: tabBarItemText, image: Asset.hareFill.image, tag: 1)
     }
     
     required init?(coder: NSCoder) {
@@ -33,7 +34,7 @@ private extension StatisticsViewController {
     }
     
     func configure() {
-        view.backgroundColor = .ypWhite
+        view.backgroundColor = Asset.ypWhite.color
     }
     
     func applyLayout() {

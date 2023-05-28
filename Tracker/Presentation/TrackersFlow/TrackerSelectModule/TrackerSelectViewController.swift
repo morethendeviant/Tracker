@@ -17,13 +17,15 @@ final class TrackerSelectViewController: BaseViewController, TrackerSelectCoordi
     var onHeadForEvent: (() -> Void)?
 
     private var newHabit: BaseButton = {
-        let button = BaseButton(style: .confirm, text: "Привычка")
+        let buttonText = NSLocalizedString("habit", comment: "Habit button title")
+        let button = BaseButton(style: .confirm, text: buttonText)
         button.addTarget(nil, action: #selector(headForHabit), for: .touchUpInside)
         return button
     }()
     
     private var newEvent: BaseButton = {
-        let button = BaseButton(style: .confirm, text: "Нерегулярное событие")
+        let buttonText = NSLocalizedString("event", comment: "Event button title")
+        let button = BaseButton(style: .confirm, text: buttonText)
         button.addTarget(nil, action: #selector(headForEvent), for: .touchUpInside)
         return button
     }()

@@ -33,16 +33,13 @@ final class TrackerCollectionViewCell: UICollectionViewCell {
     var daysAmount: Int? {
         didSet {
             if let daysAmount {
-                var suffix: String
-                let lastDigit = daysAmount % 10
-                
-                switch lastDigit {
-                case 1: suffix = "день"
-                case 2, 3, 4: suffix = "дня"
-                case 5, 6, 7, 8, 9, 0: suffix = "дней"
-                default: suffix = ""
-                }
-                daysCounter.text = "\(daysAmount) " + suffix
+                let numberFormatter = NumberFormatter()
+                numberFormatter.numberStyle = .currency
+                numberFormatter.locale = Locale.current
+                daysCounter.text = String.localizedStringWithFormat(
+                    NSLocalizedString("numberOfDays", comment: "Number of checked days"),
+                    daysAmount
+                )
             }
         }
     }
@@ -90,15 +87,14 @@ final class TrackerCollectionViewCell: UICollectionViewCell {
     private let trackerLabel: UILabel = {
         let label = UILabel()
         label.font = .systemFont(ofSize: 12)
-        label.textColor = .ypWhite
+        label.textColor = Asset.ypWhite.color
         return label
     }()
     
     private let daysCounter: UILabel = {
         let label = UILabel()
         label.font = .systemFont(ofSize: 12)
-        label.textColor = .ypBlack
-        
+        label.textColor = Asset.ypBlack.color
         return label
     }()
     
@@ -106,7 +102,7 @@ final class TrackerCollectionViewCell: UICollectionViewCell {
         let button = UIButton()
         button.setImage(UIImage(systemName: "plus"), for: .normal)
         button.layer.cornerRadius = 17
-        button.tintColor = .ypWhite
+        button.tintColor = Asset.ypWhite.color
         button.imageView?.contentMode = .scaleAspectFit
         button.imageEdgeInsets = UIEdgeInsets(top: 11, left: 11, bottom: 11, right: 11)
         button.addTarget(nil, action: #selector(plusButtonTapped), for: .touchUpInside)

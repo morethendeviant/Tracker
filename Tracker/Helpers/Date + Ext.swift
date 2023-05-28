@@ -15,14 +15,12 @@ extension Date {
        }
     
     func getDayOfWeek() -> DayOfWeek {
-        var calendar = Calendar(identifier: .gregorian)
-        calendar.firstWeekday = 2
-        let dayIndex = calendar.ordinality(of: .weekday, in: .weekOfYear, for: self)!
-        return DayOfWeek.allCases[dayIndex - 1]
+        let dayIndex = Calendar.current.ordinality(of: .weekday, in: .weekOfYear, for: self)!
+        return DayOfWeek.dayFromNumber(dayIndex - 1)
     }
     
     func onlyDate() -> Date {
-        let calendar = Calendar(identifier: .gregorian)
+        let calendar = Calendar.current
         let components = calendar.dateComponents([.year, .month, .day], from: self)
         let date = Calendar.current.date(from: components)
         return date!

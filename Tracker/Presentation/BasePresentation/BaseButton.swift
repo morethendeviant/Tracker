@@ -28,18 +28,18 @@ extension BaseButton {
     func setUpAppearance(for style: Style) {
         switch style {
         case .confirm:
-            backgroundColor = .ypBlack
-            setTitleColor(.ypWhite, for: .normal)
+            backgroundColor = Asset.ypBlack.color
+            setTitleColor(Asset.ypWhite.color, for: .normal)
             isEnabled = true
         case .disabled:
-            backgroundColor = .ypGray
-            setTitleColor(.ypWhite, for: .normal)
+            backgroundColor = Asset.ypGray.color
+            setTitleColor(Asset.ypWhite.color, for: .normal)
             isEnabled = false
         case .cancel:
-            backgroundColor = .ypWhite
-            setTitleColor(.ypRed, for: .normal)
+            backgroundColor = Asset.ypWhite.color
+            setTitleColor(Asset.ypRed.color, for: .normal)
             layer.borderWidth = 1
-            layer.borderColor = UIColor.ypRed?.cgColor
+            layer.borderColor = Asset.ypRed.color.cgColor
             isEnabled = true
         }
     }

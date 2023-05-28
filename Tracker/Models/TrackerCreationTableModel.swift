@@ -14,13 +14,14 @@ struct CellContent {
 
 enum TrackerCreationTableModel {
     case habit
-    
     case event
     
     func tableContent() -> [CellContent] {
+        let categoryText = NSLocalizedString("category", comment: "Category")
+        let scheduleText = NSLocalizedString("schedule", comment: "Schedule")
         switch self {
-        case .habit: return [CellContent(text: "Категория", detailText: nil), CellContent(text: "Расписание", detailText: nil)]
-        case .event: return [CellContent(text: "Категория", detailText: nil)]
+        case .habit: return [CellContent(text: categoryText, detailText: nil), CellContent(text: scheduleText, detailText: nil)]
+        case .event: return [CellContent(text: categoryText, detailText: nil)]
         }
     }
 }
