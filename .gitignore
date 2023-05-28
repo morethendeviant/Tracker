@@ -22,7 +22,10 @@ Icon
 .Trashes
 .VolumeIcon.icns
 .com.apple.timemachine.donotpresent
+swiftgen.yml
 .swiftgen.yml
+PodFile
+PodFile.lock
 
 # Directories potentially created on remote AFP share
 .AppleDB
