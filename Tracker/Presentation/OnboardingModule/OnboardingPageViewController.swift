@@ -13,9 +13,7 @@ protocol OnboardingPageViewControllerCoordinator {
 
 final class OnboardingPageViewController: UIPageViewController, OnboardingPageViewControllerCoordinator {
     var onProceed: (() -> Void)?
-    
-    private var defaultsStorageService: DefaultsStorageService
-    
+        
     private let pages: [UIViewController] = [
         OnboardingViewController(style: .blue),
         OnboardingViewController(style: .red)
@@ -38,22 +36,9 @@ final class OnboardingPageViewController: UIPageViewController, OnboardingPageVi
         button.addTarget(nil, action: #selector(proceedButtonTapped), for: .touchUpInside)
         return button
     }()
-    
-    init(transitionStyle: UIPageViewController.TransitionStyle, navigationOrientation: UIPageViewController.NavigationOrientation, defaultsStorageService: DefaultsStorageService) {
-        self.defaultsStorageService = defaultsStorageService
-        super.init(transitionStyle: transitionStyle, navigationOrientation: navigationOrientation)
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
-        if defaultsStorageService.onboardingWasShown {
-            onProceed?()
-        }
-        
         guard let firstPage = pages.first else { return }
         setViewControllers([firstPage], direction: .forward, animated: true)
         dataSource = self
@@ -67,7 +52,6 @@ final class OnboardingPageViewController: UIPageViewController, OnboardingPageVi
 
 @objc private extension OnboardingPageViewController {
     func proceedButtonTapped() {
-        defaultsStorageService.onboardingWasShown = true
         onProceed?()
     }
 }

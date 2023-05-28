@@ -81,7 +81,6 @@ final class ModulesFactory: ModulesFactoryProtocol {
     }
     
     func makeOnboardingPageView() -> Presentable {
-        let defaultsStorageService = DefaultsStorageService()
-        return OnboardingPageViewController(transitionStyle: .scroll, navigationOrientation: .horizontal, defaultsStorageService: defaultsStorageService)
+        return OnboardingPageViewController(transitionStyle: .scroll, navigationOrientation: .horizontal)
     }
 }

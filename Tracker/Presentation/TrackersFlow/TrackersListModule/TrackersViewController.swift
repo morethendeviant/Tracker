@@ -42,6 +42,7 @@ final class TrackersViewController: UIViewController {
         let label = UILabel()
         label.text = NSLocalizedString("trackers", comment: "Trackers screen name")
         label.font = .boldSystemFont(ofSize: 34)
+        label.textColor = Asset.ypBlack.color
         return label
     }()
     
@@ -64,6 +65,8 @@ final class TrackersViewController: UIViewController {
         datePicker.locale = .autoupdatingCurrent
         datePicker.calendar = .autoupdatingCurrent
         datePicker.datePickerMode = .date
+        datePicker.overrideUserInterfaceStyle = .light
+        datePicker.backgroundColor = Asset.ypWhite.color
         return datePicker
     }()
     
@@ -71,6 +74,7 @@ final class TrackersViewController: UIViewController {
     
     private lazy var trackersCollectionView: UICollectionView = {
         let collection = UICollectionView(frame: .zero, collectionViewLayout: createLayout())
+        collection.backgroundColor = Asset.ypWhite.color
         collection.register(TrackerCollectionViewCell.self,
                             forCellWithReuseIdentifier: TrackerCollectionViewCell.identifier)
         

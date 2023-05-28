@@ -20,7 +20,8 @@ final class CoordinatorFactory {
 
 extension CoordinatorFactory: CoordinatorsFactoryProtocol {
     func makeAppCoordinator(router: Routable) -> Coordinatable & AppCoordinatorOutput {
-        AppCoordinator(coordinatorsFactory: self, modulesFactory: modulesFactory, router: router)
+        let defaultsStorageService = DefaultsStorageService()
+        return AppCoordinator(coordinatorsFactory: self, modulesFactory: modulesFactory, router: router, defaultsStorageService: defaultsStorageService)
     }
     
     func makeTrackerCoordinator(router: Routable) -> Coordinatable {
