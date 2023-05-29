@@ -89,7 +89,7 @@
         <note>Event button title</note>
       </trans-unit>
       <trans-unit id="everyDay" xml:space="preserve">
-        <source>everyDay</source>
+        <source>Every dat</source>
         <target>كل يوم</target>
         <note>Every day</note>
       </trans-unit>
@@ -104,12 +104,12 @@
         <note>Habit button title</note>
       </trans-unit>
       <trans-unit id="newCategory" xml:space="preserve">
-        <source>New Category</source>
+        <source>New category</source>
         <target>فئة جديدة</target>
         <note>New category page name</note>
       </trans-unit>
       <trans-unit id="newEvent" xml:space="preserve">
-        <source>New Event</source>
+        <source>New event</source>
         <target>حدث جديد</target>
         <note>New event page name</note>
       </trans-unit>
@@ -131,6 +131,11 @@
         <source>Pin</source>
         <target>دبوس</target>
         <note>Pin menu item text</note>
+      </trans-unit>
+      <trans-unit id="pinned" xml:space="preserve">
+        <source>Pinned</source>
+        <target>مثبت</target>
+        <note>Pinned group name</note>
       </trans-unit>
       <trans-unit id="ready" xml:space="preserve">
         <source>Ready</source>
@@ -155,7 +160,7 @@
       </trans-unit>
       <trans-unit id="stringLengthLimit" xml:space="preserve">
         <source>38 character limit</source>
-        <target>38 حرفًا كحد أقصى</target>
+        <target>٣٨ حرفًا كحد أقصى</target>
         <note>Limit on tracker name length</note>
       </trans-unit>
       <trans-unit id="tracker.name" xml:space="preserve">
@@ -173,6 +178,11 @@
         <target>المقتفون</target>
         <note>Trackers screen name
    Trackers tab bar text</note>
+      </trans-unit>
+      <trans-unit id="unPin" xml:space="preserve">
+        <source>Unpin</source>
+        <target>نزع الدبوس</target>
+        <note>Unpin menu item text</note>
       </trans-unit>
     </body>
   </file>

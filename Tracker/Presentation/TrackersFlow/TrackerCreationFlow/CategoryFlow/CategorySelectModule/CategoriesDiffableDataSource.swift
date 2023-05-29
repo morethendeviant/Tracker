@@ -7,27 +7,17 @@
 
 import UIKit
 
-final class CategoriesDiffableDataSource: UITableViewDiffableDataSource<Int, String> {
-    typealias Snapshot = NSDiffableDataSourceSnapshot<Int, String>
+final class CategoriesDiffableDataSource: UITableViewDiffableDataSource<Int, CategoryCellModel> {
         
-    init(_ tableView: UITableView,
-         dataSourceProvider: CategoriesDataSourceProvider,
-         interactionDelegate: UIContextMenuInteractionDelegate? = nil) {
-
+    init(_ tableView: UITableView, interactionDelegate: UIContextMenuInteractionDelegate? = nil) {
+        
         super.init(tableView: tableView) { _, _, itemIdentifier in
             let cell = UITableViewCell(style: .default, reuseIdentifier: "Cell")
             cell.backgroundColor = Asset.ypBackground.color
             cell.selectionStyle = .none
             cell.textLabel?.font = .systemFont(ofSize: 17)
-            cell.textLabel?.text = itemIdentifier
-            
-            if let selectedCategory = dataSourceProvider.selectedCategory,
-               let text = cell.textLabel?.text,
-               selectedCategory == text {
-                cell.accessoryType = .checkmark
-            } else {
-                cell.accessoryType = .none
-            }
+            cell.textLabel?.text = itemIdentifier.name
+            cell.accessoryType = itemIdentifier.isSelected ? .checkmark : .none
             
             if let interactionDelegate {
                 cell.contentView.addInteraction(UIContextMenuInteraction(delegate: interactionDelegate))
@@ -37,11 +27,16 @@ final class CategoriesDiffableDataSource: UITableViewDiffableDataSource<Int, Str
         }
     }
     
-    func reload(_ data: [String], animated: Bool = true) {
-        var snapshot = Snapshot()
+    func reload(_ data: [CategoryCellModel], animated: Bool = true) {
+        var snapshot = snapshot()
         snapshot.deleteAllItems()
         snapshot.appendSections([0])
         snapshot.appendItems(data)
         apply(snapshot, animatingDifferences: animated)
     }
+}
+                                              
+struct CategoryCellModel: Hashable {
+    let name: String
+    let isSelected: Bool
 }

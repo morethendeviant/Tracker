@@ -277,19 +277,24 @@ extension TrackersViewController: UIContextMenuInteractionDelegate {
         }
         
         let configuration = UIContextMenuConfiguration(identifier: nil, previewProvider: nil) { [weak self] _ -> UIMenu in
-            let pinItemText = NSLocalizedString("pin", comment: "Pin menu item text")
+            guard let self else { return UIMenu() }
+            
+            let pinItemText = self.viewModel.trackerIsPinnedAt(indexPath: indexPath) ?
+            NSLocalizedString("unPin", comment: "Unpin menu item text") :
+            NSLocalizedString("pin", comment: "Pin menu item text")
+
             let pin = UIAction(title: pinItemText, image: UIImage(systemName: "pin")) { _ in
-                // TODO: - Implement pin ability
+                self.viewModel.pinTrackerAt(indexPath: indexPath)
             }
             
             let editItemText = NSLocalizedString("edit", comment: "Edit menu item text")
             let edit = UIAction(title: editItemText, image: UIImage(systemName: "pencil")) { _ in
-                // TODO: - Implement edit ability
+                self.viewModel.editTrackerAt(indexPath: indexPath)
             }
             
             let deleteItemText = NSLocalizedString("delete", comment: "Delete menu item text")
             let delete = UIAction(title: deleteItemText, image: UIImage(systemName: "trash.fill"), attributes: .destructive) { _ in
-                self?.viewModel.deleteTrackerAt(indexPath: indexPath)
+                self.viewModel.deleteTrackerAt(indexPath: indexPath)
             }
             
             return UIMenu(children: [pin, edit, delete])

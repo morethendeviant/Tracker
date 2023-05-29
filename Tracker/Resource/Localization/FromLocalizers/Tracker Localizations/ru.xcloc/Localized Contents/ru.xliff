@@ -89,7 +89,7 @@
         <note>Event button title</note>
       </trans-unit>
       <trans-unit id="everyDay" xml:space="preserve">
-        <source>everyDay</source>
+        <source>Every dat</source>
         <target>Каждый день</target>
         <note>Every day</note>
       </trans-unit>
@@ -104,12 +104,12 @@
         <note>Habit button title</note>
       </trans-unit>
       <trans-unit id="newCategory" xml:space="preserve">
-        <source>New Category</source>
+        <source>New category</source>
         <target>Новая категория</target>
         <note>New category page name</note>
       </trans-unit>
       <trans-unit id="newEvent" xml:space="preserve">
-        <source>New Event</source>
+        <source>New event</source>
         <target>Новое нерегулярное событие</target>
         <note>New event page name</note>
       </trans-unit>
@@ -131,6 +131,11 @@
         <source>Pin</source>
         <target>Закрепить</target>
         <note>Pin menu item text</note>
+      </trans-unit>
+      <trans-unit id="pinned" xml:space="preserve">
+        <source>Pinned</source>
+        <target>Закрепленные</target>
+        <note>Pinned group name</note>
       </trans-unit>
       <trans-unit id="ready" xml:space="preserve">
         <source>Ready</source>
@@ -173,6 +178,11 @@
         <target>Трекеры</target>
         <note>Trackers screen name
    Trackers tab bar text</note>
+      </trans-unit>
+      <trans-unit id="unPin" xml:space="preserve">
+        <source>Unpin</source>
+        <target>Открепить</target>
+        <note>Unpin menu item text</note>
       </trans-unit>
     </body>
   </file>

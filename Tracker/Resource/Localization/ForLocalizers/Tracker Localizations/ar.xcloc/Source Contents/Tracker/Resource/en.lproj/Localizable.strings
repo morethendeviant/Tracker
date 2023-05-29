@@ -41,6 +41,9 @@
 /* Event button title */
 "event" = "Irregular event";
 
+/* Every day */
+"everyDay" = "Every dat";
+
 /* Filters button text */
 "filters" = "Filters";
 
@@ -48,10 +51,10 @@
 "habit" = "Habit";
 
 /* New category page name */
-"newCategory" = "New Category";
+"newCategory" = "New category";
 
 /* New event page name */
-"newEvent" = "New Event";
+"newEvent" = "New event";
 
 /* New habit page name */
 "newHabit" = "New habit";
@@ -61,6 +64,9 @@
 
 /* Pin menu item text */
 "pin" = "Pin";
+
+/* Pinned group name */
+"pinned" = "Pinned";
 
 /* Ready button title */
 "ready" = "Ready";
@@ -87,4 +93,7 @@
 /* Trackers screen name
    Trackers tab bar text */
 "trackers" = "Trackers";
+
+/* Unpin menu item text */
+"unPin" = "Unpin";
 

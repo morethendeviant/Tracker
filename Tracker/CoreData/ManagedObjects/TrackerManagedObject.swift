@@ -14,6 +14,7 @@ final class TrackerManagedObject: NSManagedObject {
     @NSManaged var color: Int16
     @NSManaged var emoji: Int16
     @NSManaged var schedule: String
+    @NSManaged var isPinned: Bool
     @NSManaged var category: TrackerCategoryManagedObject
     @NSManaged var records: Set<TrackerRecordManagedObject>
     
@@ -31,6 +32,7 @@ final class TrackerManagedObject: NSManagedObject {
         self.emoji = Int16(tracker.emoji)
         self.name = tracker.name
         self.schedule = DayOfWeek.daysToNumbers(tracker.schedule)
+        self.isPinned = tracker.isPinned
         self.records = []
     }
 }

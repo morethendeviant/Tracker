@@ -132,6 +132,11 @@
         <target>دبوس</target>
         <note>Pin menu item text</note>
       </trans-unit>
+      <trans-unit id="pinned" xml:space="preserve">
+        <source>pinned</source>
+        <target>مثبت</target>
+        <note>Pinned group name</note>
+      </trans-unit>
       <trans-unit id="ready" xml:space="preserve">
         <source>Ready</source>
         <target>مستعد</target>
@@ -173,6 +178,11 @@
         <target>المقتفون</target>
         <note>Trackers screen name
    Trackers tab bar text</note>
+      </trans-unit>
+      <trans-unit id="unPin" xml:space="preserve">
+        <source>unPin</source>
+        <target>نزع الدبوس</target>
+        <note>Unpin menu item text</note>
       </trans-unit>
     </body>
   </file>

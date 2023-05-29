@@ -65,6 +65,9 @@
 /* Pin menu item text */
 "pin" = "Закрепить";
 
+/* Pinned group name */
+"pinned" = "Закрепленные";
+
 /* Ready button title */
 "ready" = "Готово";
 
@@ -90,4 +93,7 @@
 /* Trackers screen name
    Trackers tab bar text */
 "trackers" = "Трекеры";
+
+/* Unpin menu item text */
+"unPin" = "Открепить";
 

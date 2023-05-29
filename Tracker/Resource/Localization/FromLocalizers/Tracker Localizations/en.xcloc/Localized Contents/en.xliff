@@ -90,7 +90,7 @@
       </trans-unit>
       <trans-unit id="everyDay" xml:space="preserve">
         <source>everyDay</source>
-        <target>Every day</target>
+        <target>Every dat</target>
         <note>Every day</note>
       </trans-unit>
       <trans-unit id="filters" xml:space="preserve">
@@ -133,6 +133,11 @@
         <target>Pin</target>
         <note>Pin menu item text</note>
       </trans-unit>
+      <trans-unit id="pinned" xml:space="preserve">
+        <source>pinned</source>
+        <target>Pinned</target>
+        <note>Pinned group name</note>
+      </trans-unit>
       <trans-unit id="ready" xml:space="preserve">
         <source>Ready</source>
         <target>Ready</target>
@@ -174,6 +179,11 @@
         <target>Trackers</target>
         <note>Trackers screen name
    Trackers tab bar text</note>
+      </trans-unit>
+      <trans-unit id="unPin" xml:space="preserve">
+        <source>unPin</source>
+        <target>Unpin</target>
+        <note>Unpin menu item text</note>
       </trans-unit>
     </body>
   </file>

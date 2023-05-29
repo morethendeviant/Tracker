@@ -36,6 +36,9 @@ protocol TrackersListViewModelProtocol {
     func dateChangedTo(_ date: Date)
     func searchTextChangedTo(_ text: String?)
     func deleteTrackerAt(indexPath: IndexPath)
+    func pinTrackerAt(indexPath: IndexPath)
+    func editTrackerAt(indexPath: IndexPath)
+    func trackerIsPinnedAt(indexPath: IndexPath) -> Bool
 }
 
 protocol TrackersDataSourceProvider {
@@ -63,8 +66,17 @@ final class TrackersListViewModel: TrackersViewCoordination {
     
     private var categories: [TrackerCategory] = [] {
         didSet {
-            categories = categories.map {
-                TrackerCategory(name: $0.name, trackers: $0.trackers.sorted { $0.name < $1.name })
+            var pinnedTrackers: [Tracker] = []
+            categories = categories.compactMap {
+                let trackers = $0.trackers.compactMap { $0.isPinned ? nil : $0 }.sorted { $0.name < $1.name }
+                pinnedTrackers.append(contentsOf: $0.trackers.compactMap { $0.isPinned ? $0 : nil })
+                return trackers.isEmpty ? nil : TrackerCategory(name: $0.name, trackers: trackers)
+            }
+            
+            if !pinnedTrackers.isEmpty {
+                let pinnedText = NSLocalizedString("pinned", comment: "Pinned group name")
+                let pinnedCategory = TrackerCategory(name: pinnedText, trackers: pinnedTrackers)
+                categories.insert(pinnedCategory, at: 0)
             }
             
             visibleCategories = filtered(categories: categories)
@@ -72,6 +84,7 @@ final class TrackersListViewModel: TrackersViewCoordination {
     }
     
     @Observable var visibleCategories: [TrackerCategory] = []
+    
     var visibleCategoriesObserver: Observable<[TrackerCategory]> {
         $visibleCategories
     }
@@ -105,6 +118,24 @@ private extension TrackersListViewModel {
 // MARK: - Trackers List View Model
 
 extension TrackersListViewModel: TrackersListViewModelProtocol {
+    func pinTrackerAt(indexPath: IndexPath) {
+        do {
+            let tracker = visibleCategories[indexPath.section].trackers[indexPath.row]
+            try dataProvider.setTracker(tracker, pinned: !tracker.isPinned)
+            dateChangedTo(date)
+        } catch {
+            handleError(message: error.localizedDescription)
+        }
+    }
+    
+    func trackerIsPinnedAt(indexPath: IndexPath) -> Bool {
+        visibleCategories[indexPath.section].trackers[indexPath.row].isPinned
+    }
+    
+    func editTrackerAt(indexPath: IndexPath) {
+        
+    }
+    
     func deleteTrackerAt(indexPath: IndexPath) {
         let tracker = visibleCategories[indexPath.section].trackers[indexPath.row]
         do {

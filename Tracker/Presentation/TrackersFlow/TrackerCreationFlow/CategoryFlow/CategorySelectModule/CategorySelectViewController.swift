@@ -10,12 +10,9 @@ import UIKit
 final class CategorySelectViewController: BaseViewController {
     
     private let viewModel: CategorySelectViewModelProtocol
-    private let dataSourceProvider: CategoriesDataSourceProvider
     
     private lazy var dataSource: CategoriesDiffableDataSource = {
-        let dataSource = CategoriesDiffableDataSource(categoriesTableView,
-                                                      dataSourceProvider: dataSourceProvider,
-                                                      interactionDelegate: self)
+        let dataSource = CategoriesDiffableDataSource(categoriesTableView, interactionDelegate: self)
         return dataSource
     }()
     
@@ -38,7 +35,6 @@ final class CategorySelectViewController: BaseViewController {
     }()
  
     init(dataSourceProvider: CategoriesDataSourceProvider, viewModel: CategorySelectViewModelProtocol, pageTitle: String) {
-        self.dataSourceProvider = dataSourceProvider
         self.viewModel = viewModel
         super.init(pageTitle: pageTitle)
     }
@@ -69,8 +65,7 @@ final class CategorySelectViewController: BaseViewController {
     func setUpBindings() {
         viewModel.categoriesObserver.bind { [weak self] categories in
             self?.dataSource.reload(categories)
-        }
-        
+        } 
     }
 }
 

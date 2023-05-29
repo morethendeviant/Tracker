@@ -29,6 +29,7 @@ protocol TrackerDataStoreProtocol {
     func deleteRecord(_ record: TrackerRecord) throws
     func readRecordAmountWith(id: String) throws -> Int
     func checkForExistence(_ record: TrackerRecord) throws -> Bool
+    func setTracker(_ tracker: Tracker, pinned: Bool) throws
 }
 
 // MARK: - Data Store
@@ -148,6 +149,11 @@ extension DataStore: TrackerDataStoreProtocol {
     
     func checkForExistence(_ record: TrackerRecord) throws -> Bool {
         try getRecord(record) != nil
-        
+    }
+    
+    func setTracker(_ tracker: Tracker, pinned: Bool) throws {
+        let trackerObject = try getTracker(tracker.id)
+        trackerObject?.isPinned = pinned
+        try context.save()
     }
 }

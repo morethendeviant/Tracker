@@ -21,8 +21,8 @@ protocol CategoriesDataSourceProvider {
 }
 
 protocol CategorySelectViewModelProtocol {
-    var categories: [String] { get }
-    var categoriesObserver: Observable<[String]> { get }
+    var categories: [CategoryCellModel] { get }
+    var categoriesObserver: Observable<[CategoryCellModel]> { get }
     
     var selectedCategory: String? { get }
 
@@ -37,7 +37,7 @@ final class CategorySelectViewModel: CategoriesDataSourceProvider {
     var onFinish: ((String?) -> Void)?
     var headForError: ((String) -> Void)?
     
-    @Observable var categories: [String] = []
+    @Observable var categories: [CategoryCellModel] = []
     
     private var dataProvider: CategorySelectDataStoreProtocol
     private(set) var selectedCategory: String?
@@ -54,7 +54,11 @@ final class CategorySelectViewModel: CategoriesDataSourceProvider {
 private extension CategorySelectViewModel {
     func reloadCategories() {
         do {
-            categories = try dataProvider.fetchAllCategories().map { $0.name }
+            let categoryNames = try dataProvider.fetchAllCategories().map { $0.name }
+            categories = categoryNames.map {
+                let isSelected = $0 == selectedCategory
+                return CategoryCellModel(name: $0, isSelected: isSelected)
+            }
         } catch {
             handleError(message: error.localizedDescription)
         }
@@ -64,7 +68,7 @@ private extension CategorySelectViewModel {
 // MARK: - View Model Protocol
 
 extension CategorySelectViewModel: CategorySelectViewModelProtocol {
-    var categoriesObserver: Observable<[String]> {
+    var categoriesObserver: Observable<[CategoryCellModel]> {
         $categories
     }
     
@@ -77,16 +81,15 @@ extension CategorySelectViewModel: CategorySelectViewModelProtocol {
     }
     
     func selectCategory(_ category: String?) {
-        selectedCategory = category
-        onFinish?(selectedCategory)
+        onFinish?(category)
     }
     
     func deleteCategoryAt(index: Int) {
-        let category = TrackerCategory(name: categories[index])
+        let category = TrackerCategory(name: categories[index].name)
         do {
             try dataProvider.deleteCategory(category)
+            if selectedCategory == category.name { selectedCategory = nil }
             reloadCategories()
-            selectedCategory = nil
         } catch {
             handleError(message: error.localizedDescription)
         }

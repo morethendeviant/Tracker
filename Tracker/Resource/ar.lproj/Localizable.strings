@@ -65,6 +65,9 @@
 /* Pin menu item text */
 "pin" = "دبوس";
 
+/* Pinned group name */
+"pinned" = "مثبت";
+
 /* Ready button title */
 "ready" = "مستعد";
 
@@ -90,4 +93,7 @@
 /* Trackers screen name
    Trackers tab bar text */
 "trackers" = "المقتفون";
+
+/* Unpin menu item text */
+"unPin" = "نزع الدبوس";
 
