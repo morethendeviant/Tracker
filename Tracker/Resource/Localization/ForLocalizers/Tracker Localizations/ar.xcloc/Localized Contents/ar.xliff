@@ -1,18 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.2" xsi:schemaLocation="urn:oasis:names:tc:xliff:document:1.2 http://docs.oasis-open.org/xliff/v1.2/os/xliff-core-1.2-strict.xsd">
-  <file original="Tracker/Resource/en.lproj/InfoPlist.strings" source-language="en" target-language="ar" datatype="plaintext">
-    <header>
-      <tool tool-id="com.apple.dt.xcode" tool-name="Xcode" tool-version="14.3" build-num="14E222b"/>
-    </header>
-    <body>
-      <trans-unit id="CFBundleName" xml:space="preserve">
-        <source>Tracker</source>
-        <target>تعقب</target>
-        <note>Bundle name</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="Tracker/Resource/en.lproj/Localizable.strings" source-language="en" target-language="ar" datatype="plaintext">
+  <file original="../en.lproj/Localizable.strings" source-language="en" target-language="ar" datatype="plaintext">
     <header>
       <tool tool-id="com.apple.dt.xcode" tool-name="Xcode" tool-version="14.3" build-num="14E222b"/>
     </header>
@@ -37,6 +25,11 @@
         <target>يلغي</target>
         <note>Cancel button title</note>
       </trans-unit>
+      <trans-unit id="cancelActionText" xml:space="preserve">
+        <source>Cancel</source>
+        <target>يلغي</target>
+        <note>Text for alert cancel button</note>
+      </trans-unit>
       <trans-unit id="category" xml:space="preserve">
         <source>Category</source>
         <target>فئة</target>
@@ -57,6 +50,20 @@
         <source>Delete</source>
         <target>يمسح</target>
         <note>Delete menu item text</note>
+      </trans-unit>
+      <trans-unit id="deleteActionText" xml:space="preserve">
+        <source>Delete</source>
+        <target>يمسح</target>
+        <note>Text for alert delete button</note>
+      </trans-unit>
+      <trans-unit id="deleteAlertText" xml:space="preserve">
+        <source>Is this category really not needed?</source>
+        <target>هل هذه الفئة حقا ليست ضرورية؟</target>
+        <note>Text for delete alert</note>
+      </trans-unit>
+      <trans-unit id="deleteTrackerAlertText" xml:space="preserve">
+        <source>deleteTrackerAlertText</source>
+        <note>Text for tracker delete alert</note>
       </trans-unit>
       <trans-unit id="edit" xml:space="preserve">
         <source>Edit</source>
@@ -118,9 +125,9 @@
         <target>عادة جديدة</target>
         <note>New habit page name</note>
       </trans-unit>
-      <trans-unit id="numberOfDays" translate="no" xml:space="preserve">
+      <trans-unit id="numberOfDays" xml:space="preserve">
         <source>numberOfDays</source>
-        <note>Number of checked days (Key in .stringsdict)</note>
+        <note>Number of checked days</note>
       </trans-unit>
       <trans-unit id="onboardingPageViewController.proceedButton" xml:space="preserve">
         <source>This is technology!</source>
@@ -186,6 +193,18 @@
       </trans-unit>
     </body>
   </file>
+  <file original="Tracker/Resource/en.lproj/InfoPlist.strings" source-language="en" target-language="ar" datatype="plaintext">
+    <header>
+      <tool tool-id="com.apple.dt.xcode" tool-name="Xcode" tool-version="14.3" build-num="14E222b"/>
+    </header>
+    <body>
+      <trans-unit id="CFBundleName" xml:space="preserve">
+        <source>Tracker</source>
+        <target>تعقب</target>
+        <note>Bundle name</note>
+      </trans-unit>
+    </body>
+  </file>
   <file original="Tracker/Resource/en.lproj/Localizable.stringsdict" source-language="en" target-language="ar" datatype="plaintext">
     <header>
       <tool tool-id="com.apple.dt.xcode" tool-name="Xcode" tool-version="14.3" build-num="14E222b"/>
@@ -194,37 +213,37 @@
       <trans-unit id="/numberOfDays:dict/NSStringLocalizedFormatKey:dict/:string" xml:space="preserve">
         <source>%#@days@</source>
         <target>%#@days@</target>
-        <note>Number of checked days</note>
+        <note/>
       </trans-unit>
       <trans-unit id="/numberOfDays:dict/days:dict/few:dict/:string" xml:space="preserve">
         <source>%d days</source>
         <target>%d ايام</target>
-        <note>Number of checked days</note>
+        <note/>
       </trans-unit>
       <trans-unit id="/numberOfDays:dict/days:dict/many:dict/:string" xml:space="preserve">
         <source>%d days</source>
         <target>%d أيام</target>
-        <note>Number of checked days</note>
+        <note/>
       </trans-unit>
       <trans-unit id="/numberOfDays:dict/days:dict/one:dict/:string" xml:space="preserve">
         <source>%d day</source>
         <target>%d يوم</target>
-        <note>Number of checked days</note>
+        <note/>
       </trans-unit>
       <trans-unit id="/numberOfDays:dict/days:dict/other:dict/:string" xml:space="preserve">
         <source>%d days</source>
         <target>%d أيام</target>
-        <note>Number of checked days</note>
+        <note/>
       </trans-unit>
       <trans-unit id="/numberOfDays:dict/days:dict/two:dict/:string" xml:space="preserve">
         <source>%d days</source>
         <target>%d أيام</target>
-        <note>Number of checked days</note>
+        <note/>
       </trans-unit>
       <trans-unit id="/numberOfDays:dict/days:dict/zero:dict/:string" xml:space="preserve">
         <source>%d days</source>
         <target>%d يوم</target>
-        <note>Number of checked days</note>
+        <note/>
       </trans-unit>
     </body>
   </file>

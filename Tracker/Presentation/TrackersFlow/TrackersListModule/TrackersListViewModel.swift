@@ -12,6 +12,7 @@ import Foundation
 protocol TrackersViewCoordination: AnyObject {
     var headForTrackerSelect: (() -> Void)? { get set }
     var headForError: ((String) -> Void)? { get set }
+    var headForAlert: ((AlertModel) -> Void)? { get set }
     
     func returnOnCreate()
 }
@@ -52,6 +53,8 @@ protocol TrackersDataSourceProvider {
 // MARK: - TrackersList View Model
 
 final class TrackersListViewModel: TrackersViewCoordination {
+    var headForAlert: ((AlertModel) -> Void)?
+    
     func returnOnCreate() {
         dateChangedTo(date)
     }
@@ -137,14 +140,23 @@ extension TrackersListViewModel: TrackersListViewModelProtocol {
     }
     
     func deleteTrackerAt(indexPath: IndexPath) {
-        let tracker = visibleCategories[indexPath.section].trackers[indexPath.row]
-        do {
-            try dataProvider.deleteTracker(tracker)
-        } catch {
-            handleError(message: error.localizedDescription)
-        }
+        let alertText = NSLocalizedString("deleteTrackerAlertText", comment: "Text for tracker delete alert")
+        let alertDeleteActionText = NSLocalizedString("deleteActionText", comment: "Text for alert delete button")
+        let alertCancelText = NSLocalizedString("cancelActionText", comment: "Text for alert cancel button")
+        let alertDeleteAction = AlertAction(actionText: alertDeleteActionText, actionRole: .destructive, action: { [unowned self] in
+            let tracker = visibleCategories[indexPath.section].trackers[indexPath.row]
+            do {
+                try dataProvider.deleteTracker(tracker)
+            } catch {
+                handleError(message: error.localizedDescription)
+            }
+            
+            dateChangedTo(date)
+        })
         
-        dateChangedTo(date)
+        let alertCancelAction = AlertAction(actionText: alertCancelText, actionRole: .cancel, action: nil)
+        let alertModel = AlertModel(alertText: alertText, alertActions: [alertDeleteAction, alertCancelAction])
+        headForAlert?(alertModel)
     }
     
     var lastSectionIndex: Int {

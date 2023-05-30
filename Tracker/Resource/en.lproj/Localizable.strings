@@ -10,6 +10,9 @@
 /* Cancel button title */
 "cancel" = "Cancel";
 
+/* Text for alert cancel button */
+"cancelActionText" = "Cancel";
+
 /* Categories page name
    Category */
 "category" = "Category";
@@ -22,6 +25,15 @@
 
 /* Delete menu item text */
 "delete" = "Delete";
+
+/* Text for alert delete button */
+"deleteActionText" = "Delete";
+
+/* Text for delete alert */
+"deleteAlertText" = "Is this category really not needed?";
+
+/* Text for tracker delete alert */
+"deleteTrackerAlertText" = "Are you sure you want to delete the tracker?";
 
 /* Edit menu item text */
 "edit" = "Edit";

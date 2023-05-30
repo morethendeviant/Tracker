@@ -18,104 +18,100 @@
     </header>
     <body>
       <trans-unit id="addCategory" xml:space="preserve">
-        <source>Add category</source>
-        <target>إضافة فئة</target>
+        <source>addCategory</source>
         <note>Add category button text</note>
       </trans-unit>
       <trans-unit id="backgroundImage.blue.description" xml:space="preserve">
-        <source>Track only what you want</source>
-        <target>تتبع فقط ما تريد</target>
+        <source>backgroundImage.blue.description</source>
         <note>Blue onboarding screen text</note>
       </trans-unit>
       <trans-unit id="backgroundImage.red.description" xml:space="preserve">
-        <source>Even if it's not liters of water or yoga</source>
-        <target>حتى لو لم يكن لترًا من الماء أو اليوجا</target>
+        <source>backgroundImage.red.description</source>
         <note>Red onboarding screen text</note>
       </trans-unit>
       <trans-unit id="cancel" xml:space="preserve">
-        <source>Cancel</source>
-        <target>يلغي</target>
+        <source>cancel</source>
         <note>Cancel button title</note>
       </trans-unit>
+      <trans-unit id="cancelActionText" xml:space="preserve">
+        <source>cancelActionText</source>
+        <note>Text for alert cancel button</note>
+      </trans-unit>
       <trans-unit id="category" xml:space="preserve">
-        <source>Category</source>
-        <target>فئة</target>
+        <source>category</source>
         <note>Categories page name
    Category</note>
       </trans-unit>
       <trans-unit id="colors" xml:space="preserve">
-        <source>Colors</source>
-        <target>الألوان</target>
+        <source>colors</source>
         <note>Colors section label text</note>
       </trans-unit>
       <trans-unit id="create" xml:space="preserve">
-        <source>Create</source>
-        <target>يخلق</target>
+        <source>create</source>
         <note>Create button title</note>
       </trans-unit>
       <trans-unit id="delete" xml:space="preserve">
-        <source>Delete</source>
-        <target>يمسح</target>
+        <source>delete</source>
         <note>Delete menu item text</note>
       </trans-unit>
+      <trans-unit id="deleteActionText" xml:space="preserve">
+        <source>deleteActionText</source>
+        <note>Text for alert delete button</note>
+      </trans-unit>
+      <trans-unit id="deleteAlertText" xml:space="preserve">
+        <source>deleteAlertText</source>
+        <note>Text for delete alert</note>
+      </trans-unit>
+      <trans-unit id="deleteTrackerAlertText" xml:space="preserve">
+        <source>deleteTrackerAlertText</source>
+        <note>Text for tracker delete alert</note>
+      </trans-unit>
       <trans-unit id="edit" xml:space="preserve">
-        <source>Edit</source>
-        <target>يحرر</target>
+        <source>edit</source>
         <note>Edit menu item text</note>
       </trans-unit>
       <trans-unit id="emoji" xml:space="preserve">
-        <source>Emoji</source>
-        <target>تعبيري</target>
+        <source>emoji</source>
         <note>Emoji section label text</note>
       </trans-unit>
       <trans-unit id="emptyPlaceholder.search" xml:space="preserve">
-        <source>Nothing found</source>
-        <target>لم يتم العثور على شيء</target>
+        <source>emptyPlaceholder.search</source>
         <note>Text displayed on empty search</note>
       </trans-unit>
       <trans-unit id="emptyPlaceholder.trackers" xml:space="preserve">
-        <source>What will we track?</source>
-        <target>ماذا سنتعقب؟</target>
+        <source>emptyPlaceholder.trackers</source>
         <note>Text displayed on empty schedule</note>
       </trans-unit>
       <trans-unit id="enterCategoryName" xml:space="preserve">
-        <source>Enter category name</source>
-        <target>أدخل اسم الفئة</target>
+        <source>enterCategoryName</source>
         <note>Enter category name placeholder text</note>
       </trans-unit>
       <trans-unit id="event" xml:space="preserve">
-        <source>Irregular event</source>
-        <target>حدث غير منتظم</target>
+        <source>event</source>
         <note>Event button title</note>
       </trans-unit>
       <trans-unit id="everyDay" xml:space="preserve">
         <source>everyDay</source>
-        <target>كل يوم</target>
         <note>Every day</note>
       </trans-unit>
       <trans-unit id="filters" xml:space="preserve">
-        <source>Filters</source>
-        <target>المرشحات</target>
+        <source>filters</source>
         <note>Filters button text</note>
       </trans-unit>
       <trans-unit id="habit" xml:space="preserve">
-        <source>Habit</source>
-        <target>عادة</target>
+        <source>habit</source>
         <note>Habit button title</note>
       </trans-unit>
       <trans-unit id="newCategory" xml:space="preserve">
-        <source>New Category</source>
-        <target>فئة جديدة</target>
+        <source>newCategory</source>
         <note>New category page name</note>
       </trans-unit>
       <trans-unit id="newEvent" xml:space="preserve">
-        <source>New Event</source>
-        <target>حدث جديد</target>
+        <source>newEvent</source>
         <note>New event page name</note>
       </trans-unit>
       <trans-unit id="newHabit" xml:space="preserve">
-        <source>New habit</source>
-        <target>عادة جديدة</target>
+        <source>newHabit</source>
         <note>New habit page name</note>
       </trans-unit>
       <trans-unit id="numberOfDays" translate="no" xml:space="preserve">
@@ -123,65 +119,53 @@
         <note>Number of checked days (Key in .stringsdict)</note>
       </trans-unit>
       <trans-unit id="onboardingPageViewController.proceedButton" xml:space="preserve">
-        <source>This is technology!</source>
-        <target>هذه هي التكنولوجيا!</target>
+        <source>onboardingPageViewController.proceedButton</source>
         <note>Onboarding screen proceed button text</note>
       </trans-unit>
       <trans-unit id="pin" xml:space="preserve">
-        <source>Pin</source>
-        <target>دبوس</target>
+        <source>pin</source>
         <note>Pin menu item text</note>
       </trans-unit>
       <trans-unit id="pinned" xml:space="preserve">
         <source>pinned</source>
-        <target>مثبت</target>
         <note>Pinned group name</note>
       </trans-unit>
       <trans-unit id="ready" xml:space="preserve">
-        <source>Ready</source>
-        <target>مستعد</target>
+        <source>ready</source>
         <note>Ready button title</note>
       </trans-unit>
       <trans-unit id="schedule" xml:space="preserve">
-        <source>Schedule</source>
-        <target>جدول</target>
+        <source>schedule</source>
         <note>Schedule
    Schedule page name</note>
       </trans-unit>
       <trans-unit id="search" xml:space="preserve">
-        <source>Search</source>
-        <target>يبحث</target>
+        <source>search</source>
         <note>Search bar placeholder text</note>
       </trans-unit>
       <trans-unit id="statistics" xml:space="preserve">
-        <source>Statistics</source>
-        <target>إحصائيات</target>
+        <source>statistics</source>
         <note>Statistics tab bar text</note>
       </trans-unit>
       <trans-unit id="stringLengthLimit" xml:space="preserve">
-        <source>38 character limit</source>
-        <target>٣٨ حرفًا كحد أقصى</target>
+        <source>stringLengthLimit</source>
         <note>Limit on tracker name length</note>
       </trans-unit>
       <trans-unit id="tracker.name" xml:space="preserve">
-        <source>Enter tracker name</source>
-        <target>أدخل اسم تعقب</target>
+        <source>tracker.name</source>
         <note>Tracker name text field placeholder</note>
       </trans-unit>
       <trans-unit id="trackerCreation" xml:space="preserve">
-        <source>Tracker creation</source>
-        <target>إنشاء المقتفي</target>
+        <source>trackerCreation</source>
         <note>Tracker creation page name</note>
       </trans-unit>
       <trans-unit id="trackers" xml:space="preserve">
-        <source>Trackers</source>
-        <target>المقتفون</target>
+        <source>trackers</source>
         <note>Trackers screen name
    Trackers tab bar text</note>
       </trans-unit>
       <trans-unit id="unPin" xml:space="preserve">
         <source>unPin</source>
-        <target>نزع الدبوس</target>
         <note>Unpin menu item text</note>
       </trans-unit>
     </body>

@@ -10,6 +10,9 @@
 /* Cancel button title */
 "cancel" = "يلغي";
 
+/* Text for alert cancel button */
+"cancelActionText" = "يلغي";
+
 /* Categories page name
    Category */
 "category" = "فئة";
@@ -22,6 +25,15 @@
 
 /* Delete menu item text */
 "delete" = "يمسح";
+
+/* Text for alert delete button */
+"deleteActionText" = "يمسح";
+
+/* Text for delete alert */
+"deleteAlertText" = "هل هذه الفئة حقا ليست ضرورية؟";
+
+/* Text for tracker delete alert */
+"deleteTrackerAlertText" = "هل أنت متأكد أنك تريد حذف المتعقب؟";
 
 /* Edit menu item text */
 "edit" = "يحرر";

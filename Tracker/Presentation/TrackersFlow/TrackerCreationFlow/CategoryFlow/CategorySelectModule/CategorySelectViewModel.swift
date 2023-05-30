@@ -11,6 +11,7 @@ protocol CategorySelectCoordination: AnyObject {
     var onHeadForCategoryCreation: (() -> Void)? { get set }
     var onFinish: ((String?) -> Void)? { get set }
     var headForError: ((String) -> Void)? { get set }
+    var headForAlert: ((AlertModel) -> Void)? { get set }
     var selectedCategory: String? { get }
     
     func setNewCategory(_: String)
@@ -36,6 +37,7 @@ final class CategorySelectViewModel: CategoriesDataSourceProvider {
     var onHeadForCategoryCreation: (() -> Void)?
     var onFinish: ((String?) -> Void)?
     var headForError: ((String) -> Void)?
+    var headForAlert: ((AlertModel) -> Void)?
     
     @Observable var categories: [CategoryCellModel] = []
     
@@ -85,14 +87,22 @@ extension CategorySelectViewModel: CategorySelectViewModelProtocol {
     }
     
     func deleteCategoryAt(index: Int) {
-        let category = TrackerCategory(name: categories[index].name)
-        do {
-            try dataProvider.deleteCategory(category)
-            if selectedCategory == category.name { selectedCategory = nil }
-            reloadCategories()
-        } catch {
-            handleError(message: error.localizedDescription)
-        }
+        let alertText = NSLocalizedString("deleteAlertText", comment: "Text for delete alert")
+        let alertDeleteActionText = NSLocalizedString("deleteActionText", comment: "Text for alert delete button")
+        let alertCancelText = NSLocalizedString("cancelActionText", comment: "Text for alert cancel button")
+        let alertDeleteAction = AlertAction(actionText: alertDeleteActionText, actionRole: .destructive, action: { [unowned self] in
+            let category = TrackerCategory(name: categories[index].name)
+            do {
+                try dataProvider.deleteCategory(category)
+                if selectedCategory == category.name { selectedCategory = nil }
+                reloadCategories()
+            } catch {
+                handleError(message: error.localizedDescription)
+            }
+        })
+        let alertCancelAction = AlertAction(actionText: alertCancelText, actionRole: .cancel, action: nil)
+        let alertModel = AlertModel(alertText: alertText, alertActions: [alertDeleteAction, alertCancelAction])
+        headForAlert?(alertModel)
     }
 }
 

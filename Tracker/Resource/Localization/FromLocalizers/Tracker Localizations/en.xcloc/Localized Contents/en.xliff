@@ -18,73 +18,93 @@
     </header>
     <body>
       <trans-unit id="addCategory" xml:space="preserve">
-        <source>Add category</source>
+        <source>addCategory</source>
         <target>Add category</target>
         <note>Add category button text</note>
       </trans-unit>
       <trans-unit id="backgroundImage.blue.description" xml:space="preserve">
-        <source>Track only what you want</source>
+        <source>backgroundImage.blue.description</source>
         <target>Track only what you want</target>
         <note>Blue onboarding screen text</note>
       </trans-unit>
       <trans-unit id="backgroundImage.red.description" xml:space="preserve">
-        <source>Even if it's not liters of water or yoga</source>
+        <source>backgroundImage.red.description</source>
         <target>Even if it's not liters of water or yoga</target>
         <note>Red onboarding screen text</note>
       </trans-unit>
       <trans-unit id="cancel" xml:space="preserve">
-        <source>Cancel</source>
+        <source>cancel</source>
         <target>Cancel</target>
         <note>Cancel button title</note>
       </trans-unit>
+      <trans-unit id="cancelActionText" xml:space="preserve">
+        <source>cancelActionText</source>
+        <target>Cancel</target>
+        <note>Text for alert cancel button</note>
+      </trans-unit>
       <trans-unit id="category" xml:space="preserve">
-        <source>Category</source>
+        <source>category</source>
         <target>Category</target>
         <note>Categories page name
    Category</note>
       </trans-unit>
       <trans-unit id="colors" xml:space="preserve">
-        <source>Colors</source>
+        <source>colors</source>
         <target>Colors</target>
         <note>Colors section label text</note>
       </trans-unit>
       <trans-unit id="create" xml:space="preserve">
-        <source>Create</source>
+        <source>create</source>
         <target>Create</target>
         <note>Create button title</note>
       </trans-unit>
       <trans-unit id="delete" xml:space="preserve">
-        <source>Delete</source>
+        <source>delete</source>
         <target>Delete</target>
         <note>Delete menu item text</note>
       </trans-unit>
+      <trans-unit id="deleteActionText" xml:space="preserve">
+        <source>deleteActionText</source>
+        <target>Delete</target>
+        <note>Text for alert delete button</note>
+      </trans-unit>
+      <trans-unit id="deleteAlertText" xml:space="preserve">
+        <source>deleteAlertText</source>
+        <target>Is this category really not needed?</target>
+        <note>Text for delete alert</note>
+      </trans-unit>
+      <trans-unit id="deleteTrackerAlertText" xml:space="preserve">
+        <source>deleteTrackerAlertText</source>
+        <target>Are you sure you want to delete the tracker?</target>
+        <note>Text for tracker delete alert</note>
+      </trans-unit>
       <trans-unit id="edit" xml:space="preserve">
-        <source>Edit</source>
+        <source>edit</source>
         <target>Edit</target>
         <note>Edit menu item text</note>
       </trans-unit>
       <trans-unit id="emoji" xml:space="preserve">
-        <source>Emoji</source>
+        <source>emoji</source>
         <target>Emoji</target>
         <note>Emoji section label text</note>
       </trans-unit>
       <trans-unit id="emptyPlaceholder.search" xml:space="preserve">
-        <source>Nothing found</source>
+        <source>emptyPlaceholder.search</source>
         <target>Nothing found</target>
         <note>Text displayed on empty search</note>
       </trans-unit>
       <trans-unit id="emptyPlaceholder.trackers" xml:space="preserve">
-        <source>What will we track?</source>
+        <source>emptyPlaceholder.trackers</source>
         <target>What will we track?</target>
         <note>Text displayed on empty schedule</note>
       </trans-unit>
       <trans-unit id="enterCategoryName" xml:space="preserve">
-        <source>Enter category name</source>
+        <source>enterCategoryName</source>
         <target>Enter category name</target>
         <note>Enter category name placeholder text</note>
       </trans-unit>
       <trans-unit id="event" xml:space="preserve">
-        <source>Irregular event</source>
+        <source>event</source>
         <target>Irregular event</target>
         <note>Event button title</note>
       </trans-unit>
@@ -94,27 +114,27 @@
         <note>Every day</note>
       </trans-unit>
       <trans-unit id="filters" xml:space="preserve">
-        <source>Filters</source>
+        <source>filters</source>
         <target>Filters</target>
         <note>Filters button text</note>
       </trans-unit>
       <trans-unit id="habit" xml:space="preserve">
-        <source>Habit</source>
+        <source>habit</source>
         <target>Habit</target>
         <note>Habit button title</note>
       </trans-unit>
       <trans-unit id="newCategory" xml:space="preserve">
-        <source>New Category</source>
+        <source>newCategory</source>
         <target>New category</target>
         <note>New category page name</note>
       </trans-unit>
       <trans-unit id="newEvent" xml:space="preserve">
-        <source>New Event</source>
+        <source>newEvent</source>
         <target>New event</target>
         <note>New event page name</note>
       </trans-unit>
       <trans-unit id="newHabit" xml:space="preserve">
-        <source>New habit</source>
+        <source>newHabit</source>
         <target>New habit</target>
         <note>New habit page name</note>
       </trans-unit>
@@ -124,12 +144,12 @@
         <note>Number of checked days (Key in .stringsdict)</note>
       </trans-unit>
       <trans-unit id="onboardingPageViewController.proceedButton" xml:space="preserve">
-        <source>This is technology!</source>
+        <source>onboardingPageViewController.proceedButton</source>
         <target>This is technology!</target>
         <note>Onboarding screen proceed button text</note>
       </trans-unit>
       <trans-unit id="pin" xml:space="preserve">
-        <source>Pin</source>
+        <source>pin</source>
         <target>Pin</target>
         <note>Pin menu item text</note>
       </trans-unit>
@@ -139,43 +159,43 @@
         <note>Pinned group name</note>
       </trans-unit>
       <trans-unit id="ready" xml:space="preserve">
-        <source>Ready</source>
+        <source>ready</source>
         <target>Ready</target>
         <note>Ready button title</note>
       </trans-unit>
       <trans-unit id="schedule" xml:space="preserve">
-        <source>Schedule</source>
+        <source>schedule</source>
         <target>Schedule</target>
         <note>Schedule
    Schedule page name</note>
       </trans-unit>
       <trans-unit id="search" xml:space="preserve">
-        <source>Search</source>
+        <source>search</source>
         <target>Search</target>
         <note>Search bar placeholder text</note>
       </trans-unit>
       <trans-unit id="statistics" xml:space="preserve">
-        <source>Statistics</source>
+        <source>statistics</source>
         <target>Statistics</target>
         <note>Statistics tab bar text</note>
       </trans-unit>
       <trans-unit id="stringLengthLimit" xml:space="preserve">
-        <source>38 character limit</source>
+        <source>stringLengthLimit</source>
         <target>38 character limit</target>
         <note>Limit on tracker name length</note>
       </trans-unit>
       <trans-unit id="tracker.name" xml:space="preserve">
-        <source>Enter tracker name</source>
+        <source>tracker.name</source>
         <target>Enter tracker name</target>
         <note>Tracker name text field placeholder</note>
       </trans-unit>
       <trans-unit id="trackerCreation" xml:space="preserve">
-        <source>Tracker creation</source>
+        <source>trackerCreation</source>
         <target>Tracker creation</target>
         <note>Tracker creation page name</note>
       </trans-unit>
       <trans-unit id="trackers" xml:space="preserve">
-        <source>Trackers</source>
+        <source>trackers</source>
         <target>Trackers</target>
         <note>Trackers screen name
    Trackers tab bar text</note>

@@ -57,6 +57,10 @@ extension CategoryCoordinator {
             self.router.present(categoryCreateView)
         }
         
+        categorySelectCoordination.headForAlert = { [weak self] alertModel in
+            self?.router.presentActionSheet(alertModel: alertModel)
+        }
+        
         router.present(categorySelectView) { [weak self, weak categorySelectCoordination] in
             guard let categorySelectCoordination else { return }
             self?.finishFlow?(categorySelectCoordination.selectedCategory)

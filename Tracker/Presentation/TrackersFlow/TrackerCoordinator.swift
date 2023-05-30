@@ -78,6 +78,10 @@ private extension TrackerCoordinator {
             self?.router.presentAlert(message: message)
         }
         
+        trackersCoordination.headForAlert = { [weak self] alertModel in
+            self?.router.presentActionSheet(alertModel: alertModel)
+        }
+        
         router.addToTabBar(trackersView)
     }
 }
