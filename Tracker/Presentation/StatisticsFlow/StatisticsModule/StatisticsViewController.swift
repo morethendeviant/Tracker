@@ -9,6 +9,17 @@ import UIKit
 
 final class StatisticsViewController: UIViewController {
     
+    private lazy var statisticTableView: UITableView = {
+        let table = UITableView(frame: .zero, style: .insetGrouped)
+        table.delegate = self
+        table.isScrollEnabled = true
+        table.backgroundColor = Asset.ypWhite.color
+        table.tableHeaderView = UIView(frame: CGRect(x: 0, y: 0, width: 0, height: CGFloat.leastNonzeroMagnitude))
+        table.tableFooterView = UIView(frame: CGRect(x: 0, y: 0, width: 0, height: CGFloat.leastNonzeroMagnitude))
+        return table
+    }()
+    
+    
     init() {
         super.init(nibName: nil, bundle: nil)
         let tabBarItemText = NSLocalizedString("statistics", comment: "Statistics tab bar text")
@@ -25,6 +36,11 @@ final class StatisticsViewController: UIViewController {
         configure()
         applyLayout()
     }
+}
+
+
+extension StatisticsViewController: UITableViewDelegate {
+    
 }
 
 // MARK: - Subviews configure + layout

@@ -73,6 +73,7 @@
 		78F2FCCB2A23535B006AF3BE /* DefaultsStorageService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78F2FCCA2A23535B006AF3BE /* DefaultsStorageService.swift */; };
 		78F2FCD22A2664DA006AF3BE /* AlertModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78F2FCD12A2664DA006AF3BE /* AlertModel.swift */; };
 		78F2FCE42A267BC7006AF3BE /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 78F2FCE62A267BC7006AF3BE /* Localizable.strings */; };
+		78F2FCEB2A290387006AF3BE /* StatisticTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78F2FCEA2A290387006AF3BE /* StatisticTableViewCell.swift */; };
 		78FA52D82A1BCBCB00B0D17A /* UserDefaults+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78FA52D72A1BCBCB00B0D17A /* UserDefaults+Ext.swift */; };
 		9AC79607F76D379ADBACBB72 /* Pods_Tracker.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FCCAF17E388A0C56734E597A /* Pods_Tracker.framework */; };
 /* End PBXBuildFile section */
@@ -151,6 +152,7 @@
 		78F2FCE52A267BC7006AF3BE /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		78F2FCE72A267BCC006AF3BE /* ar */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ar; path = ar.lproj/Localizable.strings; sourceTree = "<group>"; };
 		78F2FCE82A267BCD006AF3BE /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/Localizable.strings; sourceTree = "<group>"; };
+		78F2FCEA2A290387006AF3BE /* StatisticTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatisticTableViewCell.swift; sourceTree = "<group>"; };
 		78FA52D72A1BCBCB00B0D17A /* UserDefaults+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UserDefaults+Ext.swift"; sourceTree = "<group>"; };
 		B824B7C24D27EBA6C253F24A /* Pods-Tracker.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Tracker.release.xcconfig"; path = "Target Support Files/Pods-Tracker/Pods-Tracker.release.xcconfig"; sourceTree = "<group>"; };
 		E21800AF72F71F5F6152929D /* Pods-Tracker.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Tracker.debug.xcconfig"; path = "Target Support Files/Pods-Tracker/Pods-Tracker.debug.xcconfig"; sourceTree = "<group>"; };
@@ -497,6 +499,7 @@
 		78AA53DC29D8CC0D0063EB84 /* StatisticsModule */ = {
 			isa = PBXGroup;
 			children = (
+				78F2FCE92A290334006AF3BE /* TableCell */,
 				78AA538D29D2028D0063EB84 /* StatisticsViewController.swift */,
 			);
 			path = StatisticsModule;
@@ -508,6 +511,14 @@
 				78F2FCB02A1BE447006AF3BE /* XCAssets+Generated.swift */,
 			);
 			path = Generated;
+			sourceTree = "<group>";
+		};
+		78F2FCE92A290334006AF3BE /* TableCell */ = {
+			isa = PBXGroup;
+			children = (
+				78F2FCEA2A290387006AF3BE /* StatisticTableViewCell.swift */,
+			);
+			path = TableCell;
 			sourceTree = "<group>";
 		};
 		AAF5142B53F7AC17091BCF81 /* Frameworks */ = {
@@ -692,6 +703,7 @@
 				7854D8E729F6EC3800CE6AE7 /* CategoriesDiffableDataSource.swift in Sources */,
 				78AA53AF29D768E60063EB84 /* ColorCollectionViewCell.swift in Sources */,
 				78AA539729D353990063EB84 /* BaseButton.swift in Sources */,
+				78F2FCEB2A290387006AF3BE /* StatisticTableViewCell.swift in Sources */,
 				78A706DC29DB2AC100932908 /* TrackerCreationTableModel.swift in Sources */,
 				7854D8E329F5A0C300CE6AE7 /* HabitCreationViewModel.swift in Sources */,
 				78AA53A229D6100A0063EB84 /* HabitCreationViewController.swift in Sources */,
