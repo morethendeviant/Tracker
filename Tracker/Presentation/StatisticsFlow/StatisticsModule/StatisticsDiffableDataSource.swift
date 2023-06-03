@@ -26,8 +26,3 @@ final class StatisticsDiffableDataSource: UITableViewDiffableDataSource<Int, Sta
         apply(snapshot, animatingDifferences: animated)
     }
 }
-                                              
-struct StatisticsModel: Hashable {
-    let number: Int
-    let title: String
-}
