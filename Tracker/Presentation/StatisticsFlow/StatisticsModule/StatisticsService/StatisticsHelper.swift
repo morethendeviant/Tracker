@@ -24,7 +24,6 @@ extension StatisticsHelper: StatisticsHelperProtocol {
     func getStatistics() throws -> [StatisticsEntityModel] {
         let (trackers, records) = try dataProvider.loadRawDataForStatistics()
         var recordsDatesSet: [Date: Int] = [:]
-        print(records)
         records.forEach { record in
             if recordsDatesSet[record.date] == nil {
                 recordsDatesSet[record.date] = 1

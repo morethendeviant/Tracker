@@ -21,7 +21,7 @@
 			<key>other</key>
 			<string>%d дней</string>
 			<key>zero</key>
-			<string>%d days</string>
+			<string>%d дней</string>
 		</dict>
 	</dict>
 </dict>
