@@ -20,11 +20,14 @@ protocol ModulesFactoryProtocol {
 }
 
 final class ModulesFactory: ModulesFactoryProtocol {
+    let analyticsService = AnalyticsService()
     
     func makeTrackersView() -> (view: Presentable, coordination: TrackersViewCoordination) {
         let dataProvider: TrackerDataStoreProtocol = DataStore()
         let viewModel = TrackersListViewModel(dataProvider: dataProvider)
-        let view = TrackersViewController(viewModel: viewModel, diffableDataSourceProvider: viewModel)
+        let view = TrackersViewController(viewModel: viewModel,
+                                          diffableDataSourceProvider: viewModel,
+                                          analyticsService: analyticsService)
         return (view, viewModel)
     }
     

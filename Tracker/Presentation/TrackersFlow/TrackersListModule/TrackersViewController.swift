@@ -12,11 +12,13 @@ final class TrackersViewController: UIViewController {
     
     private let viewModel: TrackersListViewModelProtocol
     private let diffableDataSourceProvider: TrackersDataSourceProvider
+    private let analyticsService: AnalyticsService
     
     private lazy var diffableDataSource: TrackerListDiffableDataSource = {
         let dataSource = TrackerListDiffableDataSource(trackersCollectionView,
                                                        dataSourceProvider: diffableDataSourceProvider,
-                                                       interactionDelegate: self)
+                                                       interactionDelegate: self,
+                                                       analyticsService: analyticsService)
         return dataSource
     }()
     
@@ -97,12 +99,16 @@ final class TrackersViewController: UIViewController {
         button.setTitle(buttonTitle, for: .normal)
         button.backgroundColor = Asset.ypBlue.color
         button.titleLabel?.font = .systemFont(ofSize: 17)
+        button.addTarget(nil, action: #selector(filterButtonTapped), for: .touchUpInside)
         return button
     }()
     
-    init(viewModel: TrackersListViewModelProtocol, diffableDataSourceProvider: TrackersDataSourceProvider) {
+    init(viewModel: TrackersListViewModelProtocol,
+         diffableDataSourceProvider: TrackersDataSourceProvider,
+         analyticsService: AnalyticsService) {
         self.viewModel = viewModel
         self.diffableDataSourceProvider = diffableDataSourceProvider
+        self.analyticsService = analyticsService
         super.init(nibName: nil, bundle: nil)
         let tabBarItemText = NSLocalizedString("trackers", comment: "Trackers tab bar text")
         self.tabBarItem = UITabBarItem(title: tabBarItemText, image: Asset.recordCircleFill.image, tag: 0)
@@ -126,6 +132,12 @@ final class TrackersViewController: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         viewModel.dateChangedTo(datePicker.date)
+        analyticsService.reportEvent(event: .open, screen: .trackersList)
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        analyticsService.reportEvent(event: .close, screen: .trackersList)
     }
 }
 
@@ -134,7 +146,12 @@ final class TrackersViewController: UIViewController {
 @objc private extension TrackersViewController {
     func plusButtonTapped() {
         searchBar.resignFirstResponder()
+        analyticsService.reportEvent(event: .tap, screen: .trackersList, item: .addTracker)
         viewModel.plusButtonTapped()
+    }
+    
+    func filterButtonTapped() {
+        analyticsService.reportEvent(event: .tap, screen: .trackersList, item: .filter)
     }
     
     func dateChanged() {
@@ -289,11 +306,13 @@ extension TrackersViewController: UIContextMenuInteractionDelegate {
             
             let editItemText = NSLocalizedString("edit", comment: "Edit menu item text")
             let edit = UIAction(title: editItemText, image: UIImage(systemName: "pencil")) { _ in
+                self.analyticsService.reportEvent(event: .tap, screen: .trackersList, item: .edit)
                 self.viewModel.editTrackerAt(indexPath: indexPath)
             }
             
             let deleteItemText = NSLocalizedString("delete", comment: "Delete menu item text")
             let delete = UIAction(title: deleteItemText, image: UIImage(systemName: "trash.fill"), attributes: .destructive) { _ in
+                self.analyticsService.reportEvent(event: .tap, screen: .trackersList, item: .delete)
                 self.viewModel.deleteTrackerAt(indexPath: indexPath)
             }
             

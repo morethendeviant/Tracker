@@ -63,6 +63,7 @@
 		78AA53D429D8A3730063EB84 /* AppCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78AA53D329D8A3730063EB84 /* AppCoordinator.swift */; };
 		78AA53D629D8A56B0063EB84 /* StatisticsFlowCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78AA53D529D8A56B0063EB84 /* StatisticsFlowCoordinator.swift */; };
 		78AA53DB29D8A6D40063EB84 /* TrackerCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78AA53DA29D8A6D40063EB84 /* TrackerCoordinator.swift */; };
+		78C0A5E32A2B655F0021144A /* AnalyticsService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78C0A5E22A2B655F0021144A /* AnalyticsService.swift */; };
 		78C2689829E88BC700E8B6EC /* TrackerManagedObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78C2689729E88BC700E8B6EC /* TrackerManagedObject.swift */; };
 		78C2689A29E8924600E8B6EC /* TrackerRecordManagedObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78C2689929E8924600E8B6EC /* TrackerRecordManagedObject.swift */; };
 		78C2689E29E9BD5900E8B6EC /* TrackerCategoryManagedObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78C2689D29E9BD5900E8B6EC /* TrackerCategoryManagedObject.swift */; };
@@ -154,6 +155,7 @@
 		78AA53D329D8A3730063EB84 /* AppCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppCoordinator.swift; sourceTree = "<group>"; };
 		78AA53D529D8A56B0063EB84 /* StatisticsFlowCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatisticsFlowCoordinator.swift; sourceTree = "<group>"; };
 		78AA53DA29D8A6D40063EB84 /* TrackerCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackerCoordinator.swift; sourceTree = "<group>"; };
+		78C0A5E22A2B655F0021144A /* AnalyticsService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalyticsService.swift; sourceTree = "<group>"; };
 		78C2689729E88BC700E8B6EC /* TrackerManagedObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackerManagedObject.swift; sourceTree = "<group>"; };
 		78C2689929E8924600E8B6EC /* TrackerRecordManagedObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackerRecordManagedObject.swift; sourceTree = "<group>"; };
 		78C2689D29E9BD5900E8B6EC /* TrackerCategoryManagedObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackerCategoryManagedObject.swift; sourceTree = "<group>"; };
@@ -493,6 +495,7 @@
 				78AA53D329D8A3730063EB84 /* AppCoordinator.swift */,
 				78AA53C429D894800063EB84 /* ModulesFactory.swift */,
 				78AA53CD29D8A11B0063EB84 /* Router.swift */,
+				78C0A5E22A2B655F0021144A /* AnalyticsService.swift */,
 			);
 			path = AppBasic;
 			sourceTree = "<group>";
@@ -617,6 +620,7 @@
 				780BF38229D0EA6E00A3CFA0 /* Frameworks */,
 				780BF38329D0EA6E00A3CFA0 /* Resources */,
 				786BF14A29ED766B009317E5 /* SwiftLint */,
+				557EC40878A22ACA70894C6B /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -741,6 +745,23 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
+		557EC40878A22ACA70894C6B /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Tracker/Pods-Tracker-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Tracker/Pods-Tracker-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Tracker/Pods-Tracker-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
 		786BF14A29ED766B009317E5 /* SwiftLint */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -806,6 +827,7 @@
 				78AA53AF29D768E60063EB84 /* ColorCollectionViewCell.swift in Sources */,
 				78AA539729D353990063EB84 /* BaseButton.swift in Sources */,
 				78F2FCEB2A290387006AF3BE /* StatisticTableViewCell.swift in Sources */,
+				78C0A5E32A2B655F0021144A /* AnalyticsService.swift in Sources */,
 				78A706DC29DB2AC100932908 /* TrackerCreationTableModel.swift in Sources */,
 				7854D8E329F5A0C300CE6AE7 /* HabitCreationViewModel.swift in Sources */,
 				78AA53A229D6100A0063EB84 /* HabitCreationViewController.swift in Sources */,

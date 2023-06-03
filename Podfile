@@ -6,5 +6,6 @@ target 'Tracker' do
   use_frameworks!
 
   pod 'SwiftGen', '~> 6.0'
+  pod 'YandexMobileMetrica/Dynamic', '4.5.0'
 
 end

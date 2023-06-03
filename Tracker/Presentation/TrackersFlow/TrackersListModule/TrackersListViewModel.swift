@@ -62,8 +62,7 @@ final class TrackersListViewModel: TrackersViewCoordination {
     var headForTrackerSelect: (() -> Void)?
     var headForError: ((String) -> Void)?
     
-    private var dataProvider: TrackerDataStoreProtocol
-    
+    private let dataProvider: TrackerDataStoreProtocol
     private(set) var date: Date = Date()
     private(set) var searchText: String?
     
