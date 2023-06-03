@@ -213,6 +213,11 @@
         <target>اكتملت أجهزة التعقب</target>
         <note>Statistic finished trackers amount text</note>
       </trans-unit>
+      <trans-unit id="trackers.ideal" xml:space="preserve">
+        <source>Perfect days</source>
+        <target>أيام مثالية</target>
+        <note>Statistic ideal days amount text</note>
+      </trans-unit>
       <trans-unit id="trackers.total" xml:space="preserve">
         <source>Total trackers</source>
         <target>مجموع بتتبع</target>

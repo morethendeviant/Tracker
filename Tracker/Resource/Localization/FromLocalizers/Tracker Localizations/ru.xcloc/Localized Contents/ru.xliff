@@ -214,6 +214,11 @@
         <target>Трекеров завершено</target>
         <note>Statistic finished trackers amount text</note>
       </trans-unit>
+      <trans-unit id="trackers.ideal" xml:space="preserve">
+        <source>Perfect days</source>
+        <target>Идеальны</target>
+        <note>Statistic ideal days amount text</note>
+      </trans-unit>
       <trans-unit id="trackers.total" xml:space="preserve">
         <source>Total trackers</source>
         <target>Всего трекеров</target>

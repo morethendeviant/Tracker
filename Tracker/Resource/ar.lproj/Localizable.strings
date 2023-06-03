@@ -112,6 +112,9 @@
 /* Statistic finished trackers amount text */
 "trackers.finished" = "اكتملت أجهزة التعقب";
 
+/* Statistic ideal days amount text */
+"trackers.ideal" = "أيام مثالية";
+
 /* Statistic total trackers amount text */
 "trackers.total" = "مجموع بتتبع";
 

@@ -54,15 +54,15 @@ private extension StatisticsViewModel {
                 switch $0 {
                 case .finished(let amount):
                     let text = NSLocalizedString("trackers.finished", comment: "Statistic finished trackers amount text")
-                    return amount == 0 ? nil : StatisticsModel(number: String(amount),
+                    return amount == 0 ? nil : StatisticsModel(number: amount,
                                                                title: text)
                 case .trackers(let amount):
                     let text = NSLocalizedString("trackers.total", comment: "Statistic total trackers amount text")
-                    return amount == 0 ? nil : StatisticsModel(number: String(amount),
+                    return amount == 0 ? nil : StatisticsModel(number: amount,
                                                                title: text)
                 case .idealDays(let amount):
                     let text = NSLocalizedString("trackers.ideal", comment: "Statistic ideal days amount text")
-                    return amount == 0 ? nil : StatisticsModel(number: String(amount),
+                    return amount == 0 ? nil : StatisticsModel(number: amount,
                                                                title: text)
                 }
             }

@@ -13,10 +13,18 @@ final class StatisticsTableViewCell: UITableViewCell {
     
     var model: StatisticsModel? {
         didSet {
-            numberLabel.text = model?.number
-            titleLabel.text = model?.title
+            guard let model else { return }
+            numberLabel.text = numberFormatter.string(from: NSNumber(value: model.number))
+            titleLabel.text = model.title
         }
     }
+    
+    private let numberFormatter: NumberFormatter = {
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .decimal
+        formatter.locale = Locale.current
+        return formatter
+    }()
     
     private var gradientColors: [UIColor] = [Asset.gradientRed.color,
                                              Asset.gradientGreen.color,
@@ -25,14 +33,12 @@ final class StatisticsTableViewCell: UITableViewCell {
     private lazy var numberLabel: UILabel = {
         let label = UILabel()
         label.font = .boldSystemFont(ofSize: 34)
-        label.textAlignment = .left
         return label
     }()
     
     private lazy var titleLabel: UILabel = {
         let label = UILabel()
         label.font = .systemFont(ofSize: 12, weight: .medium)
-        label.textAlignment = .left
         return label
     }()
     

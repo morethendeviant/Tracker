@@ -115,6 +115,9 @@
 /* Statistic finished trackers amount text */
 "trackers.finished" = "Трекеров завершено";
 
+/* Statistic ideal days amount text */
+"trackers.ideal" = "Идеальны";
+
 /* Statistic total trackers amount text */
 "trackers.total" = "Всего трекеров";
 

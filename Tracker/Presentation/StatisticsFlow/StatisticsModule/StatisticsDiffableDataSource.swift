@@ -28,6 +28,6 @@ final class StatisticsDiffableDataSource: UITableViewDiffableDataSource<Int, Sta
 }
                                               
 struct StatisticsModel: Hashable {
-    let number: String
+    let number: Int
     let title: String
 }

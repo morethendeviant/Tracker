@@ -94,7 +94,7 @@
         <note>Text displayed on empty search</note>
       </trans-unit>
       <trans-unit id="emptyPlaceholder.statistics" xml:space="preserve">
-        <source>emptyPlaceholder.statistics</source>
+        <source>Nothing to analyze</source>
         <target>Nothing to analyze</target>
         <note>Text displayed on empty statistics</note>
       </trans-unit>
@@ -180,7 +180,7 @@
         <note>Search bar placeholder text</note>
       </trans-unit>
       <trans-unit id="statistic" xml:space="preserve">
-        <source>statistic</source>
+        <source>Statistics</source>
         <target>Statistics</target>
         <note>Statistic screen name</note>
       </trans-unit>
@@ -211,12 +211,17 @@
    Trackers tab bar text</note>
       </trans-unit>
       <trans-unit id="trackers.finished" xml:space="preserve">
-        <source>trackers.finished</source>
+        <source>Trackers completed</source>
         <target>Trackers completed</target>
         <note>Statistic finished trackers amount text</note>
       </trans-unit>
+      <trans-unit id="trackers.ideal" xml:space="preserve">
+        <source>trackers.ideal</source>
+        <target>Perfect days</target>
+        <note>Statistic ideal days amount text</note>
+      </trans-unit>
       <trans-unit id="trackers.total" xml:space="preserve">
-        <source>trackers.total</source>
+        <source>Total trackers</source>
         <target>Total trackers</target>
         <note>Statistic total trackers amount text</note>
       </trans-unit>
