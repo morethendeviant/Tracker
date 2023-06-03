@@ -44,7 +44,9 @@ extension ContentPlaceholder {
         case .search:
             imageView.image = Asset.notFound.image
             label.text = NSLocalizedString("emptyPlaceholder.search", comment: "Text displayed on empty search")
-        case .statistics: break
+        case .statistics:
+            imageView.image = Asset.statistics.image
+            label.text = NSLocalizedString("emptyPlaceholder.statistics", comment: "Text displayed on empty statistics")
         }
     }
 }

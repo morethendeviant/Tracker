@@ -32,6 +32,10 @@ protocol TrackerDataStoreProtocol {
     func setTracker(_ tracker: Tracker, pinned: Bool) throws
 }
 
+protocol StatisticsDataStoreProtocol {
+    func loadRawDataForStatistics() throws -> (trackers: [TrackerManagedObject], records: [TrackerRecordManagedObject])
+}
+
 // MARK: - Data Store
 
 final class DataStore {
@@ -155,5 +159,19 @@ extension DataStore: TrackerDataStoreProtocol {
         let trackerObject = try getTracker(tracker.id)
         trackerObject?.isPinned = pinned
         try context.save()
+    }
+}
+
+extension DataStore: StatisticsDataStoreProtocol {
+    func loadRawDataForStatistics() throws -> (trackers: [TrackerManagedObject], records: [TrackerRecordManagedObject]) {
+        let trackersRequest = NSFetchRequest<TrackerManagedObject>(entityName: "TrackerCoreData")
+        trackersRequest.returnsObjectsAsFaults = false
+        let trackers = try context.fetch(trackersRequest)
+        
+        let recordsRequest = NSFetchRequest<TrackerRecordManagedObject>(entityName: "TrackerRecordCoreData")
+        recordsRequest.returnsObjectsAsFaults = false
+        let records = try context.fetch(recordsRequest)
+        
+        return (trackers: trackers, records: records)
     }
 }

@@ -23,7 +23,6 @@ final class OnboardingPageViewController: UIPageViewController, OnboardingPageVi
         let pageControl = UIPageControl()
         pageControl.numberOfPages = pages.count
         pageControl.currentPage = 0
-        
         pageControl.currentPageIndicatorTintColor = Asset.ypBlack.color
         pageControl.pageIndicatorTintColor = Asset.ypGray.color
         
@@ -34,6 +33,7 @@ final class OnboardingPageViewController: UIPageViewController, OnboardingPageVi
         let buttonText = NSLocalizedString("onboardingPageViewController.proceedButton", comment: "Onboarding screen proceed button text")
         let button = BaseButton(style: .confirm, text: buttonText)
         button.addTarget(nil, action: #selector(proceedButtonTapped), for: .touchUpInside)
+        button.overrideUserInterfaceStyle = .light
         return button
     }()
 

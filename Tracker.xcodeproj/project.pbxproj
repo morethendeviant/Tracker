@@ -74,6 +74,11 @@
 		78F2FCD22A2664DA006AF3BE /* AlertModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78F2FCD12A2664DA006AF3BE /* AlertModel.swift */; };
 		78F2FCE42A267BC7006AF3BE /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 78F2FCE62A267BC7006AF3BE /* Localizable.strings */; };
 		78F2FCEB2A290387006AF3BE /* StatisticTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78F2FCEA2A290387006AF3BE /* StatisticTableViewCell.swift */; };
+		78F2FCEE2A290CA8006AF3BE /* StatisticsDiffableDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78F2FCED2A290CA8006AF3BE /* StatisticsDiffableDataSource.swift */; };
+		78F2FCF02A2A3758006AF3BE /* StatisticsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78F2FCEF2A2A3758006AF3BE /* StatisticsViewModel.swift */; };
+		78F2FCF22A2A37FF006AF3BE /* UIImage + Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78F2FCF12A2A37FF006AF3BE /* UIImage + Ext.swift */; };
+		78F2FCF42A2A43A5006AF3BE /* StatisticsEntityModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78F2FCF32A2A43A5006AF3BE /* StatisticsEntityModel.swift */; };
+		78F2FCF72A2B2CEB006AF3BE /* StatisticsHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78F2FCF62A2B2CEB006AF3BE /* StatisticsHelper.swift */; };
 		78FA52D82A1BCBCB00B0D17A /* UserDefaults+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78FA52D72A1BCBCB00B0D17A /* UserDefaults+Ext.swift */; };
 		9AC79607F76D379ADBACBB72 /* Pods_Tracker.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FCCAF17E388A0C56734E597A /* Pods_Tracker.framework */; };
 /* End PBXBuildFile section */
@@ -153,6 +158,11 @@
 		78F2FCE72A267BCC006AF3BE /* ar */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ar; path = ar.lproj/Localizable.strings; sourceTree = "<group>"; };
 		78F2FCE82A267BCD006AF3BE /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/Localizable.strings; sourceTree = "<group>"; };
 		78F2FCEA2A290387006AF3BE /* StatisticTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatisticTableViewCell.swift; sourceTree = "<group>"; };
+		78F2FCED2A290CA8006AF3BE /* StatisticsDiffableDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatisticsDiffableDataSource.swift; sourceTree = "<group>"; };
+		78F2FCEF2A2A3758006AF3BE /* StatisticsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatisticsViewModel.swift; sourceTree = "<group>"; };
+		78F2FCF12A2A37FF006AF3BE /* UIImage + Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage + Ext.swift"; sourceTree = "<group>"; };
+		78F2FCF32A2A43A5006AF3BE /* StatisticsEntityModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatisticsEntityModel.swift; sourceTree = "<group>"; };
+		78F2FCF62A2B2CEB006AF3BE /* StatisticsHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatisticsHelper.swift; sourceTree = "<group>"; };
 		78FA52D72A1BCBCB00B0D17A /* UserDefaults+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UserDefaults+Ext.swift"; sourceTree = "<group>"; };
 		B824B7C24D27EBA6C253F24A /* Pods-Tracker.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Tracker.release.xcconfig"; path = "Target Support Files/Pods-Tracker/Pods-Tracker.release.xcconfig"; sourceTree = "<group>"; };
 		E21800AF72F71F5F6152929D /* Pods-Tracker.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Tracker.debug.xcconfig"; path = "Target Support Files/Pods-Tracker/Pods-Tracker.debug.xcconfig"; sourceTree = "<group>"; };
@@ -308,6 +318,7 @@
 			children = (
 				78AA538929D1FD320063EB84 /* UIColor + Ext.swift */,
 				78AA53C629D894980063EB84 /* UIViewController + Ext.swift */,
+				78F2FCF12A2A37FF006AF3BE /* UIImage + Ext.swift */,
 			);
 			path = UI;
 			sourceTree = "<group>";
@@ -499,8 +510,12 @@
 		78AA53DC29D8CC0D0063EB84 /* StatisticsModule */ = {
 			isa = PBXGroup;
 			children = (
+				78F2FCF52A2B2CCB006AF3BE /* StatisticsService */,
+				78F2FCEC2A290C7C006AF3BE /* Model */,
 				78F2FCE92A290334006AF3BE /* TableCell */,
 				78AA538D29D2028D0063EB84 /* StatisticsViewController.swift */,
+				78F2FCEF2A2A3758006AF3BE /* StatisticsViewModel.swift */,
+				78F2FCED2A290CA8006AF3BE /* StatisticsDiffableDataSource.swift */,
 			);
 			path = StatisticsModule;
 			sourceTree = "<group>";
@@ -519,6 +534,22 @@
 				78F2FCEA2A290387006AF3BE /* StatisticTableViewCell.swift */,
 			);
 			path = TableCell;
+			sourceTree = "<group>";
+		};
+		78F2FCEC2A290C7C006AF3BE /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				78F2FCF32A2A43A5006AF3BE /* StatisticsEntityModel.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		78F2FCF52A2B2CCB006AF3BE /* StatisticsService */ = {
+			isa = PBXGroup;
+			children = (
+				78F2FCF62A2B2CEB006AF3BE /* StatisticsHelper.swift */,
+			);
+			path = StatisticsService;
 			sourceTree = "<group>";
 		};
 		AAF5142B53F7AC17091BCF81 /* Frameworks */ = {
@@ -693,6 +724,7 @@
 				784BCA7629E85BDD00D1A14E /* TrackerCoreDataModel.xcdatamodeld in Sources */,
 				780BF38929D0EA6F00A3CFA0 /* AppDelegate.swift in Sources */,
 				786BF14229EC41F4009317E5 /* Context.swift in Sources */,
+				78F2FCF22A2A37FF006AF3BE /* UIImage + Ext.swift in Sources */,
 				78A7070629DDC95000932908 /* TrackerCollectionFooter.swift in Sources */,
 				78A706D829DA082C00932908 /* EmojiModel.swift in Sources */,
 				78AA538A29D1FD320063EB84 /* UIColor + Ext.swift in Sources */,
@@ -701,6 +733,7 @@
 				7854D8EB29F99EFA00CE6AE7 /* TrackerListDiffableDataSource.swift in Sources */,
 				786BF14029EC38EA009317E5 /* DataStore.swift in Sources */,
 				7854D8E729F6EC3800CE6AE7 /* CategoriesDiffableDataSource.swift in Sources */,
+				78F2FCF02A2A3758006AF3BE /* StatisticsViewModel.swift in Sources */,
 				78AA53AF29D768E60063EB84 /* ColorCollectionViewCell.swift in Sources */,
 				78AA539729D353990063EB84 /* BaseButton.swift in Sources */,
 				78F2FCEB2A290387006AF3BE /* StatisticTableViewCell.swift in Sources */,
@@ -712,6 +745,7 @@
 				786BF15629F42189009317E5 /* CategorySelectViewModel.swift in Sources */,
 				78AA53D229D8A2340063EB84 /* CoordinatorFactory.swift in Sources */,
 				78FA52D82A1BCBCB00B0D17A /* UserDefaults+Ext.swift in Sources */,
+				78F2FCF72A2B2CEB006AF3BE /* StatisticsHelper.swift in Sources */,
 				78AA539C29D361660063EB84 /* TrackerCollectionViewCell.swift in Sources */,
 				78F2FCD22A2664DA006AF3BE /* AlertModel.swift in Sources */,
 				78AA538829D1FC0E0063EB84 /* MainTabBarController.swift in Sources */,
@@ -731,7 +765,9 @@
 				786BF15329F1B5F4009317E5 /* OnboardingPageViewController.swift in Sources */,
 				78C2689A29E8924600E8B6EC /* TrackerRecordManagedObject.swift in Sources */,
 				78AA539929D3579B0063EB84 /* ContentPlaceholder.swift in Sources */,
+				78F2FCEE2A290CA8006AF3BE /* StatisticsDiffableDataSource.swift in Sources */,
 				78AA53CE29D8A11B0063EB84 /* Router.swift in Sources */,
+				78F2FCF42A2A43A5006AF3BE /* StatisticsEntityModel.swift in Sources */,
 				78AA53C529D894800063EB84 /* ModulesFactory.swift in Sources */,
 				78A706CF29D98B7900932908 /* EventCreationCoordinator.swift in Sources */,
 				786BF14C29EF01B8009317E5 /* CategoryCreateViewController.swift in Sources */,

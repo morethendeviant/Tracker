@@ -18,123 +18,128 @@
     </header>
     <body>
       <trans-unit id="addCategory" xml:space="preserve">
-        <source>addCategory</source>
+        <source>Add category</source>
         <target>Add category</target>
         <note>Add category button text</note>
       </trans-unit>
       <trans-unit id="backgroundImage.blue.description" xml:space="preserve">
-        <source>backgroundImage.blue.description</source>
+        <source>Track only what you want</source>
         <target>Track only what you want</target>
         <note>Blue onboarding screen text</note>
       </trans-unit>
       <trans-unit id="backgroundImage.red.description" xml:space="preserve">
-        <source>backgroundImage.red.description</source>
+        <source>Even if it's not liters of water or yoga</source>
         <target>Even if it's not liters of water or yoga</target>
         <note>Red onboarding screen text</note>
       </trans-unit>
       <trans-unit id="cancel" xml:space="preserve">
-        <source>cancel</source>
+        <source>Cancel</source>
         <target>Cancel</target>
         <note>Cancel button title</note>
       </trans-unit>
       <trans-unit id="cancelActionText" xml:space="preserve">
-        <source>cancelActionText</source>
+        <source>Cancel</source>
         <target>Cancel</target>
         <note>Text for alert cancel button</note>
       </trans-unit>
       <trans-unit id="category" xml:space="preserve">
-        <source>category</source>
+        <source>Category</source>
         <target>Category</target>
         <note>Categories page name
    Category</note>
       </trans-unit>
       <trans-unit id="colors" xml:space="preserve">
-        <source>colors</source>
+        <source>Colors</source>
         <target>Colors</target>
         <note>Colors section label text</note>
       </trans-unit>
       <trans-unit id="create" xml:space="preserve">
-        <source>create</source>
+        <source>Create</source>
         <target>Create</target>
         <note>Create button title</note>
       </trans-unit>
       <trans-unit id="delete" xml:space="preserve">
-        <source>delete</source>
+        <source>Delete</source>
         <target>Delete</target>
         <note>Delete menu item text</note>
       </trans-unit>
       <trans-unit id="deleteActionText" xml:space="preserve">
-        <source>deleteActionText</source>
+        <source>Delete</source>
         <target>Delete</target>
         <note>Text for alert delete button</note>
       </trans-unit>
       <trans-unit id="deleteAlertText" xml:space="preserve">
-        <source>deleteAlertText</source>
+        <source>Is this category really not needed?</source>
         <target>Is this category really not needed?</target>
         <note>Text for delete alert</note>
       </trans-unit>
       <trans-unit id="deleteTrackerAlertText" xml:space="preserve">
-        <source>deleteTrackerAlertText</source>
+        <source>Are you sure you want to delete the tracker?</source>
         <target>Are you sure you want to delete the tracker?</target>
         <note>Text for tracker delete alert</note>
       </trans-unit>
       <trans-unit id="edit" xml:space="preserve">
-        <source>edit</source>
+        <source>Edit</source>
         <target>Edit</target>
         <note>Edit menu item text</note>
       </trans-unit>
       <trans-unit id="emoji" xml:space="preserve">
-        <source>emoji</source>
+        <source>Emoji</source>
         <target>Emoji</target>
         <note>Emoji section label text</note>
       </trans-unit>
       <trans-unit id="emptyPlaceholder.search" xml:space="preserve">
-        <source>emptyPlaceholder.search</source>
+        <source>Nothing found</source>
         <target>Nothing found</target>
         <note>Text displayed on empty search</note>
       </trans-unit>
+      <trans-unit id="emptyPlaceholder.statistics" xml:space="preserve">
+        <source>emptyPlaceholder.statistics</source>
+        <target>Nothing to analyze</target>
+        <note>Text displayed on empty statistics</note>
+      </trans-unit>
       <trans-unit id="emptyPlaceholder.trackers" xml:space="preserve">
-        <source>emptyPlaceholder.trackers</source>
+        <source>What will we track?</source>
         <target>What will we track?</target>
         <note>Text displayed on empty schedule</note>
       </trans-unit>
       <trans-unit id="enterCategoryName" xml:space="preserve">
-        <source>enterCategoryName</source>
+        <source>Enter category name</source>
         <target>Enter category name</target>
         <note>Enter category name placeholder text</note>
       </trans-unit>
       <trans-unit id="event" xml:space="preserve">
-        <source>event</source>
+        <source>Irregular event</source>
         <target>Irregular event</target>
         <note>Event button title</note>
       </trans-unit>
       <trans-unit id="everyDay" xml:space="preserve">
-        <source>everyDay</source>
+        <source>Every dat</source>
         <target>Every dat</target>
         <note>Every day</note>
       </trans-unit>
       <trans-unit id="filters" xml:space="preserve">
-        <source>filters</source>
+        <source>Filters</source>
         <target>Filters</target>
         <note>Filters button text</note>
       </trans-unit>
       <trans-unit id="habit" xml:space="preserve">
-        <source>habit</source>
+        <source>Habit</source>
         <target>Habit</target>
         <note>Habit button title</note>
       </trans-unit>
       <trans-unit id="newCategory" xml:space="preserve">
-        <source>newCategory</source>
+        <source>New category</source>
         <target>New category</target>
         <note>New category page name</note>
       </trans-unit>
       <trans-unit id="newEvent" xml:space="preserve">
-        <source>newEvent</source>
+        <source>New event</source>
         <target>New event</target>
         <note>New event page name</note>
       </trans-unit>
       <trans-unit id="newHabit" xml:space="preserve">
-        <source>newHabit</source>
+        <source>New habit</source>
         <target>New habit</target>
         <note>New habit page name</note>
       </trans-unit>
@@ -144,64 +149,79 @@
         <note>Number of checked days (Key in .stringsdict)</note>
       </trans-unit>
       <trans-unit id="onboardingPageViewController.proceedButton" xml:space="preserve">
-        <source>onboardingPageViewController.proceedButton</source>
+        <source>This is technology!</source>
         <target>This is technology!</target>
         <note>Onboarding screen proceed button text</note>
       </trans-unit>
       <trans-unit id="pin" xml:space="preserve">
-        <source>pin</source>
+        <source>Pin</source>
         <target>Pin</target>
         <note>Pin menu item text</note>
       </trans-unit>
       <trans-unit id="pinned" xml:space="preserve">
-        <source>pinned</source>
+        <source>Pinned</source>
         <target>Pinned</target>
         <note>Pinned group name</note>
       </trans-unit>
       <trans-unit id="ready" xml:space="preserve">
-        <source>ready</source>
+        <source>Ready</source>
         <target>Ready</target>
         <note>Ready button title</note>
       </trans-unit>
       <trans-unit id="schedule" xml:space="preserve">
-        <source>schedule</source>
+        <source>Schedule</source>
         <target>Schedule</target>
         <note>Schedule
    Schedule page name</note>
       </trans-unit>
       <trans-unit id="search" xml:space="preserve">
-        <source>search</source>
+        <source>Search</source>
         <target>Search</target>
         <note>Search bar placeholder text</note>
       </trans-unit>
+      <trans-unit id="statistic" xml:space="preserve">
+        <source>statistic</source>
+        <target>Statistics</target>
+        <note>Statistic screen name</note>
+      </trans-unit>
       <trans-unit id="statistics" xml:space="preserve">
-        <source>statistics</source>
+        <source>Statistics</source>
         <target>Statistics</target>
         <note>Statistics tab bar text</note>
       </trans-unit>
       <trans-unit id="stringLengthLimit" xml:space="preserve">
-        <source>stringLengthLimit</source>
+        <source>38 character limit</source>
         <target>38 character limit</target>
         <note>Limit on tracker name length</note>
       </trans-unit>
       <trans-unit id="tracker.name" xml:space="preserve">
-        <source>tracker.name</source>
+        <source>Enter tracker name</source>
         <target>Enter tracker name</target>
         <note>Tracker name text field placeholder</note>
       </trans-unit>
       <trans-unit id="trackerCreation" xml:space="preserve">
-        <source>trackerCreation</source>
+        <source>Tracker creation</source>
         <target>Tracker creation</target>
         <note>Tracker creation page name</note>
       </trans-unit>
       <trans-unit id="trackers" xml:space="preserve">
-        <source>trackers</source>
+        <source>Trackers</source>
         <target>Trackers</target>
         <note>Trackers screen name
    Trackers tab bar text</note>
       </trans-unit>
+      <trans-unit id="trackers.finished" xml:space="preserve">
+        <source>trackers.finished</source>
+        <target>Trackers completed</target>
+        <note>Statistic finished trackers amount text</note>
+      </trans-unit>
+      <trans-unit id="trackers.total" xml:space="preserve">
+        <source>trackers.total</source>
+        <target>Total trackers</target>
+        <note>Statistic total trackers amount text</note>
+      </trans-unit>
       <trans-unit id="unPin" xml:space="preserve">
-        <source>unPin</source>
+        <source>Unpin</source>
         <target>Unpin</target>
         <note>Unpin menu item text</note>
       </trans-unit>

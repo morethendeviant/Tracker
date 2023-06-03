@@ -44,6 +44,9 @@
 /* Text displayed on empty search */
 "emptyPlaceholder.search" = "Nothing found";
 
+/* Text displayed on empty statistics */
+"emptyPlaceholder.statistics" = "Nothing to analyze";
+
 /* Text displayed on empty schedule */
 "emptyPlaceholder.trackers" = "What will we track?";
 
@@ -90,6 +93,9 @@
 /* Search bar placeholder text */
 "search" = "Search";
 
+/* Statistic screen name */
+"statistic" = "Statistics";
+
 /* Statistics tab bar text */
 "statistics" = "Statistics";
 
@@ -105,6 +111,12 @@
 /* Trackers screen name
    Trackers tab bar text */
 "trackers" = "Trackers";
+
+/* Statistic finished trackers amount text */
+"trackers.finished" = "Trackers completed";
+
+/* Statistic total trackers amount text */
+"trackers.total" = "Total trackers";
 
 /* Unpin menu item text */
 "unPin" = "Unpin";

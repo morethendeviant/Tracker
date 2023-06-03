@@ -17,6 +17,7 @@ final class OnboardingViewController: UIViewController {
         label.lineBreakMode = .byWordWrapping
         label.numberOfLines = 0
         label.textAlignment = .center
+        label.overrideUserInterfaceStyle = .light
         return label
     }()
 

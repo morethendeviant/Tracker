@@ -44,6 +44,9 @@
 /* Text displayed on empty search */
 "emptyPlaceholder.search" = "Ничего не найдено";
 
+/* Text displayed on empty statistics */
+"emptyPlaceholder.statistics" = "Анализировать пока нечего";
+
 /* Text displayed on empty schedule */
 "emptyPlaceholder.trackers" = "Что будем отслеживать?";
 
@@ -90,6 +93,9 @@
 /* Search bar placeholder text */
 "search" = "Поиск";
 
+/* Statistic screen name */
+"statistic" = "Статистика";
+
 /* Statistics tab bar text */
 "statistics" = "Статистика";
 
@@ -105,6 +111,12 @@
 /* Trackers screen name
    Trackers tab bar text */
 "trackers" = "Трекеры";
+
+/* Statistic finished trackers amount text */
+"trackers.finished" = "Трекеров завершено";
+
+/* Statistic total trackers amount text */
+"trackers.total" = "Всего трекеров";
 
 /* Unpin menu item text */
 "unPin" = "Открепить";

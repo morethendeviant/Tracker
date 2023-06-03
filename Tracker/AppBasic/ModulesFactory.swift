@@ -9,7 +9,7 @@ import Foundation
 
 protocol ModulesFactoryProtocol {
     func makeTrackersView() -> (view: Presentable, coordination: TrackersViewCoordination)
-    func makeStatisticsView() -> Presentable
+    func makeStatisticsView() -> (view: Presentable, coordination: StatisticsViewCoordination)
     func makeTrackerSelectView() -> Presentable
     func makeScheduleView(weekdays: [DayOfWeek]) -> (view: Presentable, coordination: ScheduleCoordination)
     func makeHabitCreationView() -> (view: Presentable, coordination: HabitCreationCoordination)
@@ -28,8 +28,12 @@ final class ModulesFactory: ModulesFactoryProtocol {
         return (view, viewModel)
     }
     
-    func makeStatisticsView() -> Presentable {
-        StatisticsViewController()
+    func makeStatisticsView() -> (view: Presentable, coordination: StatisticsViewCoordination) {
+        let dataProvider: StatisticsDataStoreProtocol = DataStore()
+        let statisticsHelper: StatisticsHelperProtocol = StatisticsHelper(dataProvider: dataProvider)
+        let viewModel = StatisticsViewModel(statisticsHelper: statisticsHelper)
+        let view = StatisticsViewController(viewModel: viewModel)
+        return (view, viewModel)
     }
     
     func makeTrackerSelectView() -> Presentable {

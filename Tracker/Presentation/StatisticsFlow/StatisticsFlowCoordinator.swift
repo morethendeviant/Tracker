@@ -27,7 +27,14 @@ final class StatisticsCoordinator: BaseCoordinator, Coordinatable {
 
 private extension StatisticsCoordinator {
     func performFlow() {
-        let statisticsView = modulesFactory.makeStatisticsView()
+        let statisticsModule = modulesFactory.makeStatisticsView()
+        let statisticsView = statisticsModule.view
+        let statisticsCoordination = statisticsModule.coordination
+        
+        statisticsCoordination.headForError = { [weak self] message in
+            self?.router.presentAlert(message: message)
+        }
+        
         router.addToTabBar(statisticsView)
     }
 }

@@ -90,6 +90,9 @@
 /* Search bar placeholder text */
 "search" = "يبحث";
 
+/* Statistic screen name */
+"statistic" = "إحصائيات";
+
 /* Statistics tab bar text */
 "statistics" = "إحصائيات";
 
@@ -105,6 +108,12 @@
 /* Trackers screen name
    Trackers tab bar text */
 "trackers" = "المقتفون";
+
+/* Statistic finished trackers amount text */
+"trackers.finished" = "اكتملت أجهزة التعقب";
+
+/* Statistic total trackers amount text */
+"trackers.total" = "مجموع بتتبع";
 
 /* Unpin menu item text */
 "unPin" = "نزع الدبوس";

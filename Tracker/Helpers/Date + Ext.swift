@@ -23,7 +23,7 @@ extension Date {
         let calendar = Calendar.current
         let components = calendar.dateComponents([.year, .month, .day], from: self)
         let date = Calendar.current.date(from: components)
-        return date!
+        return date!.toCurrentTimezone()
     }
     
     func toCurrentTimezone() -> Date {
