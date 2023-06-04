@@ -74,6 +74,20 @@ private extension TrackerCoordinator {
             self.router.present(trackerSelectModule)
         }
         
+        trackersCoordination.headForFilter = { [weak self, weak trackersCoordination] filter in
+            guard let self else { return }
+            let filterModule = modulesFactory.makeFilterModule(selectedFilter: filter)
+            let filterView = filterModule.view
+            var filterCoordination = filterModule.coordination
+            
+            filterCoordination.onFinish = { [weak self, weak filterView] filter in
+                self?.router.dismissModule(filterView)
+                trackersCoordination?.returnOnFilter(selectedFilter: filter)
+            }
+            
+            self.router.present(filterView)
+        }
+        
         trackersCoordination.headForError = { [weak self] message in
             self?.router.presentAlert(message: message)
         }

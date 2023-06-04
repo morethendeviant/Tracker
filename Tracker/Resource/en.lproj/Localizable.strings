@@ -124,3 +124,14 @@
 /* Unpin menu item text */
 "unPin" = "Unpin";
 
+/* All filter text */
+"allFilters" = "All trackers";
+
+/* Finished filter text */
+"finishedFilters" = "Finished";
+
+/* Unfinished filter text */
+"unfinishedFilters" = "Unfinished";
+
+/* Filters page name */
+"filters" = "Filters";

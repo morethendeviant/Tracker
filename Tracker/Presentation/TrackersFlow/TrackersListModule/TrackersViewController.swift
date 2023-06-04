@@ -152,6 +152,7 @@ final class TrackersViewController: UIViewController {
     
     func filterButtonTapped() {
         analyticsService.reportEvent(event: .tap, screen: .trackersList, item: .filter)
+        viewModel.filterButtonTapped()
     }
     
     func dateChanged() {

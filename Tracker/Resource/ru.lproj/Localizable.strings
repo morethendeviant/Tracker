@@ -124,3 +124,14 @@
 /* Unpin menu item text */
 "unPin" = "Открепить";
 
+/* All filter text */
+"allFilters" = "Все трекеры";
+
+/* Finished filter text */
+"finishedFilters" = "Завершенные";
+
+/* Unfinished filter text */
+"unfinishedFilters" = "Не завершенные";
+
+/* Filters page name */
+"filters" = "Фильтры";

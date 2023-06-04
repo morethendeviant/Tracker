@@ -17,5 +17,4 @@ final class TrackerTests: XCTestCase {
         assertSnapshot(matching: trackerListView, as: .image(traits: .init(userInterfaceStyle: .dark)))
         assertSnapshot(matching: trackerListView, as: .image(traits: .init(userInterfaceStyle: .light)))
     }
-
 }

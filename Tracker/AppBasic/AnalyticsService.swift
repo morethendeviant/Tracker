@@ -8,7 +8,7 @@
 import UIKit
 import YandexMobileMetrica
 
-struct AnalyticsService {    
+struct AnalyticsService {        
     func reportEvent(event: Event, screen: Screen, item: Item? = nil) {
         var params: [AnyHashable: Any] = ["screen": screen.rawValue]
         if event == .tap, let item {

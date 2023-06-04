@@ -121,3 +121,14 @@
 /* Unpin menu item text */
 "unPin" = "نزع الدبوس";
 
+/* All filter text */
+"allFilters" = "جميع أجهزة التتبع";
+
+/* Finished filter text */
+"finishedFilters" = "مكتمل";
+
+/* Unfinished filter text */
+"unfinishedFilters" = "غير مكتمل";
+
+/* Filters page name */
+"filters" = "المرشحات";

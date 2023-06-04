@@ -11,6 +11,7 @@ protocol ModulesFactoryProtocol {
     func makeTrackersView() -> (view: Presentable, coordination: TrackersViewCoordination)
     func makeStatisticsView() -> (view: Presentable, coordination: StatisticsViewCoordination)
     func makeTrackerSelectView() -> Presentable
+    func makeFilterModule(selectedFilter: Filter) -> (view: Presentable, coordination: FiltersViewCoordination)
     func makeScheduleView(weekdays: [DayOfWeek]) -> (view: Presentable, coordination: ScheduleCoordination)
     func makeHabitCreationView() -> (view: Presentable, coordination: HabitCreationCoordination)
     func makeEventCreationView() -> (view: Presentable, coordination: EventCreationCoordination)
@@ -19,8 +20,15 @@ protocol ModulesFactoryProtocol {
     func makeOnboardingPageView() -> Presentable
 }
 
-final class ModulesFactory: ModulesFactoryProtocol {
+struct ModulesFactory: ModulesFactoryProtocol {
     let analyticsService = AnalyticsService()
+    
+    func makeFilterModule(selectedFilter: Filter) -> (view: Presentable, coordination: FiltersViewCoordination) {
+        let viewModel = FilterViewModel(selectedFilter: selectedFilter)
+        let pageTitle = NSLocalizedString("filters", comment: "Filters page name")
+        let view = FiltersViewController(viewModel: viewModel, pageTitle: pageTitle)
+        return (view, viewModel)
+    }
     
     func makeTrackersView() -> (view: Presentable, coordination: TrackersViewCoordination) {
         let dataProvider: TrackerDataStoreProtocol = DataStore()

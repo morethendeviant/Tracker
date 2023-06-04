@@ -26,6 +26,7 @@ final class ScheduleViewController: BaseViewController {
         table.dataSource = self
         table.isScrollEnabled = true
         table.backgroundColor = Asset.ypWhite.color
+        table.separatorInset = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
         table.tableHeaderView = UIView(frame: CGRect(x: 0, y: 0, width: 0, height: CGFloat.leastNonzeroMagnitude))
         table.tableFooterView = UIView(frame: CGRect(x: 0, y: 0, width: 0, height: CGFloat.leastNonzeroMagnitude))
         table.separatorColor = Asset.ypGray.color

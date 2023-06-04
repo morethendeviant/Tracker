@@ -8,10 +8,10 @@
 import UIKit
 
 final class CategoriesDiffableDataSource: UITableViewDiffableDataSource<Int, CategoryCellModel> {
-        
+    
     init(_ tableView: UITableView, interactionDelegate: UIContextMenuInteractionDelegate? = nil) {
         
-        super.init(tableView: tableView) { _, _, itemIdentifier in
+        super.init(tableView: tableView) { [weak interactionDelegate] _, _, itemIdentifier in
             let cell = UITableViewCell(style: .default, reuseIdentifier: "Cell")
             cell.backgroundColor = Asset.ypBackground.color
             cell.selectionStyle = .none
