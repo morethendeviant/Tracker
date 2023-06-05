@@ -25,18 +25,22 @@ final class StatisticsViewModel: StatisticsViewCoordination {
     
     private(set) var statistics = PassthroughSubject<[StatisticsModel], Never>()
     private var cancellable: Cancellable?
-
+    
     init(statisticsHelper: StatisticsHelperProtocol) {
         self.statisticsHelper = statisticsHelper
         setupNotification()
     }
 }
 
+// MARK: - Statistics ViewModel Protocol
+
 extension StatisticsViewModel: StatisticsViewModelProtocol {
     func viewDidLoad() {
         loadData()
     }
 }
+
+// MARK: - Private Methods
 
 private extension StatisticsViewModel {
     func setupNotification() {
@@ -50,24 +54,26 @@ private extension StatisticsViewModel {
     
     func loadData() {
         do {
-            let mappedStatistics = try statisticsHelper.getStatistics().compactMap {
-                switch $0 {
-                case .finished(let amount):
-                    let text = NSLocalizedString("trackers.finished", comment: "Statistic finished trackers amount text")
-                    return amount == 0 ? nil : StatisticsModel(number: amount,
-                                                               title: text)
-                case .trackers(let amount):
-                    let text = NSLocalizedString("trackers.total", comment: "Statistic total trackers amount text")
-                    return amount == 0 ? nil : StatisticsModel(number: amount,
-                                                               title: text)
-                case .idealDays(let amount):
-                    let text = NSLocalizedString("trackers.ideal", comment: "Statistic ideal days amount text")
-                    return amount == 0 ? nil : StatisticsModel(number: amount,
-                                                               title: text)
+            let loadedStatistics = try statisticsHelper.getStatistics()
+            if loadedStatistics.filter({ $0 == .trackers(0) }).isEmpty {
+                let mappedStatistics = loadedStatistics.map {
+                    switch $0 {
+                    case .finished(let amount):
+                        let text = NSLocalizedString("trackers.finished", comment: "Statistic finished trackers amount text")
+                        return StatisticsModel(number: amount, title: text)
+                    case .trackers(let amount):
+                        let text = NSLocalizedString("trackers.total", comment: "Statistic total trackers amount text")
+                        return StatisticsModel(number: amount, title: text)
+                    case .idealDays(let amount):
+                        let text = NSLocalizedString("trackers.ideal", comment: "Statistic ideal days amount text")
+                        return StatisticsModel(number: amount, title: text)
+                    }
                 }
+                
+                statistics.send(mappedStatistics)
+            } else {
+                statistics.send([])
             }
-            
-            statistics.send(mappedStatistics)
         } catch {
             handleError(message: error.localizedDescription)
         }

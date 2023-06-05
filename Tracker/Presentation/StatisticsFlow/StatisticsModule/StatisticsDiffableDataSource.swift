@@ -9,7 +9,7 @@ import UIKit
 
 final class StatisticsDiffableDataSource: UITableViewDiffableDataSource<Int, StatisticsModel> {
         
-    init(_ tableView: UITableView, interactionDelegate: UIContextMenuInteractionDelegate? = nil) {
+    init(_ tableView: UITableView) {
         
         super.init(tableView: tableView) { tableView, _, itemIdentifier in
             guard let cell = tableView.dequeueReusableCell(withIdentifier: StatisticsTableViewCell.identifier) as? StatisticsTableViewCell else { return UITableViewCell() }
