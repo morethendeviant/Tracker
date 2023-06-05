@@ -31,6 +31,8 @@ protocol TrackersListViewModelProtocol {
     var trackerObserver: Observable<Tracker?> { get }
     
     var date: Date { get }
+    var dateObserver: Observable<Date> { get }
+    
     var searchText: String? { get }
     var lastSectionIndex: Int { get }
     
@@ -58,37 +60,15 @@ protocol TrackersDataSourceProvider {
 final class TrackersListViewModel {
     var headForAlert: ((AlertModel) -> Void)?
     var headForFilter: ((Filter) -> Void)?
-    
     var headForTrackerSelect: (() -> Void)?
     var headForError: ((String) -> Void)?
     
-    private let dataProvider: TrackerDataStoreProtocol
-    private(set) var date: Date = Date()
-    private(set) var searchText: String?
-    
-    private var selectedFilter: Filter = .finished
-    
-    private var categories: [TrackerCategory] = [] {
-        didSet {
-            var pinnedTrackers: [Tracker] = []
-            categories = categories.compactMap {
-                let trackers = $0.trackers.compactMap { $0.isPinned ? nil : $0 }.sorted { $0.name < $1.name }
-                pinnedTrackers.append(contentsOf: $0.trackers.compactMap { $0.isPinned ? $0 : nil })
-                return trackers.isEmpty ? nil : TrackerCategory(name: $0.name, trackers: trackers)
-            }
-            
-            if !pinnedTrackers.isEmpty {
-                let pinnedText = NSLocalizedString("pinned", comment: "Pinned group name")
-                let pinnedCategory = TrackerCategory(name: pinnedText, trackers: pinnedTrackers)
-                categories.insert(pinnedCategory, at: 0)
-            }
-            
-            visibleCategories = filtered(categories: categories, filter: selectedFilter)
-        }
+    @Observable var date: Date = Date()
+    var dateObserver: Observable<Date> {
+        $date
     }
     
     @Observable var visibleCategories: [TrackerCategory] = []
-    
     var visibleCategoriesObserver: Observable<[TrackerCategory]> {
         $visibleCategories
     }
@@ -96,6 +76,22 @@ final class TrackersListViewModel {
     @Observable var tracker: Tracker?
     var trackerObserver: Observable<Tracker?> {
         $tracker
+    }
+    
+    private let dataProvider: TrackerDataStoreProtocol
+    
+    private(set) var searchText: String? {
+        didSet {
+            visibleCategories = filtered(categories: categories, filter: selectedFilter, searchText: searchText)
+        }
+    }
+    
+    private var selectedFilter: Filter = .all
+    
+    private var categories: [TrackerCategory] = [] {
+        didSet {
+            visibleCategories = filtered(categories: categories, filter: selectedFilter, searchText: searchText)
+        }
     }
     
     init(dataProvider: TrackerDataStoreProtocol) {
@@ -110,32 +106,48 @@ extension TrackersListViewModel: TrackersViewCoordination {
     
     func returnOnFilter(selectedFilter: Filter) {
         self.selectedFilter = selectedFilter
-        visibleCategories = filtered(categories: categories, filter: selectedFilter)
-        
+        switch selectedFilter {
+        case .all, .finished, .unfinished:
+            visibleCategories = filtered(categories: categories, filter: selectedFilter, searchText: searchText)
+        case .today: dateChangedTo(Date())
+        }
     }
 }
 
 // MARK: - Private methods
 
 private extension TrackersListViewModel {
-    func filtered(categories: [TrackerCategory], filter: Filter) -> [TrackerCategory] {
-        var filteredCategories = categories.compactMap { category in
-            guard let searchText, !searchText.isEmpty else { return category }
-            let trackers = category.trackers.filter { $0.name.contains(searchText) }
-            return trackers.isEmpty ? nil : TrackerCategory(name: category.name, trackers: trackers)
-        }
+    func filtered(categories: [TrackerCategory], filter: Filter, searchText: String?) -> [TrackerCategory] {
+        var filteredCategories = categories
+        var pinnedTrackers: [Tracker] = []
         
-        filteredCategories = filteredCategories.compactMap { category in
+        filteredCategories = categories.compactMap { category in
             var trackers: [Tracker] = []
             
             switch filter {
-            case .all: trackers = category.trackers
-            case .finished:
-                trackers = category.trackers.filter { cellIsMarkedWithId($0.id) }
-            case .unfinished:
-                trackers = category.trackers.filter { !cellIsMarkedWithId($0.id) }
+            case .all, .today: trackers = category.trackers
+            case .finished: trackers = category.trackers.filter { cellIsMarkedWithId($0.id) }
+            case .unfinished: trackers = category.trackers.filter { !cellIsMarkedWithId($0.id) }
             }
             
+            return trackers.isEmpty ? nil : TrackerCategory(name: category.name, trackers: trackers)
+        }
+        
+        filteredCategories = filteredCategories.compactMap {
+            let trackers = $0.trackers.compactMap { $0.isPinned ? nil : $0 }.sorted { $0.name < $1.name }
+            pinnedTrackers.append(contentsOf: $0.trackers.compactMap { $0.isPinned ? $0 : nil })
+            return trackers.isEmpty ? nil : TrackerCategory(name: $0.name, trackers: trackers)
+        }
+        
+        if !pinnedTrackers.isEmpty {
+            let pinnedText = NSLocalizedString("pinned", comment: "Pinned group name")
+            let pinnedCategory = TrackerCategory(name: pinnedText, trackers: pinnedTrackers)
+            filteredCategories.insert(pinnedCategory, at: 0)
+        }
+        
+        filteredCategories = filteredCategories.compactMap { category in
+            guard let searchText, !searchText.isEmpty else { return category }
+            let trackers = category.trackers.filter { $0.name.contains(searchText) }
             return trackers.isEmpty ? nil : TrackerCategory(name: category.name, trackers: trackers)
         }
         
@@ -215,6 +227,10 @@ extension TrackersListViewModel: TrackersListViewModelProtocol {
                 
                 return trackers.isEmpty ? nil : TrackerCategory(name: category.name, trackers: trackers)
             }
+            
+            if date.onlyDate() != Date().onlyDate() {
+                selectedFilter = .all
+            }
         } catch {
             handleError(message: error.localizedDescription)
         }
@@ -222,7 +238,6 @@ extension TrackersListViewModel: TrackersListViewModelProtocol {
     
     func searchTextChangedTo(_ text: String?) {
         self.searchText = text
-        visibleCategories = filtered(categories: categories, filter: selectedFilter)
     }
 }
 
@@ -278,7 +293,8 @@ extension TrackersListViewModel: TrackersDataSourceProvider {
         } else {
             addRecordWithId(tracker.id)
         }
-        visibleCategories = filtered(categories: categories, filter: selectedFilter)
+        
+        visibleCategories = filtered(categories: categories, filter: selectedFilter, searchText: searchText)
     }
 }
 

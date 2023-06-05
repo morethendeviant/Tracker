@@ -124,6 +124,9 @@
 /* All filter text */
 "allFilters" = "جميع أجهزة التتبع";
 
+/* Today filter text */
+"todayFilters" = "بتتبع اليوم";
+
 /* Finished filter text */
 "finishedFilters" = "مكتمل";
 

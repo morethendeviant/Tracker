@@ -257,6 +257,13 @@ private extension TrackersViewController {
             guard let tracker else { return }
             self?.diffableDataSource.reloadTracker(tracker)
         }
+        
+        viewModel.dateObserver.bind { [weak self] date in
+            guard let self else { return }
+            if date != self.datePicker.date {
+                datePicker.date = date
+            }
+        }
     }
 }
 

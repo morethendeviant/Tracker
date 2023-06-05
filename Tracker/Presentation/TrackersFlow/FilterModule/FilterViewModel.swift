@@ -22,7 +22,7 @@ protocol FiltersViewModelProtocol {
 final class FilterViewModel: FiltersViewCoordination {
     var onFinish: ((Filter) -> Void)?
     
-    private var filters: [Filter] = [.all, .finished, .unfinished]
+    private var filters: [Filter] = [.all, .today, .finished, .unfinished]
     private(set) var selectedFilterIndex: Int?
     
     init(selectedFilter: Filter) {

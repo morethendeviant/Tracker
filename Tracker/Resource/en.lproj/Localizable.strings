@@ -127,6 +127,9 @@
 /* All filter text */
 "allFilters" = "All trackers";
 
+/* Today filter text */
+"todayFilters" = "Trackers for today";
+
 /* Finished filter text */
 "finishedFilters" = "Finished";
 

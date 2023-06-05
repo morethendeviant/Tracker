@@ -127,6 +127,9 @@
 /* All filter text */
 "allFilters" = "Все трекеры";
 
+/* Today filter text */
+"todayFilters" = "Трекеры на сегодня";
+
 /* Finished filter text */
 "finishedFilters" = "Завершенные";
 
