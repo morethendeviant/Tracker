@@ -86,6 +86,9 @@
 		78F2FD1C2A2B4BD7006AF3BE /* SnapshotTesting in Frameworks */ = {isa = PBXBuildFile; productRef = 78F2FD1B2A2B4BD7006AF3BE /* SnapshotTesting */; };
 		78F2FD1E2A2B5D03006AF3BE /* StatisticsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78F2FD1D2A2B5D03006AF3BE /* StatisticsModel.swift */; };
 		78F308732A2CC6A80036BF33 /* FilterModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78F308722A2CC6A80036BF33 /* FilterModel.swift */; };
+		78F308762A2F8C720036BF33 /* TrackerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78F308752A2F8C720036BF33 /* TrackerViewModel.swift */; };
+		78F308782A2FBD1E0036BF33 /* HabitScreenMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78F308772A2FBD1E0036BF33 /* HabitScreenMode.swift */; };
+		78F3087A2A30F1700036BF33 /* PlusMinusButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78F308792A30F1700036BF33 /* PlusMinusButton.swift */; };
 		78FA52D82A1BCBCB00B0D17A /* UserDefaults+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78FA52D72A1BCBCB00B0D17A /* UserDefaults+Ext.swift */; };
 		9AC79607F76D379ADBACBB72 /* Pods_Tracker.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FCCAF17E388A0C56734E597A /* Pods_Tracker.framework */; };
 /* End PBXBuildFile section */
@@ -187,6 +190,9 @@
 		78F2FD102A2B43AE006AF3BE /* TrackerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackerTests.swift; sourceTree = "<group>"; };
 		78F2FD1D2A2B5D03006AF3BE /* StatisticsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatisticsModel.swift; sourceTree = "<group>"; };
 		78F308722A2CC6A80036BF33 /* FilterModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterModel.swift; sourceTree = "<group>"; };
+		78F308752A2F8C720036BF33 /* TrackerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackerViewModel.swift; sourceTree = "<group>"; };
+		78F308772A2FBD1E0036BF33 /* HabitScreenMode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HabitScreenMode.swift; sourceTree = "<group>"; };
+		78F308792A30F1700036BF33 /* PlusMinusButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlusMinusButton.swift; sourceTree = "<group>"; };
 		78FA52D72A1BCBCB00B0D17A /* UserDefaults+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UserDefaults+Ext.swift"; sourceTree = "<group>"; };
 		B824B7C24D27EBA6C253F24A /* Pods-Tracker.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Tracker.release.xcconfig"; path = "Target Support Files/Pods-Tracker/Pods-Tracker.release.xcconfig"; sourceTree = "<group>"; };
 		E21800AF72F71F5F6152929D /* Pods-Tracker.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Tracker.debug.xcconfig"; path = "Target Support Files/Pods-Tracker/Pods-Tracker.debug.xcconfig"; sourceTree = "<group>"; };
@@ -410,6 +416,7 @@
 				78AA539629D353990063EB84 /* BaseButton.swift */,
 				78AA539829D3579B0063EB84 /* ContentPlaceholder.swift */,
 				78AA53A729D735FE0063EB84 /* BaseTextField.swift */,
+				78F308792A30F1700036BF33 /* PlusMinusButton.swift */,
 			);
 			path = BasePresentation;
 			sourceTree = "<group>";
@@ -425,6 +432,7 @@
 		78AA53A029D60F060063EB84 /* TrackerCreationFlow */ = {
 			isa = PBXGroup;
 			children = (
+				78F308742A2F8C630036BF33 /* Models */,
 				78A706CC29D9889C00932908 /* HabitCreationCoordinator.swift */,
 				78A706CE29D98B7900932908 /* EventCreationCoordinator.swift */,
 				78AA53D929D8A6BC0063EB84 /* HabitModule */,
@@ -467,7 +475,6 @@
 				78AA53BF29D862890063EB84 /* DaysOfWeek.swift */,
 				78A706D729DA082C00932908 /* EmojiModel.swift */,
 				78A706D929DA0A5800932908 /* Colors.swift */,
-				78A706DB29DB2AC100932908 /* TrackerCreationTableModel.swift */,
 				78F2FCD12A2664DA006AF3BE /* AlertModel.swift */,
 			);
 			path = Models;
@@ -611,6 +618,16 @@
 			isa = PBXGroup;
 			children = (
 				78F308722A2CC6A80036BF33 /* FilterModel.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		78F308742A2F8C630036BF33 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				78A706DB29DB2AC100932908 /* TrackerCreationTableModel.swift */,
+				78F308752A2F8C720036BF33 /* TrackerViewModel.swift */,
+				78F308772A2FBD1E0036BF33 /* HabitScreenMode.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -878,6 +895,7 @@
 				78F2FCB12A1BE447006AF3BE /* XCAssets+Generated.swift in Sources */,
 				78AA53B529D80B070063EB84 /* TrackerCategory.swift in Sources */,
 				786BF15A29F459C1009317E5 /* CategoryCreateViewModel.swift in Sources */,
+				78F308782A2FBD1E0036BF33 /* HabitScreenMode.swift in Sources */,
 				78A706DA29DA0A5800932908 /* Colors.swift in Sources */,
 				78AA53D629D8A56B0063EB84 /* StatisticsFlowCoordinator.swift in Sources */,
 				78A706D629D9DACE00932908 /* CategoryCoordinator.swift in Sources */,
@@ -885,6 +903,7 @@
 				78C2689A29E8924600E8B6EC /* TrackerRecordManagedObject.swift in Sources */,
 				78AA539929D3579B0063EB84 /* ContentPlaceholder.swift in Sources */,
 				78F2FD1E2A2B5D03006AF3BE /* StatisticsModel.swift in Sources */,
+				78F3087A2A30F1700036BF33 /* PlusMinusButton.swift in Sources */,
 				78F2FCEE2A290CA8006AF3BE /* StatisticsDiffableDataSource.swift in Sources */,
 				78AA53CE29D8A11B0063EB84 /* Router.swift in Sources */,
 				78F2FCF42A2A43A5006AF3BE /* StatisticsEntityModel.swift in Sources */,
@@ -895,6 +914,7 @@
 				78AA53DB29D8A6D40063EB84 /* TrackerCoordinator.swift in Sources */,
 				78A706D429D9D9EE00932908 /* CategorySelectViewController.swift in Sources */,
 				78AA53B729D80B120063EB84 /* TrackerRecord.swift in Sources */,
+				78F308762A2F8C720036BF33 /* TrackerViewModel.swift in Sources */,
 				78C2689E29E9BD5900E8B6EC /* TrackerCategoryManagedObject.swift in Sources */,
 				78AA53A829D735FE0063EB84 /* BaseTextField.swift in Sources */,
 				78A706CD29D9889C00932908 /* HabitCreationCoordinator.swift in Sources */,

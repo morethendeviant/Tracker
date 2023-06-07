@@ -5,7 +5,6 @@
 //  Created by Aleksandr Velikanov on 03.06.2023.
 //
 
-import UIKit
 import YandexMobileMetrica
 
 struct AnalyticsService {        

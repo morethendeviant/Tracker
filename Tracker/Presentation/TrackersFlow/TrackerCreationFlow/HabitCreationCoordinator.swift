@@ -9,21 +9,25 @@ import Foundation
  
 protocol HabitCreationCoordinatorOutput {
     var finishFlowOnCancel: (() -> Void)? { get set }
-    var finishFlowOnCreate: (() -> Void)? { get set }
+    var finishFlowOnConfirm: (() -> Void)? { get set }
 }
 
 final class HabitCreationCoordinator: BaseCoordinator, Coordinatable, HabitCreationCoordinatorOutput {
     var finishFlowOnCancel: (() -> Void)?
-    var finishFlowOnCreate: (() -> Void)?
+    var finishFlowOnConfirm: (() -> Void)?
     
     private var coordinatorsFactory: CoordinatorsFactoryProtocol
     private var modulesFactory: ModulesFactoryProtocol
     private var router: Routable
+    private var tracker: TrackerViewModel?
+    private var screenAppearance: HabitScreenAppearance
     
-    init(coordinatorsFactory: CoordinatorsFactoryProtocol, modulesFactory: ModulesFactoryProtocol, router: Routable) {
+    init(coordinatorsFactory: CoordinatorsFactoryProtocol, modulesFactory: ModulesFactoryProtocol, router: Routable, tracker: TrackerViewModel?, screenAppearance: HabitScreenAppearance) {
         self.coordinatorsFactory = coordinatorsFactory
         self.modulesFactory = modulesFactory
         self.router = router
+        self.tracker = tracker
+        self.screenAppearance = screenAppearance
     }
     
     func startFlow() {
@@ -35,14 +39,15 @@ final class HabitCreationCoordinator: BaseCoordinator, Coordinatable, HabitCreat
 
 private extension HabitCreationCoordinator {
     func performFlow() {
-        let habitModule = self.modulesFactory.makeHabitCreationView()
+        let habitModule = self.modulesFactory.makeHabitCreationView(tableDataModel: tracker,
+                                                                    screenAppearance: screenAppearance)
         let habitView = habitModule.view
         let habitCoordination = habitModule.coordination
         
         habitCoordination.onCreate = { [weak self, weak habitView] in
             guard let self else { return }
             self.router.dismissModule(habitView)
-            self.finishFlowOnCreate?()
+            self.finishFlowOnConfirm?()
         }
         
         habitCoordination.onCancel = { [weak self, weak habitView] in
@@ -54,7 +59,8 @@ private extension HabitCreationCoordinator {
         habitCoordination.onHeadForCategory = { [weak self, weak habitCoordination] category in
             guard let self else { return }
             
-            var categoryCoordinator = self.coordinatorsFactory.makeCategoryCoordinator(router: router, selectedCategory: category)
+            var categoryCoordinator = self.coordinatorsFactory.makeCategoryCoordinator(router: router,
+                                                                                       selectedCategory: category)
             
             self.addDependency(categoryCoordinator)
             

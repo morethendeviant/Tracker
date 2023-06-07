@@ -13,8 +13,10 @@ protocol ModulesFactoryProtocol {
     func makeTrackerSelectView() -> Presentable
     func makeFilterModule(selectedFilter: Filter) -> (view: Presentable, coordination: FiltersViewCoordination)
     func makeScheduleView(weekdays: [DayOfWeek]) -> (view: Presentable, coordination: ScheduleCoordination)
-    func makeHabitCreationView() -> (view: Presentable, coordination: HabitCreationCoordination)
-    func makeEventCreationView() -> (view: Presentable, coordination: EventCreationCoordination)
+    func makeHabitCreationView(tableDataModel: TrackerViewModel?,
+                               screenAppearance: HabitScreenAppearance) -> (view: Presentable, coordination: HabitCreationCoordination)
+    func makeEventCreationView(tableDataModel: TrackerViewModel?,
+                               screenAppearance: HabitScreenAppearance) -> (view: Presentable, coordination: EventCreationCoordination)
     func makeCategorySelectView(selectedCategory: String?) -> (view: Presentable, coordination: CategorySelectCoordination)
     func makeCategoryCreateView() -> (view: Presentable, coordination: CategoryCreateCoordination)
     func makeOnboardingPageView() -> Presentable
@@ -59,23 +61,24 @@ struct ModulesFactory: ModulesFactoryProtocol {
         return (view, viewModel)
     }
     
-    func makeHabitCreationView() -> (view: Presentable, coordination: HabitCreationCoordination) {
-        let tableModel = TrackerCreationTableModel.habit
+    func makeHabitCreationView(tableDataModel: TrackerViewModel?, screenAppearance: HabitScreenAppearance) -> (view: Presentable, coordination: HabitCreationCoordination) {
+        let tableModel = TrackerCreationTableModel.habit(tableDataModel)
         let dataStore: TrackerCreationDataStoreProtocol = DataStore()
         let viewModel = HabitCreationViewModel(dataStore: dataStore, tableDataModel: tableModel)
-        let pageTitle = NSLocalizedString("newHabit", comment: "New habit page name")
-        let view = HabitCreationViewController(viewModel: viewModel, pageTitle: pageTitle)
+        let view = HabitCreationViewController(viewModel: viewModel,
+                                               pageTitle: screenAppearance.pageTitle,
+                                               confirmButtonText: screenAppearance.confirmButtonText)
         return (view, viewModel)
     }
     
-    func makeEventCreationView() -> (view: Presentable, coordination: EventCreationCoordination) {
-        let tableModel = TrackerCreationTableModel.event
+    func makeEventCreationView(tableDataModel: TrackerViewModel?, screenAppearance: HabitScreenAppearance) -> (view: Presentable, coordination: EventCreationCoordination) {
+        let tableModel = TrackerCreationTableModel.event(tableDataModel)
         let dataStore: TrackerCreationDataStoreProtocol = DataStore()
         let viewModel = HabitCreationViewModel(dataStore: dataStore, tableDataModel: tableModel)
-        let pageTitle = NSLocalizedString("newEvent", comment: "New event page name")
-        let view = HabitCreationViewController(viewModel: viewModel, pageTitle: pageTitle)
+        let view = HabitCreationViewController(viewModel: viewModel,
+                                               pageTitle: screenAppearance.pageTitle,
+                                               confirmButtonText: screenAppearance.confirmButtonText)
         return (view, viewModel)
-
     }
     
     func makeCategorySelectView(selectedCategory: String?) -> (view: Presentable, coordination: CategorySelectCoordination) {

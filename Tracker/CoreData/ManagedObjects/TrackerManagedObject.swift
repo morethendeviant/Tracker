@@ -33,6 +33,5 @@ final class TrackerManagedObject: NSManagedObject {
         self.name = tracker.name
         self.schedule = DayOfWeek.daysToNumbers(tracker.schedule)
         self.isPinned = tracker.isPinned
-        self.records = []
     }
 }

@@ -138,3 +138,12 @@
 
 /* Filters page name */
 "filters" = "Filters";
+
+/* Save button title */
+"save" = "Save";
+
+/* Edit event page name */
+"editEvent" = "Edit event";
+
+/* Edit habit page name */
+"editHabit" = "Edit habit";

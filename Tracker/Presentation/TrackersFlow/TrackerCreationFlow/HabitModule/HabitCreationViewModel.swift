@@ -37,7 +37,11 @@ protocol HabitCreationViewModelProtocol {
     var selectedCategory: String? { get }
     var selectedCategoryObserver: Observable<String?> { get }
     
-    var tableContent: [CellContent] { get }
+    var trackerViewModel: TrackerViewModel? { get }
+    var trackerViewModelObserver: Observable<TrackerViewModel?> { get }
+    
+    var screenContent: HabitScreenContent { get }
+    var tableDataModel: TrackerCreationTableModel { get }
     
     var emojiSelectedItem: Int? { get }
     var colorSelectedItem: Int? { get }
@@ -46,6 +50,7 @@ protocol HabitCreationViewModelProtocol {
     func setColor(_ index: Int)
     func setEmoji(_ index: Int)
     
+    func viewDidLoad()
     func cancelButtonTapped()
     func createButtonTapped()
     func scheduleCallTapped()
@@ -61,9 +66,10 @@ final class HabitCreationViewModel {
     
     private let dataStore: TrackerCreationDataStoreProtocol
     
-    private(set) var tableContent: [CellContent]
-    private var tableDataModel: TrackerCreationTableModel
-
+    private(set) var screenContent: HabitScreenContent
+    private(set) var tableDataModel: TrackerCreationTableModel
+    
+    @Observable var trackerViewModel: TrackerViewModel?
     @Observable var confirmEnabled: Bool = false
     @Observable var selectedCategory: String? {
         didSet {
@@ -93,16 +99,13 @@ final class HabitCreationViewModel {
             checkForConfirm()
         }
     }
-
-    private var tracker: Tracker?
+    
+    private var storingTracker: Tracker?
     
     init(dataStore: TrackerCreationDataStoreProtocol, tableDataModel: TrackerCreationTableModel) {
         self.dataStore = dataStore
         self.tableDataModel = tableDataModel
-        self.tableContent = tableDataModel.tableContent()
-        if case .event = tableDataModel {
-            weekdays = DayOfWeek.allCases
-        }
+        self.screenContent = tableDataModel.tableContent()
     }
     
     func checkForConfirm() {
@@ -113,21 +116,59 @@ final class HabitCreationViewModel {
            !weekdays.isEmpty {
             
             switch tableDataModel {
-            case .event:
-                tracker = Tracker(name: text, color: colorSelectedItem, emoji: emojiSelectedItem, schedule: weekdays)
-            case .habit:
-                tracker = Tracker(name: text, color: colorSelectedItem, emoji: emojiSelectedItem, schedule: weekdays)
+            case .event(let tracker):
+                let id = tracker?.id
+                storingTracker = Tracker(id: id,
+                                         name: text,
+                                         color: colorSelectedItem,
+                                         emoji: emojiSelectedItem,
+                                         schedule: weekdays)
+            case .habit(let tracker):
+                let id = tracker?.id
+                storingTracker = Tracker(id: id,
+                                         name: text,
+                                         color: colorSelectedItem,
+                                         emoji: emojiSelectedItem,
+                                         schedule: weekdays)
             }
             
             confirmEnabled = true
         } else {
-            tracker = nil
+            storingTracker = nil
             confirmEnabled = false
         }
     }
 }
 
 extension HabitCreationViewModel: HabitCreationViewModelProtocol {
+    func viewDidLoad() {
+        switch tableDataModel {
+        case .event(let tracker):
+            weekdays = DayOfWeek.allCases
+            guard let tracker else { return }
+            
+            selectedCategory = tracker.category
+            trackerTitle = tracker.name
+            emojiSelectedItem = tracker.emoji
+            colorSelectedItem = tracker.color
+            trackerViewModel = tracker
+            
+        case .habit(let tracker):
+            guard let tracker else { return }
+            
+            selectedCategory = tracker.category
+            trackerTitle = tracker.name
+            emojiSelectedItem = tracker.emoji
+            colorSelectedItem = tracker.color
+            weekdays = tracker.schedule
+            trackerViewModel = tracker
+        }
+    }
+    
+    var trackerViewModelObserver: Observable<TrackerViewModel?> {
+        $trackerViewModel
+    }
+    
     var weekdaysObserver: Observable<[DayOfWeek]> {
         $weekdays
     }
@@ -161,9 +202,9 @@ extension HabitCreationViewModel: HabitCreationViewModelProtocol {
     }
     
     func createButtonTapped() {
-        guard let tracker, let selectedCategory else { return }
+        guard let storingTracker, let selectedCategory else { return }
         do {
-            try dataStore.createTracker(tracker, categoryName: selectedCategory)
+            try dataStore.createTracker(storingTracker, categoryName: selectedCategory)
             onCreate?()
         } catch {
             headForError?(error.localizedDescription)
@@ -177,14 +218,28 @@ extension HabitCreationViewModel: HabitCreationViewModelProtocol {
 
 extension HabitCreationViewModel: HabitCreationCoordination {
     func selectCategory(_ category: String?) {
-        self.tableContent[0] = CellContent(text: self.tableContent[0].text, detailText: category)
+        screenContent = HabitScreenContent(daysAmount: screenContent.daysAmount,
+                                           trackerName: screenContent.trackerName,
+                                           categoryName: category,
+                                           scheduleText: screenContent.scheduleText,
+                                           emoji: screenContent.emoji,
+                                           color: screenContent.color,
+                                           categoryCellName: screenContent.categoryCellName,
+                                           scheduleCellName: screenContent.scheduleCellName)
         selectedCategory = category
     }
     
     func returnWithWeekdays(_ weekDays: [DayOfWeek]) {
         let weekdaysText = DayOfWeek.shortNamesFor(weekDays)
         if !weekDays.isEmpty, case .habit = tableDataModel {
-            self.tableContent[1] = CellContent(text: self.tableContent[1].text, detailText: weekdaysText)
+            screenContent = HabitScreenContent(daysAmount: screenContent.daysAmount,
+                                               trackerName: screenContent.trackerName,
+                                               categoryName: screenContent.categoryName,
+                                               scheduleText: weekdaysText,
+                                               emoji: screenContent.emoji,
+                                               color: screenContent.color,
+                                               categoryCellName: screenContent.categoryCellName,
+                                               scheduleCellName: screenContent.scheduleCellName)
             weekdays = weekDays
         }
     }

@@ -15,8 +15,8 @@ struct Tracker: Hashable {
     let schedule: [DayOfWeek]
     let isPinned: Bool
     
-    init(id: String = UUID().uuidString, name: String, color: Int, emoji: Int, schedule: [DayOfWeek], isPinned: Bool = false) {
-        self.id = id
+    init(id: String? = nil, name: String, color: Int, emoji: Int, schedule: [DayOfWeek], isPinned: Bool = false) {
+        self.id = id ?? UUID().uuidString
         self.name = name
         self.color = color
         self.emoji = emoji

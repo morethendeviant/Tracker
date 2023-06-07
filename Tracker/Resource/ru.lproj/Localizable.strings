@@ -138,3 +138,12 @@
 
 /* Filters page name */
 "filters" = "Фильтры";
+
+/* Save button title */
+"save" = "Сохранить";
+
+/* Edit event page name */
+"editEvent" = "Редактирование нерегулярного события";
+
+/* Edit habit page name */
+"editHabit" = "Редактирование привычки";

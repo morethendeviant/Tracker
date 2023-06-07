@@ -14,8 +14,10 @@ protocol TrackersViewCoordination: AnyObject {
     var headForError: ((String) -> Void)? { get set }
     var headForAlert: ((AlertModel) -> Void)? { get set }
     var headForFilter: ((Filter) -> Void)? { get set }
-    
-    func returnOnCreate()
+    var headForHabit: ((TrackerViewModel?) -> Void)? { get set }
+    var headForEvent: ((TrackerViewModel?) -> Void)? { get set }
+
+    func returnOnConfirm()
     func returnOnFilter(selectedFilter: Filter)
 }
 
@@ -62,7 +64,9 @@ final class TrackersListViewModel {
     var headForFilter: ((Filter) -> Void)?
     var headForTrackerSelect: (() -> Void)?
     var headForError: ((String) -> Void)?
-    
+    var headForHabit: ((TrackerViewModel?) -> Void)?
+    var headForEvent: ((TrackerViewModel?) -> Void)?
+
     @Observable var date: Date = Date()
     var dateObserver: Observable<Date> {
         $date
@@ -100,7 +104,7 @@ final class TrackersListViewModel {
 }
 
 extension TrackersListViewModel: TrackersViewCoordination {
-    func returnOnCreate() {
+    func returnOnConfirm() {
         dateChangedTo(date)
     }
     
@@ -181,7 +185,21 @@ extension TrackersListViewModel: TrackersListViewModelProtocol {
     }
     
     func editTrackerAt(indexPath: IndexPath) {
-        
+        let tracker = visibleCategories[indexPath.section].trackers[indexPath.row]
+        let category = TrackerCategory(name: visibleCategories[indexPath.section].name,
+                                       trackers: [tracker])
+        let trackerModel = TrackerViewModel(id: tracker.id,
+                                            name: tracker.name,
+                                            category: category.name,
+                                            schedule: tracker.schedule,
+                                            color: tracker.color,
+                                            emoji: tracker.emoji,
+                                            daysAmount: daysAmountWithId(tracker.id))
+        if tracker.schedule.count == 7 {
+            headForEvent?(trackerModel)
+        } else {
+            headForHabit?(trackerModel)
+        }
     }
     
     func deleteTrackerAt(indexPath: IndexPath) {

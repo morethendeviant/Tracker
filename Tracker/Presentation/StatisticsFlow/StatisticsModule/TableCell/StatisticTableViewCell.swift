@@ -53,7 +53,6 @@ final class StatisticsTableViewCell: UITableViewCell {
         super.layoutSubviews()
         let gradient = UIImage.gradientImage(bounds: bounds, colors: gradientColors)
         contentView.layer.borderColor = UIColor(patternImage: gradient).cgColor
-        
         contentView.frame = contentView.frame.inset(by: UIEdgeInsets(top: 0, left: 0, bottom: 12, right: 0))
     }
     
@@ -63,6 +62,7 @@ final class StatisticsTableViewCell: UITableViewCell {
 }
 
 // MARK: - Subviews configure + layout
+
 private extension StatisticsTableViewCell {
     func addSubviews() {
         contentView.addSubview(numberLabel)

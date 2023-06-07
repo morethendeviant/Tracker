@@ -32,7 +32,6 @@ final class TrackerListDiffableDataSource: UICollectionViewDiffableDataSource<Tr
             cell.isMarked = dataSourceProvider.cellIsMarkedWithId(tracker.id)
             cell.daysAmount = dataSourceProvider.daysAmountWithId(tracker.id)
             cell.interactionDelegate = interactionDelegate
-            
             return cell
         }
     }

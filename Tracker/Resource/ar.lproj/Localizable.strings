@@ -135,3 +135,12 @@
 
 /* Filters page name */
 "filters" = "المرشحات";
+
+/* Save button title */
+"save" = "يحفظ";
+
+/* Edit event page name */
+"editEvent" = "تحرير الحدث";
+
+/* Edit habit page name */
+"editHabit" = "عدل العادة";
