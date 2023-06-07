@@ -15,7 +15,7 @@ final class ContentPlaceholder: UIView {
     private let label: UILabel = {
         let label = UILabel()
         label.font = .systemFont(ofSize: 12)
-        label.textColor = .ypBlack
+        label.textColor = Asset.ypBlack.color
         return label
     }()
     
@@ -37,14 +37,17 @@ extension ContentPlaceholder {
     func setUpContent(with style: Style) {
         switch style {
         case .trackers:
-            imageView.image = UIImage(named: "star")
-            label.text = "Что будем отслеживать?"
-            
-        case .category: break
+            imageView.image = Asset.star.image
+            label.text = NSLocalizedString("emptyPlaceholder.trackers", comment: "Text displayed on empty schedule")
+        case .category:
+            imageView.image = Asset.star.image
+            label.text = NSLocalizedString("emptyPlaceholder.category", comment: "Text displayed on empty categories")
         case .search:
-            imageView.image = UIImage(named: "notFound")
-            label.text = "Ничего не найдено"
-        case .statistics: break
+            imageView.image = Asset.notFound.image
+            label.text = NSLocalizedString("emptyPlaceholder.search", comment: "Text displayed on empty search")
+        case .statistics:
+            imageView.image = Asset.statistics.image
+            label.text = NSLocalizedString("emptyPlaceholder.statistics", comment: "Text displayed on empty statistics")
         }
     }
 }

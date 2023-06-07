@@ -42,19 +42,23 @@ extension CategoryCoordinator {
             self.router.dismissModule(categorySelectView)
             self.finishFlow?(category)
         }
-        
+
         categorySelectCoordination.onHeadForCategoryCreation = { [weak self, weak categorySelectCoordination] in
             guard let self, let categorySelectCoordination else { return }
-            let categoryCreateModule = modulesFactory.makeCategoryCreateView()
+            let categoryCreateModule = self.modulesFactory.makeCategoryCreateView()
             let categoryCreateView = categoryCreateModule.view
             let categoryCreateCoordination = categoryCreateModule.coordination
-            
+
             categoryCreateCoordination.onReturnWithDone = { [weak categoryCreateView] categoryName in
                 categorySelectCoordination.setNewCategory(categoryName)
                 self.router.dismissModule(categoryCreateView)
             }
 
             self.router.present(categoryCreateView)
+        }
+        
+        categorySelectCoordination.headForAlert = { [weak self] alertModel in
+            self?.router.presentActionSheet(alertModel: alertModel)
         }
         
         router.present(categorySelectView) { [weak self, weak categorySelectCoordination] in

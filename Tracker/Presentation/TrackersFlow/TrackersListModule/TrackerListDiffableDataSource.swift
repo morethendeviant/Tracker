@@ -13,7 +13,8 @@ final class TrackerListDiffableDataSource: UICollectionViewDiffableDataSource<Tr
     
     init(_ collectionView: UICollectionView,
          dataSourceProvider: TrackersDataSourceProvider,
-         interactionDelegate: UIContextMenuInteractionDelegate? = nil) {
+         interactionDelegate: UIContextMenuInteractionDelegate? = nil,
+         analyticsService: AnalyticsService) {
         
         super.init(collectionView: collectionView) { collectionView, indexPath, tracker in
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: TrackerCollectionViewCell.identifier, for: indexPath) as? TrackerCollectionViewCell else {
@@ -25,12 +26,12 @@ final class TrackerListDiffableDataSource: UICollectionViewDiffableDataSource<Tr
             cell.trackerText = tracker.name
             cell.callback = {
                 dataSourceProvider.changeStateForTracker(tracker)
+                analyticsService.reportEvent(event: .tap, screen: .trackersList, item: .trackerChecked)
             }
             
             cell.isMarked = dataSourceProvider.cellIsMarkedWithId(tracker.id)
             cell.daysAmount = dataSourceProvider.daysAmountWithId(tracker.id)
             cell.interactionDelegate = interactionDelegate
-            
             return cell
         }
     }

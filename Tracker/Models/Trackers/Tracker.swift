@@ -13,13 +13,15 @@ struct Tracker: Hashable {
     let color: Int
     let emoji: Int
     let schedule: [DayOfWeek]
+    let isPinned: Bool
     
-    init(id: String = UUID().uuidString, name: String, color: Int, emoji: Int, schedule: [DayOfWeek]) {
-        self.id = id
+    init(id: String? = nil, name: String, color: Int, emoji: Int, schedule: [DayOfWeek], isPinned: Bool = false) {
+        self.id = id ?? UUID().uuidString
         self.name = name
         self.color = color
         self.emoji = emoji
         self.schedule = schedule
+        self.isPinned = isPinned
     }
 }
 
@@ -30,5 +32,6 @@ extension Tracker {
         self.color = Int(managedItem.color)
         self.emoji = Int(managedItem.emoji)
         self.schedule = DayOfWeek.numbersToDays(managedItem.schedule)
+        self.isPinned = managedItem.isPinned
     }
 }

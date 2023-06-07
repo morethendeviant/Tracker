@@ -1,0 +1,146 @@
+/* Add category button text */
+"addCategory" = "إضافة فئة";
+
+/* Blue onboarding screen text */
+"backgroundImage.blue.description" = "تتبع فقط ما تريد";
+
+/* Red onboarding screen text */
+"backgroundImage.red.description" = "حتى لو لم يكن لترًا من الماء أو اليوجا";
+
+/* Cancel button title */
+"cancel" = "يلغي";
+
+/* Text for alert cancel button */
+"cancelActionText" = "يلغي";
+
+/* Categories page name
+   Category */
+"category" = "فئة";
+
+/* Colors section label text */
+"colors" = "الألوان";
+
+/* Create button title */
+"create" = "يخلق";
+
+/* Delete menu item text */
+"delete" = "يمسح";
+
+/* Text for alert delete button */
+"deleteActionText" = "يمسح";
+
+/* Text for delete alert */
+"deleteAlertText" = "هل هذه الفئة حقا ليست ضرورية؟";
+
+/* Text for tracker delete alert */
+"deleteTrackerAlertText" = "هل أنت متأكد أنك تريد حذف المتعقب؟";
+
+/* Edit menu item text */
+"edit" = "يحرر";
+
+/* Emoji section label text */
+"emoji" = "تعبيري";
+
+/* Text displayed on empty search */
+"emptyPlaceholder.search" = "لم يتم العثور على شيء";
+
+/* Text displayed on empty schedule */
+"emptyPlaceholder.trackers" = "ماذا سنتعقب؟";
+
+/* Enter category name placeholder text */
+"enterCategoryName" = "أدخل اسم الفئة";
+
+/* Event button title */
+"event" = "حدث غير منتظم";
+
+/* Every day */
+"everyDay" = "كل يوم";
+
+/* Filters button text */
+"filters" = "المرشحات";
+
+/* Habit button title */
+"habit" = "عادة";
+
+/* New category page name */
+"newCategory" = "فئة جديدة";
+
+/* New event page name */
+"newEvent" = "حدث جديد";
+
+/* New habit page name */
+"newHabit" = "عادة جديدة";
+
+/* Onboarding screen proceed button text */
+"onboardingPageViewController.proceedButton" = "هذه هي التكنولوجيا!";
+
+/* Pin menu item text */
+"pin" = "دبوس";
+
+/* Pinned group name */
+"pinned" = "مثبت";
+
+/* Ready button title */
+"ready" = "مستعد";
+
+/* Schedule
+   Schedule page name */
+"schedule" = "جدول";
+
+/* Search bar placeholder text */
+"search" = "يبحث";
+
+/* Statistic screen name */
+"statistic" = "إحصائيات";
+
+/* Statistics tab bar text */
+"statistics" = "إحصائيات";
+
+/* Limit on tracker name length */
+"stringLengthLimit" = "٣٨ حرفًا كحد أقصى";
+
+/* Tracker name text field placeholder */
+"tracker.name" = "أدخل اسم تعقب";
+
+/* Tracker creation page name */
+"trackerCreation" = "إنشاء المقتفي";
+
+/* Trackers screen name
+   Trackers tab bar text */
+"trackers" = "المقتفون";
+
+/* Statistic finished trackers amount text */
+"trackers.finished" = "اكتملت أجهزة التعقب";
+
+/* Statistic ideal days amount text */
+"trackers.ideal" = "أيام مثالية";
+
+/* Statistic total trackers amount text */
+"trackers.total" = "مجموع بتتبع";
+
+/* Unpin menu item text */
+"unPin" = "نزع الدبوس";
+
+/* All filter text */
+"allFilters" = "جميع أجهزة التتبع";
+
+/* Today filter text */
+"todayFilters" = "بتتبع اليوم";
+
+/* Finished filter text */
+"finishedFilters" = "مكتمل";
+
+/* Unfinished filter text */
+"unfinishedFilters" = "غير مكتمل";
+
+/* Filters page name */
+"filters" = "المرشحات";
+
+/* Save button title */
+"save" = "يحفظ";
+
+/* Edit event page name */
+"editEvent" = "تحرير الحدث";
+
+/* Edit habit page name */
+"editHabit" = "عدل العادة";

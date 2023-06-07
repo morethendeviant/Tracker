@@ -1,0 +1,152 @@
+/* Add category button text */
+"addCategory" = "Добавить категорию";
+
+/* Blue onboarding screen text */
+"backgroundImage.blue.description" = "Отслеживайте только то, что хотите";
+
+/* Red onboarding screen text */
+"backgroundImage.red.description" = "Даже если это не литры воды и йога";
+
+/* Cancel button title */
+"cancel" = "Отмена";
+
+/* Text for alert cancel button */
+"cancelActionText" = "Отмена";
+
+/* Categories page name
+   Category */
+"category" = "Категория";
+
+/* Colors section label text */
+"colors" = "Цвета";
+
+/* Create button title */
+"create" = "Создать";
+
+/* Delete menu item text */
+"delete" = "Удалить";
+
+/* Text for alert delete button */
+"deleteActionText" = "Удалить";
+
+/* Text for delete alert */
+"deleteAlertText" = "Эта категория точно не нужна?";
+
+/* Text for tracker delete alert */
+"deleteTrackerAlertText" = "Уверены, что хотите удалить трекер?";
+
+/* Edit menu item text */
+"edit" = "Редактировать";
+
+/* Emoji section label text */
+"emoji" = "Эмодзи";
+
+/* Text displayed on empty search */
+"emptyPlaceholder.search" = "Ничего не найдено";
+
+/* Text displayed on empty statistics */
+"emptyPlaceholder.statistics" = "Анализировать пока нечего";
+
+/* Text displayed on empty schedule */
+"emptyPlaceholder.trackers" = "Что будем отслеживать?";
+
+/* Enter category name placeholder text */
+"enterCategoryName" = "Вредите имя категории";
+
+/* Event button title */
+"event" = "Нерегулярное событие";
+
+/* Every day */
+"everyDay" = "Каждый день";
+
+/* Filters button text */
+"filters" = "Фильтры";
+
+/* Habit button title */
+"habit" = "Привычка";
+
+/* New category page name */
+"newCategory" = "Новая категория";
+
+/* New event page name */
+"newEvent" = "Новое нерегулярное событие";
+
+/* New habit page name */
+"newHabit" = "Новая привычка";
+
+/* Onboarding screen proceed button text */
+"onboardingPageViewController.proceedButton" = "Вот это технологии!";
+
+/* Pin menu item text */
+"pin" = "Закрепить";
+
+/* Pinned group name */
+"pinned" = "Закрепленные";
+
+/* Ready button title */
+"ready" = "Готово";
+
+/* Schedule
+   Schedule page name */
+"schedule" = "Расписание";
+
+/* Search bar placeholder text */
+"search" = "Поиск";
+
+/* Statistic screen name */
+"statistic" = "Статистика";
+
+/* Statistics tab bar text */
+"statistics" = "Статистика";
+
+/* Limit on tracker name length */
+"stringLengthLimit" = "Ограничение 38 символов";
+
+/* Tracker name text field placeholder */
+"tracker.name" = "Введите название трекера";
+
+/* Tracker creation page name */
+"trackerCreation" = "Создание трекера";
+
+/* Trackers screen name
+   Trackers tab bar text */
+"trackers" = "Трекеры";
+
+/* Statistic finished trackers amount text */
+"trackers.finished" = "Трекеров завершено";
+
+/* Statistic ideal days amount text */
+"trackers.ideal" = "Идеальны";
+
+/* Statistic total trackers amount text */
+"trackers.total" = "Всего трекеров";
+
+/* Unpin menu item text */
+"unPin" = "Открепить";
+
+/* All filter text */
+"allFilters" = "Все трекеры";
+
+/* Today filter text */
+"todayFilters" = "Трекеры на сегодня";
+
+/* Finished filter text */
+"finishedFilters" = "Завершенные";
+
+/* Unfinished filter text */
+"unfinishedFilters" = "Не завершенные";
+
+/* Filters page name */
+"filters" = "Фильтры";
+
+/* Save button title */
+"save" = "Сохранить";
+
+/* Edit event page name */
+"editEvent" = "Редактирование нерегулярного события";
+
+/* Edit habit page name */
+"editHabit" = "Редактирование привычки";
+
+/* Text displayed on empty categories */
+"emptyPlaceholder.category" = "Привычки и события можно объединять по смыслу";

@@ -9,68 +9,92 @@ import Foundation
 
 protocol ModulesFactoryProtocol {
     func makeTrackersView() -> (view: Presentable, coordination: TrackersViewCoordination)
-    func makeStatisticsView() -> Presentable
+    func makeStatisticsView() -> (view: Presentable, coordination: StatisticsViewCoordination)
     func makeTrackerSelectView() -> Presentable
+    func makeFilterModule(selectedFilter: Filter) -> (view: Presentable, coordination: FiltersViewCoordination)
     func makeScheduleView(weekdays: [DayOfWeek]) -> (view: Presentable, coordination: ScheduleCoordination)
-    func makeHabitCreationView() -> (view: Presentable, coordination: HabitCreationCoordination)
-    func makeEventCreationView() -> (view: Presentable, coordination: EventCreationCoordination)
+    func makeHabitCreationView(tableDataModel: TrackerViewModel?,
+                               screenAppearance: HabitScreenAppearance) -> (view: Presentable, coordination: HabitCreationCoordination)
+    func makeEventCreationView(tableDataModel: TrackerViewModel?,
+                               screenAppearance: HabitScreenAppearance) -> (view: Presentable, coordination: EventCreationCoordination)
     func makeCategorySelectView(selectedCategory: String?) -> (view: Presentable, coordination: CategorySelectCoordination)
     func makeCategoryCreateView() -> (view: Presentable, coordination: CategoryCreateCoordination)
     func makeOnboardingPageView() -> Presentable
 }
 
-final class ModulesFactory: ModulesFactoryProtocol {
+struct ModulesFactory: ModulesFactoryProtocol {
+    let analyticsService = AnalyticsService()
+    
+    func makeFilterModule(selectedFilter: Filter) -> (view: Presentable, coordination: FiltersViewCoordination) {
+        let viewModel = FilterViewModel(selectedFilter: selectedFilter)
+        let pageTitle = NSLocalizedString("filters", comment: "Filters page name")
+        let view = FiltersViewController(viewModel: viewModel, pageTitle: pageTitle)
+        return (view, viewModel)
+    }
     
     func makeTrackersView() -> (view: Presentable, coordination: TrackersViewCoordination) {
         let dataProvider: TrackerDataStoreProtocol = DataStore()
         let viewModel = TrackersListViewModel(dataProvider: dataProvider)
-        let view = TrackersViewController(viewModel: viewModel, diffableDataSourceProvider: viewModel)
+        let view = TrackersViewController(viewModel: viewModel,
+                                          diffableDataSourceProvider: viewModel,
+                                          analyticsService: analyticsService)
         return (view, viewModel)
     }
     
-    func makeStatisticsView() -> Presentable {
-        StatisticsViewController()
+    func makeStatisticsView() -> (view: Presentable, coordination: StatisticsViewCoordination) {
+        let dataProvider: StatisticsDataStoreProtocol = DataStore()
+        let statisticsHelper: StatisticsHelperProtocol = StatisticsHelper(dataProvider: dataProvider)
+        let viewModel = StatisticsViewModel(statisticsHelper: statisticsHelper)
+        let view = StatisticsViewController(viewModel: viewModel)
+        return (view, viewModel)
     }
     
     func makeTrackerSelectView() -> Presentable {
-        TrackerSelectViewController(pageTitle: "Создание трекера")
+        let pageTitle = NSLocalizedString("trackerCreation", comment: "Tracker creation page name")
+        return TrackerSelectViewController(pageTitle: pageTitle)
     }
     
     func makeScheduleView(weekdays: [DayOfWeek]) -> (view: Presentable, coordination: ScheduleCoordination) {
         let viewModel = ScheduleViewModel(weekdays: weekdays)
-        let view = ScheduleViewController(viewModel: viewModel, pageTitle: "Расписание")
+        let pageTitle = NSLocalizedString("schedule", comment: "Schedule page name")
+        let view = ScheduleViewController(viewModel: viewModel, pageTitle: pageTitle)
         return (view, viewModel)
     }
     
-    func makeHabitCreationView() -> (view: Presentable, coordination: HabitCreationCoordination) {
-        let tableModel = TrackerCreationTableModel.habit
+    func makeHabitCreationView(tableDataModel: TrackerViewModel?, screenAppearance: HabitScreenAppearance) -> (view: Presentable, coordination: HabitCreationCoordination) {
+        let tableModel = TrackerCreationTableModel.habit(tableDataModel)
         let dataStore: TrackerCreationDataStoreProtocol = DataStore()
         let viewModel = HabitCreationViewModel(dataStore: dataStore, tableDataModel: tableModel)
-        let view = HabitCreationViewController(viewModel: viewModel, pageTitle: "Новая привычка")
+        let view = HabitCreationViewController(viewModel: viewModel,
+                                               pageTitle: screenAppearance.pageTitle,
+                                               confirmButtonText: screenAppearance.confirmButtonText)
         return (view, viewModel)
     }
     
-    func makeEventCreationView() -> (view: Presentable, coordination: EventCreationCoordination) {
-        let tableModel = TrackerCreationTableModel.event
+    func makeEventCreationView(tableDataModel: TrackerViewModel?, screenAppearance: HabitScreenAppearance) -> (view: Presentable, coordination: EventCreationCoordination) {
+        let tableModel = TrackerCreationTableModel.event(tableDataModel)
         let dataStore: TrackerCreationDataStoreProtocol = DataStore()
         let viewModel = HabitCreationViewModel(dataStore: dataStore, tableDataModel: tableModel)
-        let view = HabitCreationViewController(viewModel: viewModel, pageTitle: "Новая привычка")
+        let view = HabitCreationViewController(viewModel: viewModel,
+                                               pageTitle: screenAppearance.pageTitle,
+                                               confirmButtonText: screenAppearance.confirmButtonText)
         return (view, viewModel)
-
     }
     
     func makeCategorySelectView(selectedCategory: String?) -> (view: Presentable, coordination: CategorySelectCoordination) {
         let dataStore: CategorySelectDataStoreProtocol = DataStore()
         let viewModel = CategorySelectViewModel(dataProvider: dataStore, selectedCategory: selectedCategory)
+        let pageTitle = NSLocalizedString("category", comment: "Categories page name")
         let view = CategorySelectViewController(dataSourceProvider: viewModel,
                                                 viewModel: viewModel,
-                                                pageTitle: "Категория")
+                                                pageTitle: pageTitle)
         return (view, viewModel)
     }
     
     func makeCategoryCreateView() -> (view: Presentable, coordination: CategoryCreateCoordination) {
         let viewModel = CategoryCreateViewModel()
-        let view = CategoryCreateViewController(viewModel: viewModel, pageTitle: "Новая категория")
+        let pageTitle = NSLocalizedString("newCategory", comment: "New category page name")
+        let view = CategoryCreateViewController(viewModel: viewModel, pageTitle: pageTitle)
         return (view, viewModel)
     }
     

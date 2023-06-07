@@ -6,12 +6,19 @@
 //
 
 import UIKit
+import YandexMobileMetrica
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
+    let analyticsApiKey = "51dcda39-8651-4237-a374-a6d5b5579abd"
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        true
+        guard let configuration = YMMYandexMetricaConfiguration(apiKey: analyticsApiKey) else {
+            return true
+        }
+        
+        YMMYandexMetrica.activate(with: configuration)
+        return true
     }
     
     // MARK: - UISceneSession Lifecycle

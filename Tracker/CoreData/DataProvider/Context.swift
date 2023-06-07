@@ -13,7 +13,7 @@ final class Context {
     private let persistentContainer: NSPersistentContainer
     private let context: NSManagedObjectContext
     
-    init() {
+    private init() {
         let modelName = "TrackerCoreDataModel"
         self.persistentContainer = {
             let container = NSPersistentContainer(name: modelName)

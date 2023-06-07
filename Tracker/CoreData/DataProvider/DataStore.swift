@@ -29,6 +29,11 @@ protocol TrackerDataStoreProtocol {
     func deleteRecord(_ record: TrackerRecord) throws
     func readRecordAmountWith(id: String) throws -> Int
     func checkForExistence(_ record: TrackerRecord) throws -> Bool
+    func setTracker(_ tracker: Tracker, pinned: Bool) throws
+}
+
+protocol StatisticsDataStoreProtocol {
+    func loadRawDataForStatistics() throws -> (trackers: [TrackerManagedObject], records: [TrackerRecordManagedObject])
 }
 
 // MARK: - Data Store
@@ -79,19 +84,25 @@ extension DataStore: CategorySelectDataStoreProtocol {
  
 extension DataStore: TrackerCreationDataStoreProtocol {
     func createTracker(_ tracker: Tracker, categoryName: String) throws {
-        let request = NSFetchRequest<TrackerCategoryManagedObject>(entityName: "TrackerCategoryCoreData")
-        request.returnsObjectsAsFaults = false
-        request.predicate = NSPredicate(format: "%K == %@", #keyPath(TrackerCategoryManagedObject.name), categoryName)
+        let categoryRequest = NSFetchRequest<TrackerCategoryManagedObject>(entityName: "TrackerCategoryCoreData")
+        categoryRequest.returnsObjectsAsFaults = false
+        categoryRequest.predicate = NSPredicate(format: "%K == %@",
+                                                #keyPath(TrackerCategoryManagedObject.name),
+                                                categoryName)
         
-        let trackerCategoryObjects = try? context.fetch(request)
+        let trackerCategoryObjects = try? context.fetch(categoryRequest)
         
         let trackerCategoryObject = trackerCategoryObjects?.first != nil ?
         trackerCategoryObjects!.first! : try createCategory(categoryName)
 
-        let trackerObject = TrackerManagedObject(context: context)
-        trackerObject.setFrom(tracker: tracker)
-        trackerObject.category = trackerCategoryObject
-        trackerCategoryObject.addToTrackers(trackerObject)
+        if let trackerObject = try getTracker(tracker.id) {
+            trackerObject.setFrom(tracker: tracker)
+        } else {
+            let trackerObject = TrackerManagedObject(context: context)
+            trackerObject.category = trackerCategoryObject
+            trackerObject.setFrom(tracker: tracker)
+            trackerCategoryObject.addToTrackers(trackerObject)
+        }
         
         try context.save()
     }
@@ -148,6 +159,25 @@ extension DataStore: TrackerDataStoreProtocol {
     
     func checkForExistence(_ record: TrackerRecord) throws -> Bool {
         try getRecord(record) != nil
+    }
+    
+    func setTracker(_ tracker: Tracker, pinned: Bool) throws {
+        let trackerObject = try getTracker(tracker.id)
+        trackerObject?.isPinned = pinned
+        try context.save()
+    }
+}
+
+extension DataStore: StatisticsDataStoreProtocol {
+    func loadRawDataForStatistics() throws -> (trackers: [TrackerManagedObject], records: [TrackerRecordManagedObject]) {
+        let trackersRequest = NSFetchRequest<TrackerManagedObject>(entityName: "TrackerCoreData")
+        trackersRequest.returnsObjectsAsFaults = false
+        let trackers = try context.fetch(trackersRequest)
         
+        let recordsRequest = NSFetchRequest<TrackerRecordManagedObject>(entityName: "TrackerRecordCoreData")
+        recordsRequest.returnsObjectsAsFaults = false
+        let records = try context.fetch(recordsRequest)
+        
+        return (trackers: trackers, records: records)
     }
 }

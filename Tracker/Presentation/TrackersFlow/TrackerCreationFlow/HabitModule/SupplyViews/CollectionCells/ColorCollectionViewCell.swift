@@ -34,7 +34,7 @@ final class ColorCollectionViewCell: UICollectionViewCell {
     
     var cellIsSelected: Bool = false {
         didSet {
-            cellIsSelected ? (borderLayer.borderColor = UIColor.ypLightGray?.cgColor) : (borderLayer.borderColor = UIColor.clear.cgColor)
+            cellIsSelected ? (borderLayer.borderColor = Asset.ypLightGray.color.cgColor) : (borderLayer.borderColor = UIColor.clear.cgColor)
         }
     }
 

@@ -21,6 +21,7 @@ protocol Routable {
     func dismissModule(_ module: Presentable?, animated: Bool, completion: (() -> Void)?)
     
     func presentAlert(message: String)
+    func presentActionSheet(alertModel: AlertModel)
     
     func addToTabBar(_ module: Presentable?)
 }
@@ -95,7 +96,24 @@ extension Router: Routable {
     
     func presentAlert(message: String) {
         let alert = UIAlertController(title: "Ошибка", message: message, preferredStyle: .alert)
-        present(alert, animated: true)
+        presentingViewController?.toPresent()?.present(alert, animated: true)
+    }
+    
+    func presentActionSheet(alertModel: AlertModel) {
+        let alert = UIAlertController(title: alertModel.alertText, message: nil, preferredStyle: .actionSheet)
+        alertModel.alertActions.forEach { alertAction in
+            let actionStyle: UIAlertAction.Style
+            switch alertAction.actionRole {
+            case .destructive: actionStyle = .destructive
+            case .regular: actionStyle = .default
+            case .cancel: actionStyle = .cancel
+            }
+            
+            let action = UIAlertAction(title: alertAction.actionText, style: actionStyle, handler: { _ in alertAction.action?() })
+            alert.addAction(action)
+        }
+        
+        presentingViewController?.toPresent()?.present(alert, animated: true)
     }
 }
 

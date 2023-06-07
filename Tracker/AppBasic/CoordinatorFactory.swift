@@ -8,8 +8,12 @@
 protocol CoordinatorsFactoryProtocol {
     func makeAppCoordinator(router: Routable) -> Coordinatable & AppCoordinatorOutput
     func makeTrackerCoordinator(router: Routable) -> Coordinatable
-    func makeHabitCreationCoordinator(router: Routable) -> Coordinatable & HabitCreationCoordinator
-    func makeEventCreationCoordinator(router: Routable) -> Coordinatable & EventCreationCoordinator
+    func makeHabitCreationCoordinator(router: Routable,
+                                      tracker: TrackerViewModel?,
+                                      screenAppearance: HabitScreenAppearance) -> Coordinatable & HabitCreationCoordinator
+    func makeEventCreationCoordinator(router: Routable,
+                                      tracker: TrackerViewModel?,
+                                      screenAppearance: HabitScreenAppearance) -> Coordinatable & EventCreationCoordinator
     func makeCategoryCoordinator(router: Routable, selectedCategory: String?) -> Coordinatable & CategoryCoordinatorOutput
     func makeStatisticsCoordinator(router: Routable) -> Coordinatable
 }
@@ -20,26 +24,45 @@ final class CoordinatorFactory {
 
 extension CoordinatorFactory: CoordinatorsFactoryProtocol {
     func makeAppCoordinator(router: Routable) -> Coordinatable & AppCoordinatorOutput {
-        AppCoordinator(coordinatorsFactory: self, modulesFactory: modulesFactory, router: router)
+        let defaultsStorageService = DefaultsStorageService()
+        return AppCoordinator(coordinatorsFactory: self,
+                              modulesFactory: modulesFactory,
+                              router: router,
+                              defaultsStorageService: defaultsStorageService)
     }
     
     func makeTrackerCoordinator(router: Routable) -> Coordinatable {
-        TrackerCoordinator(coordinatorsFactory: self, modulesFactory: modulesFactory, router: router)
+        TrackerCoordinator(coordinatorsFactory: self,
+                           modulesFactory: modulesFactory,
+                           router: router)
     }
     
-    func makeHabitCreationCoordinator(router: Routable) -> Coordinatable & HabitCreationCoordinator {
-        HabitCreationCoordinator(coordinatorsFactory: self, modulesFactory: modulesFactory, router: router)
+    func makeHabitCreationCoordinator(router: Routable, tracker: TrackerViewModel?, screenAppearance: HabitScreenAppearance) -> Coordinatable & HabitCreationCoordinator {
+        HabitCreationCoordinator(coordinatorsFactory: self,
+                                 modulesFactory: modulesFactory,
+                                 router: router,
+                                 tracker: tracker,
+                                 screenAppearance: screenAppearance)
     }
     
-    func makeEventCreationCoordinator(router: Routable) -> Coordinatable & EventCreationCoordinator {
-        EventCreationCoordinator(coordinatorsFactory: self, modulesFactory: modulesFactory, router: router)
+    func makeEventCreationCoordinator(router: Routable, tracker: TrackerViewModel?, screenAppearance: HabitScreenAppearance) -> Coordinatable & EventCreationCoordinator {
+        EventCreationCoordinator(coordinatorsFactory: self,
+                                 modulesFactory: modulesFactory,
+                                 router: router,
+                                 tracker: tracker,
+                                 screenAppearance: screenAppearance)
     }
     
     func makeStatisticsCoordinator(router: Routable) -> Coordinatable {
-        StatisticsCoordinator(coordinatorsFactory: self, modulesFactory: modulesFactory, router: router)
+        StatisticsCoordinator(coordinatorsFactory: self,
+                              modulesFactory: modulesFactory,
+                              router: router)
     }
     
     func makeCategoryCoordinator(router: Routable, selectedCategory: String?) -> Coordinatable & CategoryCoordinatorOutput {
-        CategoryCoordinator(coordinatorsFactory: self, modulesFactory: modulesFactory, router: router, selectedCategory: selectedCategory)
+        CategoryCoordinator(coordinatorsFactory: self,
+                            modulesFactory: modulesFactory,
+                            router: router,
+                            selectedCategory: selectedCategory)
     }
 }

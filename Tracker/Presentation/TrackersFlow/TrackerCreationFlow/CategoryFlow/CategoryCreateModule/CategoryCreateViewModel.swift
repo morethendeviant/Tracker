@@ -14,7 +14,6 @@ protocol CategoryCreateCoordination: AnyObject {
 protocol CategoryCreateViewModelProtocol {
     var categoryName: String { get }
     var categoryNameObserver: Observable<String> { get }
-    var textLimit: Int { get }
     
     func returnDidTapped()
     func setName(_ name: String)
@@ -25,8 +24,6 @@ final class CategoryCreateViewModel: CategoryCreateCoordination {
     var onReturnWithDone: ((String) -> Void)?
     
     @Observable private(set) var categoryName: String = ""
-
-    let textLimit: Int = 10
 }
 
 extension CategoryCreateViewModel: CategoryCreateViewModelProtocol {
@@ -43,7 +40,7 @@ extension CategoryCreateViewModel: CategoryCreateViewModelProtocol {
     }
     
     func isAtTextLimit(existingText: String?, newText: String) -> Bool {
-        let isAtLimit = (existingText ?? "").count + newText.count <= textLimit
+        let isAtLimit = (existingText ?? "").count + newText.count <= 38
         if newText.isEmpty {
             categoryName.removeLast()
         } else {

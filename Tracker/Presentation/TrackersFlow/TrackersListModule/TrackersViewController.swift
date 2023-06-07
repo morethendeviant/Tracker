@@ -12,11 +12,13 @@ final class TrackersViewController: UIViewController {
     
     private let viewModel: TrackersListViewModelProtocol
     private let diffableDataSourceProvider: TrackersDataSourceProvider
+    private let analyticsService: AnalyticsService
     
     private lazy var diffableDataSource: TrackerListDiffableDataSource = {
         let dataSource = TrackerListDiffableDataSource(trackersCollectionView,
                                                        dataSourceProvider: diffableDataSourceProvider,
-                                                       interactionDelegate: self)
+                                                       interactionDelegate: self,
+                                                       analyticsService: analyticsService)
         return dataSource
     }()
     
@@ -33,15 +35,16 @@ final class TrackersViewController: UIViewController {
         let image = UIImage(systemName: "plus",
                             withConfiguration: UIImage.SymbolConfiguration(pointSize: 18, weight: .bold))
         button.setImage(image, for: .normal)
-        button.tintColor = .ypBlack
+        button.tintColor = Asset.ypBlack.color
         button.addTarget(nil, action: #selector(plusButtonTapped), for: .touchUpInside)
         return button
     }()
     
     private lazy var headerLabel: UILabel = {
         let label = UILabel()
-        label.text = "Трекеры"
+        label.text = NSLocalizedString("trackers", comment: "Trackers screen name")
         label.font = .boldSystemFont(ofSize: 34)
+        label.textColor = Asset.ypBlack.color
         return label
     }()
     
@@ -49,7 +52,7 @@ final class TrackersViewController: UIViewController {
         let searchBar = UISearchBar()
         searchBar.delegate = self
         searchBar.layer.cornerRadius = 10
-        searchBar.placeholder = "Поиск"
+        searchBar.placeholder = NSLocalizedString("search", comment: "Search bar placeholder text")
         searchBar.searchBarStyle = .minimal
         searchBar.directionalLayoutMargins = NSDirectionalEdgeInsets(top: 0, leading: 16, bottom: 0, trailing: 16)
         return searchBar
@@ -61,11 +64,11 @@ final class TrackersViewController: UIViewController {
         datePicker.layer.cornerRadius = 8
         datePicker.clipsToBounds = true
         datePicker.preferredDatePickerStyle = .compact
-        datePicker.locale = Locale(identifier: "ru_RU")
-        var calendar = Calendar(identifier: .gregorian)
-        calendar.firstWeekday = 2
-        datePicker.calendar = calendar
+        datePicker.locale = .autoupdatingCurrent
+        datePicker.calendar = .autoupdatingCurrent
         datePicker.datePickerMode = .date
+        datePicker.overrideUserInterfaceStyle = .light
+        datePicker.backgroundColor = Asset.ypWhite.color
         return datePicker
     }()
     
@@ -73,6 +76,7 @@ final class TrackersViewController: UIViewController {
     
     private lazy var trackersCollectionView: UICollectionView = {
         let collection = UICollectionView(frame: .zero, collectionViewLayout: createLayout())
+        collection.backgroundColor = Asset.ypWhite.color
         collection.register(TrackerCollectionViewCell.self,
                             forCellWithReuseIdentifier: TrackerCollectionViewCell.identifier)
         
@@ -91,17 +95,23 @@ final class TrackersViewController: UIViewController {
         let button = UIButton()
         button.layer.cornerRadius = 16
         button.setTitleColor(.white, for: .normal)
-        button.setTitle("Фильтры", for: .normal)
-        button.backgroundColor = .ypBlue
+        let buttonTitle = NSLocalizedString("filters", comment: "Filters button text")
+        button.setTitle(buttonTitle, for: .normal)
+        button.backgroundColor = Asset.ypBlue.color
         button.titleLabel?.font = .systemFont(ofSize: 17)
+        button.addTarget(nil, action: #selector(filterButtonTapped), for: .touchUpInside)
         return button
     }()
     
-    init(viewModel: TrackersListViewModelProtocol, diffableDataSourceProvider: TrackersDataSourceProvider) {
+    init(viewModel: TrackersListViewModelProtocol,
+         diffableDataSourceProvider: TrackersDataSourceProvider,
+         analyticsService: AnalyticsService) {
         self.viewModel = viewModel
         self.diffableDataSourceProvider = diffableDataSourceProvider
+        self.analyticsService = analyticsService
         super.init(nibName: nil, bundle: nil)
-        self.tabBarItem = UITabBarItem(title: "Трекеры", image: UIImage(named: "record.circle.fill"), tag: 0)
+        let tabBarItemText = NSLocalizedString("trackers", comment: "Trackers tab bar text")
+        self.tabBarItem = UITabBarItem(title: tabBarItemText, image: Asset.recordCircleFill.image, tag: 0)
     }
     
     required init?(coder: NSCoder) {
@@ -122,6 +132,12 @@ final class TrackersViewController: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         viewModel.dateChangedTo(datePicker.date)
+        analyticsService.reportEvent(event: .open, screen: .trackersList)
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        analyticsService.reportEvent(event: .close, screen: .trackersList)
     }
 }
 
@@ -130,7 +146,13 @@ final class TrackersViewController: UIViewController {
 @objc private extension TrackersViewController {
     func plusButtonTapped() {
         searchBar.resignFirstResponder()
+        analyticsService.reportEvent(event: .tap, screen: .trackersList, item: .addTracker)
         viewModel.plusButtonTapped()
+    }
+    
+    func filterButtonTapped() {
+        analyticsService.reportEvent(event: .tap, screen: .trackersList, item: .filter)
+        viewModel.filterButtonTapped()
     }
     
     func dateChanged() {
@@ -235,6 +257,13 @@ private extension TrackersViewController {
             guard let tracker else { return }
             self?.diffableDataSource.reloadTracker(tracker)
         }
+        
+        viewModel.dateObserver.bind { [weak self] date in
+            guard let self else { return }
+            if date != self.datePicker.date {
+                datePicker.date = date
+            }
+        }
     }
 }
 
@@ -273,16 +302,26 @@ extension TrackersViewController: UIContextMenuInteractionDelegate {
         }
         
         let configuration = UIContextMenuConfiguration(identifier: nil, previewProvider: nil) { [weak self] _ -> UIMenu in
-            let pin = UIAction(title: "Закрепить", image: UIImage(systemName: "pin")) { _ in
-                // TODO: - Implement pin ability
+            guard let self else { return UIMenu() }
+            
+            let pinItemText = self.viewModel.trackerIsPinnedAt(indexPath: indexPath) ?
+            NSLocalizedString("unPin", comment: "Unpin menu item text") :
+            NSLocalizedString("pin", comment: "Pin menu item text")
+
+            let pin = UIAction(title: pinItemText, image: UIImage(systemName: "pin")) { _ in
+                self.viewModel.pinTrackerAt(indexPath: indexPath)
             }
             
-            let edit = UIAction(title: "Редактировать", image: UIImage(systemName: "pencil")) { _ in
-                // TODO: - Implement edit ability
+            let editItemText = NSLocalizedString("edit", comment: "Edit menu item text")
+            let edit = UIAction(title: editItemText, image: UIImage(systemName: "pencil")) { _ in
+                self.analyticsService.reportEvent(event: .tap, screen: .trackersList, item: .edit)
+                self.viewModel.editTrackerAt(indexPath: indexPath)
             }
             
-            let delete = UIAction(title: "Удалить", image: UIImage(systemName: "trash.fill"), attributes: .destructive) { _ in
-                self?.viewModel.deleteTrackerAt(indexPath: indexPath)
+            let deleteItemText = NSLocalizedString("delete", comment: "Delete menu item text")
+            let delete = UIAction(title: deleteItemText, image: UIImage(systemName: "trash.fill"), attributes: .destructive) { _ in
+                self.analyticsService.reportEvent(event: .tap, screen: .trackersList, item: .delete)
+                self.viewModel.deleteTrackerAt(indexPath: indexPath)
             }
             
             return UIMenu(children: [pin, edit, delete])
@@ -306,7 +345,7 @@ private extension TrackersViewController {
     }
     
     func configure() {
-        view.backgroundColor = .ypWhite
+        view.backgroundColor = Asset.ypWhite.color
     }
     
     func applyLayout() {
@@ -329,7 +368,7 @@ private extension TrackersViewController {
         datePicker.snp.makeConstraints { make in
             make.top.equalTo(plusButton.snp.bottom).offset(13)
             make.trailing.equalToSuperview().offset(-16)
-            make.width.equalTo(100)
+            make.width.equalTo(100).priority(250)
             make.height.equalTo(34)
         }
         

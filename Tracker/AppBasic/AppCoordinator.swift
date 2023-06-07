@@ -16,15 +16,23 @@ final class AppCoordinator: BaseCoordinator, Coordinatable, AppCoordinatorOutput
     private var coordinatorsFactory: CoordinatorsFactoryProtocol
     private var modulesFactory: ModulesFactoryProtocol
     private var router: Routable
+    private var defaultsStorageService: DefaultsStorageService
     
-    init(coordinatorsFactory: CoordinatorsFactoryProtocol, modulesFactory: ModulesFactoryProtocol, router: Routable) {
+    init(coordinatorsFactory: CoordinatorsFactoryProtocol, modulesFactory: ModulesFactoryProtocol, router: Routable, defaultsStorageService: DefaultsStorageService) {
         self.coordinatorsFactory = coordinatorsFactory
         self.modulesFactory = modulesFactory
         self.router = router
+        self.defaultsStorageService = defaultsStorageService
     }
     
     func startFlow() {
-        routeToOnboarding()
+        if defaultsStorageService.onboardingWasShown {
+            routeToTabBarController()
+            createTrackersFlow()
+            createStatisticsFlow()
+        } else {
+            routeToOnboarding()
+        }
     }
 }
 
@@ -33,9 +41,8 @@ private extension AppCoordinator {
         let pageView = modulesFactory.makeOnboardingPageView()
         var pageViewCoordinator = pageView as? OnboardingPageViewControllerCoordinator
         pageViewCoordinator?.onProceed = { [weak self] in
-            self?.routeToTabBarController()
-            self?.createTrackersFlow()
-            self?.createStatisticsFlow()
+            self?.defaultsStorageService.onboardingWasShown = true
+            self?.startFlow()
         }
         
         router.setRootViewController(viewController: pageView)

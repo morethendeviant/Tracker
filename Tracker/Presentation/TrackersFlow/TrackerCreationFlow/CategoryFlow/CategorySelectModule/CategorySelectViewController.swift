@@ -10,12 +10,9 @@ import UIKit
 final class CategorySelectViewController: BaseViewController {
     
     private let viewModel: CategorySelectViewModelProtocol
-    private let dataSourceProvider: CategoriesDataSourceProvider
     
     private lazy var dataSource: CategoriesDiffableDataSource = {
-        let dataSource = CategoriesDiffableDataSource(categoriesTableView,
-                                                      dataSourceProvider: dataSourceProvider,
-                                                      interactionDelegate: self)
+        let dataSource = CategoriesDiffableDataSource(categoriesTableView, interactionDelegate: self)
         return dataSource
     }()
     
@@ -23,21 +20,24 @@ final class CategorySelectViewController: BaseViewController {
         let table = UITableView(frame: .zero, style: .insetGrouped)
         table.delegate = self
         table.isScrollEnabled = true
-        table.separatorColor = .ypGray
-        table.backgroundColor = .ypWhite
+        table.separatorColor = Asset.ypGray.color
+        table.separatorInset = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
+        table.backgroundColor = Asset.ypWhite.color
         table.tableHeaderView = UIView(frame: CGRect(x: 0, y: 0, width: 0, height: CGFloat.leastNonzeroMagnitude))
         table.tableFooterView = UIView(frame: CGRect(x: 0, y: 0, width: 0, height: CGFloat.leastNonzeroMagnitude))
         return table
     }()
     
+    private lazy var contentPlaceholder = ContentPlaceholder(style: .category)
+    
     private lazy var addButton: BaseButton = {
-        let button = BaseButton(style: .confirm, text: "Добавить категорию")
+        let buttonText = NSLocalizedString("addCategory", comment: "Add category button text")
+        let button = BaseButton(style: .confirm, text: buttonText)
         button.addTarget(nil, action: #selector(addButtonTapped), for: .touchUpInside)
         return button
     }()
  
     init(dataSourceProvider: CategoriesDataSourceProvider, viewModel: CategorySelectViewModelProtocol, pageTitle: String) {
-        self.dataSourceProvider = dataSourceProvider
         self.viewModel = viewModel
         super.init(pageTitle: pageTitle)
     }
@@ -67,9 +67,15 @@ final class CategorySelectViewController: BaseViewController {
     
     func setUpBindings() {
         viewModel.categoriesObserver.bind { [weak self] categories in
+            if categories.isEmpty {
+                self?.categoriesTableView.isHidden = true
+                self?.contentPlaceholder.isHidden = false
+            } else {
+                self?.categoriesTableView.isHidden = false
+                self?.contentPlaceholder.isHidden = true
+            }
             self?.dataSource.reload(categories)
-        }
-        
+        } 
     }
 }
 
@@ -102,11 +108,13 @@ extension CategorySelectViewController: UIContextMenuInteractionDelegate {
         }
         
         let configuration = UIContextMenuConfiguration(identifier: nil, previewProvider: nil) { [weak self] _ -> UIMenu in
-            let edit = UIAction(title: "Редактировать", image: UIImage(systemName: "pencil")) { _ in
+            let editItemText = NSLocalizedString("edit", comment: "Edit menu item text")
+            let edit = UIAction(title: editItemText, image: UIImage(systemName: "pencil")) { _ in
                 // TODO: - Implement edit ability
             }
             
-            let delete = UIAction(title: "Удалить", image: UIImage(systemName: "trash.fill"), attributes: .destructive) { _ in
+            let deleteItemText = NSLocalizedString("delete", comment: "Delete menu item text")
+            let delete = UIAction(title: deleteItemText, image: UIImage(systemName: "trash.fill"), attributes: .destructive) { _ in
                 self?.viewModel.deleteCategoryAt(index: indexPath.row)
             }
             
@@ -122,11 +130,12 @@ extension CategorySelectViewController: UIContextMenuInteractionDelegate {
 private extension CategorySelectViewController {
     func addSubviews() {
         content.addSubview(categoriesTableView)
+        content.addSubview(contentPlaceholder)
         content.addSubview(addButton)
     }
     
     func configure() {
-        view.backgroundColor = .ypWhite
+        view.backgroundColor = Asset.ypWhite.color
     }
     
     func applyLayout() {
@@ -134,6 +143,10 @@ private extension CategorySelectViewController {
             make.top.equalToSuperview()
             make.leading.trailing.equalToSuperview()
             make.bottom.equalTo(addButton.snp.top).offset(-50)
+        }
+        
+        contentPlaceholder.snp.makeConstraints { make in
+            make.centerX.centerY.equalTo(categoriesTableView)
         }
         
         addButton.snp.makeConstraints { make in

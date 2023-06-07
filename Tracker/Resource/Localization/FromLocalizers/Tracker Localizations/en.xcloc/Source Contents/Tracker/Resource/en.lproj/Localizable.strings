@@ -1,0 +1,123 @@
+/* Add category button text */
+"addCategory" = "Add category";
+
+/* Blue onboarding screen text */
+"backgroundImage.blue.description" = "Track only what you want";
+
+/* Red onboarding screen text */
+"backgroundImage.red.description" = "Even if it's not liters of water or yoga";
+
+/* Cancel button title */
+"cancel" = "Cancel";
+
+/* Text for alert cancel button */
+"cancelActionText" = "Cancel";
+
+/* Categories page name
+   Category */
+"category" = "Category";
+
+/* Colors section label text */
+"colors" = "Colors";
+
+/* Create button title */
+"create" = "Create";
+
+/* Delete menu item text */
+"delete" = "Delete";
+
+/* Text for alert delete button */
+"deleteActionText" = "Delete";
+
+/* Text for delete alert */
+"deleteAlertText" = "Is this category really not needed?";
+
+/* Text for tracker delete alert */
+"deleteTrackerAlertText" = "Are you sure you want to delete the tracker?";
+
+/* Edit menu item text */
+"edit" = "Edit";
+
+/* Emoji section label text */
+"emoji" = "Emoji";
+
+/* Text displayed on empty search */
+"emptyPlaceholder.search" = "Nothing found";
+
+/* Text displayed on empty statistics */
+"emptyPlaceholder.statistics" = "Nothing to analyze";
+
+/* Text displayed on empty schedule */
+"emptyPlaceholder.trackers" = "What will we track?";
+
+/* Enter category name placeholder text */
+"enterCategoryName" = "Enter category name";
+
+/* Event button title */
+"event" = "Irregular event";
+
+/* Every day */
+"everyDay" = "Every dat";
+
+/* Filters button text */
+"filters" = "Filters";
+
+/* Habit button title */
+"habit" = "Habit";
+
+/* New category page name */
+"newCategory" = "New category";
+
+/* New event page name */
+"newEvent" = "New event";
+
+/* New habit page name */
+"newHabit" = "New habit";
+
+/* Onboarding screen proceed button text */
+"onboardingPageViewController.proceedButton" = "This is technology!";
+
+/* Pin menu item text */
+"pin" = "Pin";
+
+/* Pinned group name */
+"pinned" = "Pinned";
+
+/* Ready button title */
+"ready" = "Ready";
+
+/* Schedule
+   Schedule page name */
+"schedule" = "Schedule";
+
+/* Search bar placeholder text */
+"search" = "Search";
+
+/* Statistic screen name */
+"statistic" = "Statistics";
+
+/* Statistics tab bar text */
+"statistics" = "Statistics";
+
+/* Limit on tracker name length */
+"stringLengthLimit" = "38 character limit";
+
+/* Tracker name text field placeholder */
+"tracker.name" = "Enter tracker name";
+
+/* Tracker creation page name */
+"trackerCreation" = "Tracker creation";
+
+/* Trackers screen name
+   Trackers tab bar text */
+"trackers" = "Trackers";
+
+/* Statistic finished trackers amount text */
+"trackers.finished" = "Trackers completed";
+
+/* Statistic total trackers amount text */
+"trackers.total" = "Total trackers";
+
+/* Unpin menu item text */
+"unPin" = "Unpin";
+

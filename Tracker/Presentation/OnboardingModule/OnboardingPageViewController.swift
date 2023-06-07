@@ -13,7 +13,7 @@ protocol OnboardingPageViewControllerCoordinator {
 
 final class OnboardingPageViewController: UIPageViewController, OnboardingPageViewControllerCoordinator {
     var onProceed: (() -> Void)?
-    
+        
     private let pages: [UIViewController] = [
         OnboardingViewController(style: .blue),
         OnboardingViewController(style: .red)
@@ -23,19 +23,20 @@ final class OnboardingPageViewController: UIPageViewController, OnboardingPageVi
         let pageControl = UIPageControl()
         pageControl.numberOfPages = pages.count
         pageControl.currentPage = 0
-        
-        pageControl.currentPageIndicatorTintColor = .ypBlack
-        pageControl.pageIndicatorTintColor = .ypGray
+        pageControl.currentPageIndicatorTintColor = Asset.ypBlack.color
+        pageControl.pageIndicatorTintColor = Asset.ypGray.color
         
         return pageControl
     }()
     
     private lazy var proceedButton: BaseButton = {
-        let button = BaseButton(style: .confirm, text: "Вот это технологии!")
+        let buttonText = NSLocalizedString("onboardingPageViewController.proceedButton", comment: "Onboarding screen proceed button text")
+        let button = BaseButton(style: .confirm, text: buttonText)
         button.addTarget(nil, action: #selector(proceedButtonTapped), for: .touchUpInside)
+        button.overrideUserInterfaceStyle = .light
         return button
     }()
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
         guard let firstPage = pages.first else { return }
@@ -50,7 +51,7 @@ final class OnboardingPageViewController: UIPageViewController, OnboardingPageVi
 // MARK: - Private Methods
 
 @objc private extension OnboardingPageViewController {
-     func proceedButtonTapped() {
+    func proceedButtonTapped() {
         onProceed?()
     }
 }

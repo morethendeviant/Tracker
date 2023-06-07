@@ -12,8 +12,13 @@ import Foundation
 protocol TrackersViewCoordination: AnyObject {
     var headForTrackerSelect: (() -> Void)? { get set }
     var headForError: ((String) -> Void)? { get set }
-    
-    func returnOnCreate()
+    var headForAlert: ((AlertModel) -> Void)? { get set }
+    var headForFilter: ((Filter) -> Void)? { get set }
+    var headForHabit: ((TrackerViewModel?) -> Void)? { get set }
+    var headForEvent: ((TrackerViewModel?) -> Void)? { get set }
+
+    func returnOnConfirm()
+    func returnOnFilter(selectedFilter: Filter)
 }
 
 protocol ErrorHandlerDelegate: AnyObject {
@@ -28,14 +33,20 @@ protocol TrackersListViewModelProtocol {
     var trackerObserver: Observable<Tracker?> { get }
     
     var date: Date { get }
+    var dateObserver: Observable<Date> { get }
+    
     var searchText: String? { get }
     var lastSectionIndex: Int { get }
     
     func sectionNameAt(_ index: Int) -> String
     func plusButtonTapped()
+    func filterButtonTapped()
     func dateChangedTo(_ date: Date)
     func searchTextChangedTo(_ text: String?)
     func deleteTrackerAt(indexPath: IndexPath)
+    func pinTrackerAt(indexPath: IndexPath)
+    func editTrackerAt(indexPath: IndexPath)
+    func trackerIsPinnedAt(indexPath: IndexPath) -> Bool
 }
 
 protocol TrackersDataSourceProvider {
@@ -48,27 +59,17 @@ protocol TrackersDataSourceProvider {
 
 // MARK: - TrackersList View Model
 
-final class TrackersListViewModel: TrackersViewCoordination {
-    func returnOnCreate() {
-        dateChangedTo(date)
-    }
-    
+final class TrackersListViewModel {
+    var headForAlert: ((AlertModel) -> Void)?
+    var headForFilter: ((Filter) -> Void)?
     var headForTrackerSelect: (() -> Void)?
     var headForError: ((String) -> Void)?
-    
-    private var dataProvider: TrackerDataStoreProtocol
-    
-    private(set) var date: Date = Date()
-    private(set) var searchText: String?
-    
-    private var categories: [TrackerCategory] = [] {
-        didSet {
-            categories = categories.map {
-                TrackerCategory(name: $0.name, trackers: $0.trackers.sorted { $0.name < $1.name })
-            }
-            
-            visibleCategories = filtered(categories: categories)
-        }
+    var headForHabit: ((TrackerViewModel?) -> Void)?
+    var headForEvent: ((TrackerViewModel?) -> Void)?
+
+    @Observable var date: Date = Date()
+    var dateObserver: Observable<Date> {
+        $date
     }
     
     @Observable var visibleCategories: [TrackerCategory] = []
@@ -81,20 +82,80 @@ final class TrackersListViewModel: TrackersViewCoordination {
         $tracker
     }
     
+    private let dataProvider: TrackerDataStoreProtocol
+    
+    private(set) var searchText: String? {
+        didSet {
+            visibleCategories = filtered(categories: categories, filter: selectedFilter, searchText: searchText)
+        }
+    }
+    
+    private var selectedFilter: Filter = .all
+    
+    private var categories: [TrackerCategory] = [] {
+        didSet {
+            visibleCategories = filtered(categories: categories, filter: selectedFilter, searchText: searchText)
+        }
+    }
+    
     init(dataProvider: TrackerDataStoreProtocol) {
         self.dataProvider = dataProvider
+    }
+}
+
+extension TrackersListViewModel: TrackersViewCoordination {
+    func returnOnConfirm() {
+        dateChangedTo(date)
+    }
+    
+    func returnOnFilter(selectedFilter: Filter) {
+        self.selectedFilter = selectedFilter
+        switch selectedFilter {
+        case .all, .finished, .unfinished:
+            visibleCategories = filtered(categories: categories, filter: selectedFilter, searchText: searchText)
+        case .today: dateChangedTo(Date())
+        }
     }
 }
 
 // MARK: - Private methods
 
 private extension TrackersListViewModel {
-    func filtered(categories: [TrackerCategory]) -> [TrackerCategory] {
-        categories.compactMap { category in
+    func filtered(categories: [TrackerCategory], filter: Filter, searchText: String?) -> [TrackerCategory] {
+        var filteredCategories = categories
+        var pinnedTrackers: [Tracker] = []
+        
+        filteredCategories = categories.compactMap { category in
+            var trackers: [Tracker] = []
+            
+            switch filter {
+            case .all, .today: trackers = category.trackers
+            case .finished: trackers = category.trackers.filter { cellIsMarkedWithId($0.id) }
+            case .unfinished: trackers = category.trackers.filter { !cellIsMarkedWithId($0.id) }
+            }
+            
+            return trackers.isEmpty ? nil : TrackerCategory(name: category.name, trackers: trackers)
+        }
+        
+        filteredCategories = filteredCategories.compactMap {
+            let trackers = $0.trackers.compactMap { $0.isPinned ? nil : $0 }.sorted { $0.name < $1.name }
+            pinnedTrackers.append(contentsOf: $0.trackers.compactMap { $0.isPinned ? $0 : nil })
+            return trackers.isEmpty ? nil : TrackerCategory(name: $0.name, trackers: trackers)
+        }
+        
+        if !pinnedTrackers.isEmpty {
+            let pinnedText = NSLocalizedString("pinned", comment: "Pinned group name")
+            let pinnedCategory = TrackerCategory(name: pinnedText, trackers: pinnedTrackers)
+            filteredCategories.insert(pinnedCategory, at: 0)
+        }
+        
+        filteredCategories = filteredCategories.compactMap { category in
             guard let searchText, !searchText.isEmpty else { return category }
             let trackers = category.trackers.filter { $0.name.contains(searchText) }
             return trackers.isEmpty ? nil : TrackerCategory(name: category.name, trackers: trackers)
         }
+        
+        return filteredCategories
     }
     
     func getTrackerWithId(id: String) -> Tracker? {
@@ -105,14 +166,60 @@ private extension TrackersListViewModel {
 // MARK: - Trackers List View Model
 
 extension TrackersListViewModel: TrackersListViewModelProtocol {
-    func deleteTrackerAt(indexPath: IndexPath) {
-        let tracker = visibleCategories[indexPath.section].trackers[indexPath.row]
+    func filterButtonTapped() {
+        headForFilter?(selectedFilter)
+    }
+    
+    func pinTrackerAt(indexPath: IndexPath) {
         do {
-            try dataProvider.deleteTracker(tracker)
+            let tracker = visibleCategories[indexPath.section].trackers[indexPath.row]
+            try dataProvider.setTracker(tracker, pinned: !tracker.isPinned)
+            dateChangedTo(date)
         } catch {
             handleError(message: error.localizedDescription)
         }
-        dateChangedTo(date)
+    }
+    
+    func trackerIsPinnedAt(indexPath: IndexPath) -> Bool {
+        visibleCategories[indexPath.section].trackers[indexPath.row].isPinned
+    }
+    
+    func editTrackerAt(indexPath: IndexPath) {
+        let tracker = visibleCategories[indexPath.section].trackers[indexPath.row]
+        let category = TrackerCategory(name: visibleCategories[indexPath.section].name,
+                                       trackers: [tracker])
+        let trackerModel = TrackerViewModel(id: tracker.id,
+                                            name: tracker.name,
+                                            category: category.name,
+                                            schedule: tracker.schedule,
+                                            color: tracker.color,
+                                            emoji: tracker.emoji,
+                                            daysAmount: daysAmountWithId(tracker.id))
+        if tracker.schedule.count == 7 {
+            headForEvent?(trackerModel)
+        } else {
+            headForHabit?(trackerModel)
+        }
+    }
+    
+    func deleteTrackerAt(indexPath: IndexPath) {
+        let alertText = NSLocalizedString("deleteTrackerAlertText", comment: "Text for tracker delete alert")
+        let alertDeleteActionText = NSLocalizedString("deleteActionText", comment: "Text for alert delete button")
+        let alertCancelText = NSLocalizedString("cancelActionText", comment: "Text for alert cancel button")
+        let alertDeleteAction = AlertAction(actionText: alertDeleteActionText, actionRole: .destructive, action: { [unowned self] in
+            let tracker = visibleCategories[indexPath.section].trackers[indexPath.row]
+            do {
+                try dataProvider.deleteTracker(tracker)
+            } catch {
+                handleError(message: error.localizedDescription)
+            }
+            
+            dateChangedTo(date)
+        })
+        
+        let alertCancelAction = AlertAction(actionText: alertCancelText, actionRole: .cancel, action: nil)
+        let alertModel = AlertModel(alertText: alertText, alertActions: [alertDeleteAction, alertCancelAction])
+        headForAlert?(alertModel)
     }
     
     var lastSectionIndex: Int {
@@ -130,7 +237,6 @@ extension TrackersListViewModel: TrackersListViewModelProtocol {
     func dateChangedTo(_ date: Date) {
         self.date = date.onlyDate()
         let dayOfWeek = date.getDayOfWeek()
-        
         do {
             categories = try dataProvider.fetchAllCategories().compactMap { category in
                 let trackers = category.trackers.compactMap { tracker in
@@ -139,6 +245,10 @@ extension TrackersListViewModel: TrackersListViewModelProtocol {
                 
                 return trackers.isEmpty ? nil : TrackerCategory(name: category.name, trackers: trackers)
             }
+            
+            if date.onlyDate() != Date().onlyDate() {
+                selectedFilter = .all
+            }
         } catch {
             handleError(message: error.localizedDescription)
         }
@@ -146,7 +256,6 @@ extension TrackersListViewModel: TrackersListViewModelProtocol {
     
     func searchTextChangedTo(_ text: String?) {
         self.searchText = text
-        visibleCategories = filtered(categories: categories)
     }
 }
 
@@ -178,7 +287,6 @@ extension TrackersListViewModel: TrackersDataSourceProvider {
     
     func cellIsMarkedWithId(_ id: String) -> Bool {
         let record = TrackerRecord(id: id, date: date)
-        
         do {
             return try dataProvider.checkForExistence(record)
         } catch {
@@ -203,6 +311,8 @@ extension TrackersListViewModel: TrackersDataSourceProvider {
         } else {
             addRecordWithId(tracker.id)
         }
+        
+        visibleCategories = filtered(categories: categories, filter: selectedFilter, searchText: searchText)
     }
 }
 
