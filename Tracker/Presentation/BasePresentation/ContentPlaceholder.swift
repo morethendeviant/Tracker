@@ -39,8 +39,9 @@ extension ContentPlaceholder {
         case .trackers:
             imageView.image = Asset.star.image
             label.text = NSLocalizedString("emptyPlaceholder.trackers", comment: "Text displayed on empty schedule")
-            
-        case .category: break
+        case .category:
+            imageView.image = Asset.star.image
+            label.text = NSLocalizedString("emptyPlaceholder.category", comment: "Text displayed on empty categories")
         case .search:
             imageView.image = Asset.notFound.image
             label.text = NSLocalizedString("emptyPlaceholder.search", comment: "Text displayed on empty search")

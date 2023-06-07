@@ -147,3 +147,6 @@
 
 /* Edit habit page name */
 "editHabit" = "Edit habit";
+
+/* Text displayed on empty categories */
+"emptyPlaceholder.category" = "Habits and events can be combined in meaning";

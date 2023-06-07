@@ -147,3 +147,6 @@
 
 /* Edit habit page name */
 "editHabit" = "Редактирование привычки";
+
+/* Text displayed on empty categories */
+"emptyPlaceholder.category" = "Привычки и события можно объединять по смыслу";

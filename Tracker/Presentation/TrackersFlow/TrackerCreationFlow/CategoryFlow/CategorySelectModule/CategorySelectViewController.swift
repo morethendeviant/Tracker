@@ -28,6 +28,8 @@ final class CategorySelectViewController: BaseViewController {
         return table
     }()
     
+    private lazy var contentPlaceholder = ContentPlaceholder(style: .category)
+    
     private lazy var addButton: BaseButton = {
         let buttonText = NSLocalizedString("addCategory", comment: "Add category button text")
         let button = BaseButton(style: .confirm, text: buttonText)
@@ -65,6 +67,13 @@ final class CategorySelectViewController: BaseViewController {
     
     func setUpBindings() {
         viewModel.categoriesObserver.bind { [weak self] categories in
+            if categories.isEmpty {
+                self?.categoriesTableView.isHidden = true
+                self?.contentPlaceholder.isHidden = false
+            } else {
+                self?.categoriesTableView.isHidden = false
+                self?.contentPlaceholder.isHidden = true
+            }
             self?.dataSource.reload(categories)
         } 
     }
@@ -121,6 +130,7 @@ extension CategorySelectViewController: UIContextMenuInteractionDelegate {
 private extension CategorySelectViewController {
     func addSubviews() {
         content.addSubview(categoriesTableView)
+        content.addSubview(contentPlaceholder)
         content.addSubview(addButton)
     }
     
@@ -133,6 +143,10 @@ private extension CategorySelectViewController {
             make.top.equalToSuperview()
             make.leading.trailing.equalToSuperview()
             make.bottom.equalTo(addButton.snp.top).offset(-50)
+        }
+        
+        contentPlaceholder.snp.makeConstraints { make in
+            make.centerX.centerY.equalTo(categoriesTableView)
         }
         
         addButton.snp.makeConstraints { make in
